@@ -1,9 +1,10 @@
-<!doctype html>
+<!DOCTYPE html>
+
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>RC Attendance</title>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>arc.A Tool</title>
 <style>
   :root {
     --bg: #f5f7fb;
@@ -45,7 +46,7 @@
   .app-shell {
     max-width: none;
     margin: 0;
-    padding: 18px 0.5in 24px;
+    padding: 18px 0.5in 24px 10px;
   }
 
   .topbar {
@@ -282,6 +283,21 @@
 
   .unexcused-calendar-button-row .btn {
     min-height: 44px;
+  }
+
+  .unexcused-calendar-button-row .btn {
+    background: #eee8ff;
+    border-color: #c9b9f6;
+    color: #5d3fa3;
+    font-weight: 850;
+  }
+
+  .unexcused-calendar-button-row .btn:hover {
+    background: #e3d8ff;
+  }
+
+  .date-picker-shell input[type="date"] {
+    pointer-events: none;
   }
 
   .date-picker-shell {
@@ -570,8 +586,8 @@
 
   .workspace {
     display: grid;
-    grid-template-columns: 180px minmax(0, 1fr) 360px;
-    gap: 10px;
+    grid-template-columns: 240px minmax(0, 1fr) 390px;
+    gap: 12px;
     align-items: start;
   }
 
@@ -1412,7 +1428,7 @@
   @media (max-width: 1450px) {
     .controls { grid-template-columns: repeat(3, minmax(160px, 1fr)); }
     .months-grid { grid-template-columns: repeat(2, minmax(280px, 1fr)); }
-    .workspace { grid-template-columns: 170px minmax(0, 1fr) 330px; }
+    .workspace { grid-template-columns: 220px minmax(0, 1fr) 350px; }
   }
 
   @media (max-width: 1080px) {
@@ -1568,274 +1584,1028 @@
     border-color: #a35b66;
   }
 
+
+  .corrective-status-card {
+    border: 1px solid var(--line);
+    border-radius: 11px;
+    background: #f8fafc;
+    padding: 10px;
+  }
+
+  .corrective-status-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .corrective-status-label {
+    color: var(--muted);
+    font-size: 0.66rem;
+    font-weight: 850;
+    text-transform: uppercase;
+    letter-spacing: 0.035em;
+  }
+
+  .corrective-status-name {
+    margin-top: 2px;
+    font-size: 0.91rem;
+    font-weight: 950;
+    line-height: 1.2;
+  }
+
+  .corrective-level-chip {
+    flex: 0 0 auto;
+    border-radius: 999px;
+    padding: 5px 8px;
+    font-size: 0.64rem;
+    font-weight: 950;
+  }
+
+  .corrective-level-chip.level-0 {
+    background: #e9edf2;
+    color: #475467;
+  }
+
+  .corrective-level-chip.level-1 {
+    background: #fff2cc;
+    color: #725500;
+  }
+
+  .corrective-level-chip.level-2 {
+    background: #ffe1b3;
+    color: #854a00;
+  }
+
+  .corrective-level-chip.level-3 {
+    background: #ffd5d9;
+    color: #9f1d2c;
+  }
+
+  .corrective-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 7px;
+    margin-top: 9px;
+  }
+
+  .corrective-metric {
+    border: 1px solid var(--soft-line);
+    border-radius: 9px;
+    background: #ffffff;
+    padding: 7px;
+  }
+
+  .corrective-metric span {
+    display: block;
+    color: var(--muted);
+    font-size: 0.6rem;
+    font-weight: 800;
+    line-height: 1.25;
+  }
+
+  .corrective-metric strong {
+    display: block;
+    margin-top: 2px;
+    font-size: 0.75rem;
+    line-height: 1.3;
+  }
+
+  .corrective-progress {
+    height: 8px;
+    margin-top: 9px;
+    border-radius: 999px;
+    background: #e6eaf0;
+    overflow: hidden;
+  }
+
+  .corrective-progress span {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: #7f56d9;
+  }
+
+  .corrective-pending {
+    margin-top: 9px;
+    border: 2px solid #d8a000;
+    border-radius: 10px;
+    background: #fff8d8;
+    padding: 9px;
+    color: #5f4800;
+  }
+
+  .corrective-pending.termination {
+    border-color: #d92d20;
+    background: #fff0ef;
+    color: #8d1f17;
+  }
+
+  .corrective-pending-title {
+    font-size: 0.76rem;
+    font-weight: 950;
+  }
+
+  .corrective-pending-meta {
+    margin-top: 3px;
+    font-size: 0.67rem;
+    line-height: 1.4;
+  }
+
+  .corrective-suspension {
+    margin-top: 8px;
+    border-radius: 8px;
+    background: #fce7f3;
+    padding: 7px 8px;
+    color: #9d174d;
+    font-size: 0.68rem;
+    font-weight: 850;
+    line-height: 1.35;
+  }
+
+  .corrective-history {
+    display: grid;
+    gap: 7px;
+  }
+
+  .corrective-history-item {
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    padding: 8px;
+    background: #fafbfc;
+  }
+
+  .corrective-history-level {
+    font-size: 0.71rem;
+    font-weight: 950;
+  }
+
+  .corrective-history-meta {
+    margin-top: 2px;
+    color: var(--muted);
+    font-size: 0.63rem;
+    line-height: 1.35;
+  }
+
+  .corrective-history-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 5px;
+    margin-top: 7px;
+    padding-top: 6px;
+    border-top: 1px solid var(--soft-line);
+  }
+
+  .corrective-policy {
+    margin-top: 10px;
+    border-top: 1px solid var(--line);
+    padding-top: 8px;
+  }
+
+  .corrective-policy summary {
+    cursor: pointer;
+    font-size: 0.7rem;
+    font-weight: 900;
+  }
+
+  .corrective-policy-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 7px;
+    margin-top: 9px;
+  }
+
+  .corrective-policy-note {
+    margin-top: 7px;
+    color: var(--muted);
+    font-size: 0.61rem;
+    line-height: 1.35;
+  }
+
+  .dialog-validation {
+    min-height: 1.2em;
+    color: var(--denied);
+    font-size: 0.69rem;
+    font-weight: 750;
+  }
+
+  body.dark-mode .unexcused-calendar-button-row .btn {
+    background: #66558f;
+    border-color: #8f7fbe;
+    color: #ffffff;
+  }
+
+  body.dark-mode .unexcused-calendar-button-row .btn:hover {
+    background: #7462a1;
+  }
+
+  body.dark-mode [data-section-id="corrective"] .section-subtitle,
+  body.dark-mode [data-section-id="corrective"] .legend-group-label,
+  body.dark-mode [data-section-id="corrective"] .detail-empty,
+  body.dark-mode [data-section-id="corrective"] .corrective-status-label,
+  body.dark-mode [data-section-id="corrective"] .corrective-metric span,
+  body.dark-mode [data-section-id="corrective"] .corrective-history-meta,
+  body.dark-mode [data-section-id="corrective"] .corrective-policy-note {
+    color: #ffffff;
+  }
+
+  body.dark-mode .corrective-status-card,
+  body.dark-mode .corrective-history-item {
+    background: #202b3a;
+    border-color: #536176;
+    color: #ffffff;
+  }
+
+  body.dark-mode .corrective-metric {
+    background: #293648;
+    border-color: #536176;
+    color: #ffffff;
+  }
+
+  body.dark-mode .corrective-progress {
+    background: #46546a;
+  }
+
+  body.dark-mode .corrective-policy {
+    border-top-color: #536176;
+  }
+
+  body.dark-mode .corrective-policy summary {
+    color: #ffffff;
+  }
+
+  body.dark-mode .corrective-history-actions {
+    border-top-color: #536176;
+  }
+
+
+  .leave-submodule {
+    min-width: 0;
+  }
+
+  .leave-submodule + .leave-submodule {
+    margin-top: 14px;
+    border-top: 2px solid var(--line);
+    padding-top: 13px;
+  }
+
+  .leave-submodule-title {
+    margin-bottom: 6px;
+    font-size: 0.8rem;
+    font-weight: 950;
+  }
+
+  .leave-number-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 7px;
+  }
+
+  .module-status {
+    min-height: 1.15em;
+    margin-top: 7px;
+    color: var(--muted);
+    font-size: 0.64rem;
+    font-weight: 750;
+    line-height: 1.35;
+  }
+
+  .manual-leave-list,
+  .capssl-list {
+    display: grid;
+    gap: 7px;
+  }
+
+  .manual-leave-item,
+  .capssl-list-item {
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    background: #fafbfc;
+    padding: 8px;
+    min-width: 0;
+  }
+
+  .manual-leave-main,
+  .capssl-list-main {
+    width: 100%;
+    border: 0;
+    background: transparent;
+    padding: 0;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .manual-leave-date,
+  .capssl-list-date {
+    white-space: nowrap;
+    font-size: 0.7rem;
+    font-weight: 950;
+  }
+
+  .manual-leave-meta,
+  .capssl-list-meta {
+    margin-top: 2px;
+    color: var(--muted);
+    font-size: 0.62rem;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+  }
+
+  .manual-leave-actions,
+  .capssl-list-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 5px;
+    margin-top: 7px;
+    padding-top: 6px;
+    border-top: 1px solid var(--soft-line);
+  }
+
+  .capssl-submodule {
+    border-radius: 10px;
+  }
+
+  .capssl-button {
+    background: #167b45;
+    border-color: #167b45;
+    color: #ffffff;
+  }
+
+  .capssl-button:hover {
+    background: #116738;
+  }
+
+  .capssl-summary {
+    margin: 10px 0 8px;
+    border: 1px solid #8fd0aa;
+    border-radius: 9px;
+    background: #ecfdf3;
+    padding: 8px;
+    color: #166534;
+    font-size: 0.65rem;
+    font-weight: 850;
+    line-height: 1.4;
+  }
+
+  .capssl-status-badge {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 999px;
+    padding: 3px 6px;
+    font-size: 0.58rem;
+    font-weight: 950;
+  }
+
+  .capssl-status-badge.protected {
+    background: #d1fadf;
+    color: #166534;
+  }
+
+  .capssl-status-badge.outside {
+    background: #fff0d5;
+    color: #8a4b00;
+  }
+
+  .capssl-indicator {
+    display: inline-flex;
+    align-items: center;
+    align-self: flex-start;
+    margin-top: 4px;
+    border-radius: 999px;
+    background: #16864d;
+    color: #ffffff;
+    padding: 3px 6px;
+    font-size: 0.55rem;
+    font-weight: 950;
+    letter-spacing: 0.01em;
+  }
+
+  .month-title {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 3px;
+  }
+
+  .corrective-period-shade {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .day-cell.corrective-shaded .day-number {
+    color: var(--corrective-shade-text, inherit);
+  }
+
+  .day-cell > :not(.corrective-period-shade):not(.zone-line):not(.custom-highlight-edge) {
+    position: relative;
+    z-index: 2;
+  }
+
+  .zone-line {
+    z-index: 3;
+  }
+
+  .custom-highlight-edge {
+    z-index: 4;
+  }
+
+  .corrective-shade-controls {
+    display: grid;
+    gap: 8px;
+  }
+
+  .corrective-shade-card {
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    background: #fafbfc;
+    padding: 8px;
+  }
+
+  .corrective-shade-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 7px;
+    margin-bottom: 8px;
+  }
+
+  .corrective-shade-name {
+    font-size: 0.7rem;
+    font-weight: 950;
+    line-height: 1.25;
+  }
+
+  .corrective-shade-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.63rem;
+    font-weight: 850;
+    white-space: nowrap;
+  }
+
+  .corrective-shade-fields {
+    display: grid;
+    grid-template-columns: 56px minmax(0, 1fr);
+    gap: 8px;
+    align-items: end;
+  }
+
+  .corrective-opacity-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 34px;
+    gap: 6px;
+    align-items: center;
+  }
+
+  .corrective-opacity-row input[type="range"] {
+    width: 100%;
+  }
+
+  .corrective-opacity-value {
+    text-align: right;
+    font-size: 0.63rem;
+    font-weight: 900;
+  }
+
+  body.dark-mode .manual-leave-item,
+  body.dark-mode .capssl-list-item,
+  body.dark-mode .corrective-shade-card {
+    background: #202b3a;
+    border-color: #536176;
+    color: #ffffff;
+  }
+
+  body.dark-mode [data-section-id="leave"] .section-subtitle,
+  body.dark-mode [data-section-id="leave"] .legend-group-label,
+  body.dark-mode [data-section-id="leave"] .module-status,
+  body.dark-mode [data-section-id="leave"] .manual-leave-meta,
+  body.dark-mode [data-section-id="leave"] .capssl-list-meta {
+    color: #ffffff;
+  }
+
+  body.dark-mode .manual-leave-actions,
+  body.dark-mode .capssl-list-actions {
+    border-top-color: #536176;
+  }
+
+  body.dark-mode .capssl-summary {
+    background: #153b29;
+    border-color: #3c8f64;
+    color: #d9ffe8;
+  }
+
+  body.dark-mode .corrective-shade-name,
+  body.dark-mode .corrective-shade-toggle,
+  body.dark-mode .corrective-opacity-value {
+    color: #ffffff;
+  }
+
+  @media (max-width: 1080px) {
+    .corrective-month-warning {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    color: #475467;
+    font-size: 0.63rem;
+    line-height: 1.35;
+    text-align: right;
+  }
+
+  .corrective-warning-name {
+    display: inline-block;
+    border-radius: 5px;
+    background: rgba(217, 45, 32, 0.30);
+    padding: 3px 6px;
+    color: #7a271a;
+    font-weight: 950;
+  }
+
+  body.dark-mode .corrective-month-warning {
+    color: #d0d5dd;
+  }
+
+  body.dark-mode .corrective-warning-name {
+    background: rgba(255, 77, 79, 0.30);
+    color: #ffd0d1;
+  }
+
+  body.dark-mode [data-section-id="capssl"] .section-subtitle,
+  body.dark-mode [data-section-id="capssl"] .module-status,
+  body.dark-mode [data-section-id="capssl"] .capssl-list-meta,
+  body.dark-mode [data-section-id="capssl"] .detail-empty {
+    color: #ffffff;
+  }
+
+
+  .brand-subheading {
+    font-weight: 900;
+    color: #344054;
+  }
+
+  .documentation-later-button {
+    margin-right: auto;
+  }
+
+  body.dark-mode .brand-subheading {
+    color: #ffffff;
+  }
+
+  @media (max-width: 580px) {
+    .corrective-month-warning {
+      width: 100%;
+      margin-left: 0;
+      justify-content: flex-end;
+      text-align: right;
+    }
+
+    .dialog-actions {
+      flex-wrap: wrap;
+    }
+
+    .documentation-later-button {
+      width: 100%;
+      margin-right: 0;
+      order: -1;
+    }
+  }
+
 </style>
 </head>
 <body>
 <div class="app-shell">
-  <div class="topbar">
-    <div class="title-block">
-      <h1>RC Attendance</h1>
-      <p>Import attendance data or use the calendar as a blank scratch workspace.</p>
-    </div>
-    <div class="source-pill" id="sourcePill"></div>
-  </div>
-
-  <section class="controls" aria-label="Calendar controls">
-    <div class="control-group">
-      <label class="control-label" for="calendarViewSelect">Calendar view</label>
-      <select id="calendarViewSelect">
-        <option value="all">All available months</option>
-        <option value="warning">Warning-zone months</option>
-      </select>
-    </div>
-
-    <div class="control-group">
-      <label class="control-label" for="dateFilterSelect">Date selection</label>
-      <select id="dateFilterSelect">
-        <option value="year">By calendar year</option>
-        <option value="months">Specific months</option>
-      </select>
-    </div>
-
-    <div class="control-group conditional-control" id="yearControl">
-      <label class="control-label" for="yearSelect">Year</label>
-      <select id="yearSelect"></select>
-    </div>
-
-    <div class="control-group conditional-control" id="yearStartControl">
-      <label class="control-label" for="yearStartMonthSelect">Starting month</label>
-      <select id="yearStartMonthSelect"></select>
-    </div>
-
-    <div class="control-group conditional-control" id="yearCountControl">
-      <label class="control-label" for="yearMonthCountSelect">Months shown</label>
-      <select id="yearMonthCountSelect">
-        <option value="3">3 months</option>
-        <option value="6">6 months</option>
-        <option value="9">9 months</option>
-        <option value="12">12 months</option>
-      </select>
-    </div>
-
-    <div class="control-group conditional-control month-picker-control" id="monthPickerControl">
-      <span class="control-label">Selected months</span>
-      <button class="month-picker-button" id="monthPickerButton" type="button" aria-expanded="false">
-        <span id="monthPickerSummary">Choose months</span>
-        <span aria-hidden="true">▾</span>
-      </button>
-      <div class="month-picker-panel" id="monthPickerPanel" hidden>
-        <div class="month-picker-heading">
-          <strong id="monthPickerYearLabel"></strong>
-          <span>Click individually or Shift-click for a range.</span>
-        </div>
-        <div class="month-checkbox-grid" id="monthCheckboxGrid"></div>
-        <div class="button-row">
-          <button class="btn" id="selectYearMonthsButton" type="button">Select this year</button>
-          <button class="btn" id="clearYearMonthsButton" type="button">Clear this year</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="control-group">
-      <span class="control-label">Appearance</span>
-      <label class="dark-mode-toggle" for="darkModeToggle">
-        <input id="darkModeToggle" type="checkbox">
-        <span class="dark-toggle-track" aria-hidden="true">
-          <span class="dark-toggle-knob"></span>
-        </span>
-        <span>Dark mode</span>
-      </label>
-    </div>
-  </section>
-
-  <main class="workspace">
-    <aside class="sidebar legend-sidebar">
-      <section class="sidebar-section collapsible-section collapsed" data-section-id="legend">
-        <button class="collapsible-header" type="button" data-collapse-toggle="legend" aria-expanded="false">
-          <span class="section-title">Legend</span>
-          <span class="collapse-icon" aria-hidden="true">+</span>
-        </button>
-        <div class="collapsible-content" data-collapse-content="legend">
-          <div id="legendContent"></div>
-        </div>
-      </section>
-
-      <section class="sidebar-section collapsible-section collapsed" data-section-id="unexcused">
-        <button class="collapsible-header" type="button" data-collapse-toggle="unexcused" aria-expanded="false">
-          <span class="section-title">Unexcused Absence</span>
-          <span class="collapse-icon" aria-hidden="true">+</span>
-        </button>
-        <div class="collapsible-content" data-collapse-content="unexcused">
-          <p class="section-subtitle">Add one date at a time using the date picker or select the date directly from the full calendar.</p>
-
-          <div class="unexcused-add-grid">
-            <div class="field-mini">
-              <label for="unexcusedDateInput">Specific date</label>
-              <div class="date-picker-shell">
-                <span id="unexcusedDateDisplay">Choose a date</span>
-                <input id="unexcusedDateInput" type="date" aria-label="Choose an unexcused absence date">
-              </div>
-            </div>
-
-            <button class="btn primary unexcused-confirm-button" id="addUnexcusedByDateButton" type="button">Confirm date</button>
-          </div>
-
-          <div class="button-row one unexcused-calendar-button-row">
-            <button class="btn" id="pickUnexcusedFromCalendarButton" type="button">Choose from full calendar</button>
-          </div>
-          <div class="unexcused-pick-status" id="unexcusedPickStatus"></div>
-
-          <div class="legend-group-label">Saved unexcused absences</div>
-          <div class="unexcused-list" id="unexcusedList"></div>
-        </div>
-      </section>
-    </aside>
-
-    <section class="calendar-panel">
-      <div class="months-grid" id="monthsGrid"></div>
-    </section>
-
-    <aside class="sidebar right-sidebar" id="rightSidebar">
-      <section class="sidebar-section collapsible-section collapsed" data-section-id="description">
-        <button class="collapsible-header" type="button" data-collapse-toggle="description" aria-expanded="false">
-          <span class="section-title">Description</span>
-          <span class="collapse-icon" aria-hidden="true">+</span>
-        </button>
-        <div class="collapsible-content" data-collapse-content="description">
-          <div id="detailContent">
-            <div class="detail-empty">No day selected.</div>
-          </div>
-        </div>
-      </section>
-
-      <section class="sidebar-section collapsible-section collapsed" data-section-id="warning">
-        <button class="collapsible-header" type="button" data-collapse-toggle="warning" aria-expanded="false">
-          <span class="section-title">90-day warning zones</span>
-          <span class="collapse-icon" aria-hidden="true">+</span>
-        </button>
-        <div class="collapsible-content" data-collapse-content="warning">
-          <p class="section-subtitle">Zone 1 uses the top edge and Zone 2 uses the bottom edge. Additional zones alternate and stack inward.</p>
-          <div class="zone-list" id="zoneList"></div>
-          <div class="button-row">
-            <button class="btn warning" id="addZoneButton" type="button">Add zone</button>
-            <button class="btn warning" id="addConsecutiveButton" type="button">Add consecutive</button>
-          </div>
-        </div>
-      </section>
-
-      <section class="sidebar-section collapsible-section collapsed" data-section-id="custom">
-        <button class="collapsible-header" type="button" data-collapse-toggle="custom" aria-expanded="false">
-          <span class="section-title">Custom day highlights</span>
-          <span class="collapse-icon" aria-hidden="true">+</span>
-        </button>
-        <div class="collapsible-content" data-collapse-content="custom">
-          <div class="selection-mode">
-            <label><input id="selectionMode" type="checkbox"> Select calendar days</label>
-            <span class="selection-count" id="selectionCount">0 selected</span>
-          </div>
-
-          <div class="annotation-fields">
-            <div class="field-mini">
-              <label for="annotationText">Text shown in day cells</label>
-              <textarea id="annotationText" maxlength="160" placeholder="Example: Doctor appointment"></textarea>
-            </div>
-            <div class="field-mini">
-              <label for="annotationColor">Color</label>
-              <input id="annotationColor" type="color" value="#2f80ed">
-            </div>
-          </div>
-
-          <div class="button-row">
-            <button class="btn primary" id="applyAnnotationButton" type="button">Apply to selected</button>
-            <button class="btn danger" id="removeAnnotationButton" type="button">Erase highlights from selected</button>
-          </div>
-          <div class="button-row one">
-            <button class="btn" id="clearSelectionButton" type="button">Clear day selection</button>
-          </div>
-          <div class="annotation-help">Applying a new highlight to a day replaces that day's previous custom highlight. This does not alter warning zones or time-off data.</div>
-        </div>
-      </section>
-
-      <section class="sidebar-section collapsible-section collapsed" data-section-id="save">
-        <button class="collapsible-header" type="button" data-collapse-toggle="save" aria-expanded="false">
-          <span class="section-title">Save and data</span>
-          <span class="collapse-icon" aria-hidden="true">+</span>
-        </button>
-        <div class="collapsible-content" data-collapse-content="save">
-          <p class="section-subtitle">
-            Import an Excel workbook to replace the current spreadsheet rows. A full JSON backup stores the Excel-derived rows together with highlights, zones, appearance, and layout settings.
-          </p>
-          <div class="button-row">
-            <button class="btn primary" id="exportBackupButton" type="button">Export full backup</button>
-            <button class="btn" id="importFileButton" type="button">Import Excel or backup</button>
-          </div>
-          <div class="button-row one">
-            <button class="btn danger" id="clearExcelDataButton" type="button">Clear Excel data</button>
-          </div>
-          <div class="button-row one">
-            <button class="btn danger" id="fullResetButton" type="button">Reset entire calendar</button>
-          </div>
-          <input id="importFileInput" type="file"
-            accept=".xlsx,.csv,.json,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv,application/json"
-            hidden>
-          <div class="settings-status" id="settingsStatus"></div>
-        </div>
-      </section>
-    </aside>
-  </main>
+<div class="topbar">
+<div class="title-block">
+<h1>arc.A Tool</h1>
+<p><span class="brand-subheading">American Red Cross Attendance Tool</span><br/>Import attendance data or use the calendar as a blank scratch workspace.</p>
 </div>
+<div class="source-pill" id="sourcePill"></div>
+</div>
+<section aria-label="Calendar controls" class="controls">
+<div class="control-group">
+<label class="control-label" for="calendarViewSelect">Calendar view</label>
+<select id="calendarViewSelect">
+<option value="all">All available months</option>
+<option value="warning">Warning-zone months</option>
+</select>
+</div>
+<div class="control-group">
+<label class="control-label" for="dateFilterSelect">Date selection</label>
+<select id="dateFilterSelect">
+<option value="year">By calendar year</option>
+<option value="months">Specific months</option>
+</select>
+</div>
+<div class="control-group conditional-control" id="yearControl">
+<label class="control-label" for="yearSelect">Year</label>
+<select id="yearSelect"></select>
+</div>
+<div class="control-group conditional-control" id="yearStartControl">
+<label class="control-label" for="yearStartMonthSelect">Starting month</label>
+<select id="yearStartMonthSelect"></select>
+</div>
+<div class="control-group conditional-control" id="yearCountControl">
+<label class="control-label" for="yearMonthCountSelect">Months shown</label>
+<select id="yearMonthCountSelect">
+<option value="3">3 months</option>
+<option value="6">6 months</option>
+<option value="9">9 months</option>
+<option value="12">12 months</option>
+</select>
+</div>
+<div class="control-group conditional-control month-picker-control" id="monthPickerControl">
+<span class="control-label">Selected months</span>
+<button aria-expanded="false" class="month-picker-button" id="monthPickerButton" type="button">
+<span id="monthPickerSummary">Choose months</span>
+<span aria-hidden="true">▾</span>
+</button>
+<div class="month-picker-panel" hidden="" id="monthPickerPanel">
+<div class="month-picker-heading">
+<strong id="monthPickerYearLabel"></strong>
+<span>Click individually or Shift-click for a range.</span>
+</div>
+<div class="month-checkbox-grid" id="monthCheckboxGrid"></div>
+<div class="button-row">
+<button class="btn" id="selectYearMonthsButton" type="button">Select this year</button>
+<button class="btn" id="clearYearMonthsButton" type="button">Clear this year</button>
+</div>
+</div>
+</div>
+<div class="control-group">
+<span class="control-label">Appearance</span>
+<label class="dark-mode-toggle" for="darkModeToggle">
+<input id="darkModeToggle" type="checkbox"/>
+<span aria-hidden="true" class="dark-toggle-track">
+<span class="dark-toggle-knob"></span>
+</span>
+<span>Dark mode</span>
+</label>
+</div>
+</section>
+<main class="workspace">
+<aside class="sidebar legend-sidebar">
+<section class="sidebar-section collapsible-section collapsed" data-section-id="legend">
+<button aria-expanded="false" class="collapsible-header" data-collapse-toggle="legend" type="button">
+<span class="section-title">Legend</span>
+<span aria-hidden="true" class="collapse-icon">+</span>
+</button>
+<div class="collapsible-content" data-collapse-content="legend">
+<div id="legendContent"></div>
+</div>
+</section>
+<section class="sidebar-section collapsible-section collapsed" data-section-id="unexcused">
+<button aria-expanded="false" class="collapsible-header" data-collapse-toggle="unexcused" type="button">
+<span class="section-title">Unexcused Leave</span>
+<span aria-hidden="true" class="collapse-icon">+</span>
+</button>
+<div class="collapsible-content" data-collapse-content="unexcused">
+<p class="section-subtitle">Add one date at a time using the date picker or select the date directly from the full calendar.</p>
+<div class="unexcused-add-grid">
+<div class="field-mini">
+<label for="unexcusedDateInput">Specific date</label>
+<div aria-label="Choose an unexcused leave date" class="date-picker-shell" id="unexcusedDateShell" role="button" tabindex="0">
+<span id="unexcusedDateDisplay">Choose a date</span>
+<input aria-label="Choose an unexcused leave date" id="unexcusedDateInput" tabindex="-1" type="date"/>
+</div>
+</div>
+<button class="btn primary unexcused-confirm-button" id="addUnexcusedByDateButton" type="button">Confirm date</button>
+</div>
+<div class="button-row one unexcused-calendar-button-row">
+<button class="btn" id="pickUnexcusedFromCalendarButton" type="button">Choose from full calendar</button>
+</div>
+<div class="unexcused-pick-status" id="unexcusedPickStatus"></div>
+<div class="legend-group-label">Saved unexcused leave</div>
+<div class="unexcused-list" id="unexcusedList"></div>
+</div>
+</section><section class="sidebar-section collapsible-section collapsed" data-section-id="leave">
+<button aria-expanded="false" class="collapsible-header" data-collapse-toggle="leave" type="button">
+<span class="section-title">Add Other Leave</span>
+<span aria-hidden="true" class="collapse-icon">+</span>
+</button>
+<div class="collapsible-content" data-collapse-content="leave">
+<div class="leave-submodule">
+<p class="section-subtitle">Add an absence, late arrival, or early leave. Excused entries do not create occurrence events. Unexcused late arrivals and early leaves create 0.5 occurrence events.</p>
+<div class="field-mini">
+<label for="manualLeaveDateInput">Date</label>
+<div aria-label="Choose an excused leave date" class="date-picker-shell" id="manualLeaveDateShell" role="button" tabindex="0">
+<span id="manualLeaveDateDisplay">Choose a date</span>
+<input aria-label="Choose an excused leave date" id="manualLeaveDateInput" tabindex="-1" type="date"/>
+</div>
+</div>
+<div class="field-mini">
+<label for="manualLeaveTypeSelect">Leave type</label>
+<select id="manualLeaveTypeSelect">
+<option value="Absence">Absence</option>
+<option value="Late arrival">Late arrival</option>
+<option value="Early leave">Early leave</option>
+</select>
+</div><div class="field-mini">
+<label for="manualLeaveStatusSelect">Attendance status</label>
+<select id="manualLeaveStatusSelect">
+<option value="Excused">Excused</option>
+<option value="Unexcused">Unexcused</option>
+</select>
+</div>
+<div class="leave-number-grid">
+<div class="field-mini">
+<label for="manualLeaveHoursInput">Hours off</label>
+<input id="manualLeaveHoursInput" inputmode="decimal" min="0.01" placeholder="8" step="0.01" type="number"/>
+</div>
+<div class="field-mini">
+<label for="manualLeavePtoInput">PTO used</label>
+<input id="manualLeavePtoInput" inputmode="decimal" min="0" placeholder="0" step="0.01" type="number"/>
+</div>
+</div>
+<div class="field-mini">
+<label for="manualLeaveNoteInput">Note</label>
+<input id="manualLeaveNoteInput" maxlength="120" placeholder="Optional" type="text"/>
+</div>
+<div class="button-row one">
+<button class="btn primary" id="saveManualLeaveButton" type="button">Save leave</button>
+</div>
+<div class="module-status" id="manualLeaveFormStatus"></div>
 
 
-
+</div>
+</div>
+</section>
+</aside>
+<section class="calendar-panel">
+<div class="months-grid" id="monthsGrid"></div>
+</section>
+<aside class="sidebar right-sidebar" id="rightSidebar">
+<section class="sidebar-section collapsible-section collapsed" data-section-id="description">
+<button aria-expanded="false" class="collapsible-header" data-collapse-toggle="description" type="button">
+<span class="section-title">Description</span>
+<span aria-hidden="true" class="collapse-icon">+</span>
+</button>
+<div class="collapsible-content" data-collapse-content="description">
+<div id="detailContent">
+<div class="detail-empty">No day selected.</div>
+</div>
+</div>
+</section>
+<section class="sidebar-section collapsible-section collapsed" data-section-id="warning">
+<button aria-expanded="false" class="collapsible-header" data-collapse-toggle="warning" type="button">
+<span class="section-title">90-day warning zones</span>
+<span aria-hidden="true" class="collapse-icon">+</span>
+</button>
+<div class="collapsible-content" data-collapse-content="warning">
+<p class="section-subtitle">Zone 1 uses the top edge and Zone 2 uses the bottom edge. Additional zones alternate and stack inward.</p>
+<div class="zone-list" id="zoneList"></div>
+<div class="button-row">
+<button class="btn warning" id="addZoneButton" type="button">Add zone</button>
+<button class="btn warning" id="addConsecutiveButton" type="button">Add consecutive</button>
+</div>
+</div>
+</section>
+<section class="sidebar-section collapsible-section collapsed" data-section-id="custom">
+<button aria-expanded="false" class="collapsible-header" data-collapse-toggle="custom" type="button">
+<span class="section-title">Custom Day Entries</span>
+<span aria-hidden="true" class="collapse-icon">+</span>
+</button>
+<div class="collapsible-content" data-collapse-content="custom">
+<div class="selection-mode">
+<label><input id="selectionMode" type="checkbox"/> Select calendar days</label>
+<span class="selection-count" id="selectionCount">0 selected</span>
+</div>
+<div class="annotation-fields">
+<div class="field-mini">
+<label for="annotationText">Text shown in day cells</label>
+<textarea id="annotationText" maxlength="160" placeholder="Example: Doctor appointment"></textarea>
+</div>
+<div class="field-mini">
+<label for="annotationColor">Color</label>
+<input id="annotationColor" type="color" value="#2f80ed"/>
+</div>
+</div>
+<div class="button-row">
+<button class="btn primary" id="applyAnnotationButton" type="button">Apply to selected</button>
+<button class="btn danger" id="removeAnnotationButton" type="button">Erase highlights from selected</button>
+</div>
+<div class="button-row one">
+<button class="btn" id="clearSelectionButton" type="button">Clear day selection</button>
+</div>
+<div class="annotation-help">Applying a new highlight to a day replaces that day's previous custom highlight. This does not alter warning zones or time-off data.</div>
+</div>
+</section>
+<section class="sidebar-section collapsible-section collapsed" data-section-id="corrective">
+<button aria-expanded="false" class="collapsible-header" data-collapse-toggle="corrective" type="button">
+<span class="section-title">Corrective Actions</span>
+<span aria-hidden="true" class="collapse-icon">+</span>
+</button>
+<div class="collapsible-content" data-collapse-content="corrective">
+<p class="section-subtitle">
+            Warning status is calculated only from manually added unexcused leave events. Levels increase after documentation is recorded and automatically step down when a 90-day warning period expires.
+          </p>
+<div id="correctiveActionSummary"></div><div class="legend-group-label">Warning-period calendar shading</div><div class="corrective-shade-controls" id="correctiveShadeControls"></div>
+<div class="button-row one">
+<button class="btn primary" id="addCorrectiveSubmissionButton" type="button">Record documentation</button>
+</div>
+<div class="legend-group-label">Documentation history</div>
+<div class="corrective-history" id="correctiveActionHistory"></div>
+<details class="corrective-policy">
+<summary>Policy settings</summary>
+<div class="corrective-policy-grid">
+<div class="field-mini">
+<label for="verbalThresholdInput">Verbal threshold</label>
+<input id="verbalThresholdInput" min="0.5" step="0.5" type="number"/>
+</div>
+<div class="field-mini">
+<label for="writtenThresholdInput">Written threshold</label>
+<input id="writtenThresholdInput" min="0.5" step="0.5" type="number"/>
+</div>
+<div class="field-mini">
+<label for="finalThresholdInput">Last &amp; Final threshold</label>
+<input id="finalThresholdInput" min="0.5" step="0.5" type="number"/>
+</div>
+<div class="field-mini">
+<label for="terminationThresholdInput">Termination threshold</label>
+<input id="terminationThresholdInput" min="0.5" step="0.5" type="number"/>
+</div>
+<div class="field-mini">
+<label for="occurrenceWindowInput">Occurrence window</label>
+<input id="occurrenceWindowInput" min="1" step="1" type="number"/>
+</div>
+<div class="field-mini">
+<label for="warningPeriodInput">Warning period</label>
+<input id="warningPeriodInput" min="1" step="1" type="number"/>
+</div>
+<div class="field-mini">
+<label for="documentationDaysInput">Documentation limit</label>
+<input id="documentationDaysInput" min="1" step="1" type="number"/>
+</div>
+</div>
+<div class="corrective-policy-note">Thresholds are occurrence events. Time periods are calendar days. Changes save automatically.</div>
+</details>
+</div>
+</section><section class="sidebar-section collapsible-section collapsed" data-section-id="capssl">
+<button aria-expanded="false" class="collapsible-header" data-collapse-toggle="capssl" type="button">
+<span class="section-title">CA-PSSL</span>
+<span aria-hidden="true" class="collapse-icon">+</span>
+</button>
+<div class="collapsible-content" data-collapse-content="capssl">
+<p class="section-subtitle">
+        Add full-day California protected sick leave. PTO used must be at least 8.0 hours. The first five qualifying days in each calendar year receive the green protected indicator.
+      </p>
+<div class="field-mini">
+<label for="capsslDateInput">Date</label>
+<div aria-label="Choose a CA-PSSL date" class="date-picker-shell" id="capsslDateShell" role="button" tabindex="0">
+<span id="capsslDateDisplay">Choose a date</span>
+<input aria-label="Choose a CA-PSSL date" id="capsslDateInput" tabindex="-1" type="date"/>
+</div>
+</div>
+<div class="field-mini">
+<label for="capsslPtoInput">PTO used</label>
+<input id="capsslPtoInput" inputmode="decimal" min="8" step="0.01" type="number" value="8"/>
+</div>
+<div class="button-row one">
+<button class="btn capssl-button" id="saveCapsslButton" type="button">Add CA-PSSL day</button>
+</div>
+<div class="module-status" id="capsslFormStatus"></div>
+<div class="capssl-summary" id="capsslSummary"></div>
+<div class="capssl-list" id="capsslList"></div>
+</div>
+</section><section class="sidebar-section collapsible-section collapsed" data-section-id="save">
+<button aria-expanded="false" class="collapsible-header" data-collapse-toggle="save" type="button">
+<span class="section-title">Settings and Actions</span>
+<span aria-hidden="true" class="collapse-icon">+</span>
+</button>
+<div class="collapsible-content" data-collapse-content="save">
+<p class="section-subtitle">Import an Excel workbook to replace spreadsheet rows. A full JSON backup stores Excel-derived rows, manually added leave, CA-PSSL tracking, corrective-action records, highlights, warning zones, appearance, and layout settings.</p>
+<div class="button-row">
+<button class="btn primary" id="exportBackupButton" type="button">Export full backup</button>
+<button class="btn" id="importFileButton" type="button">Import Excel or backup</button>
+</div>
+<div class="button-row one">
+<button class="btn danger" id="clearExcelDataButton" type="button">Clear Excel data</button>
+</div>
+<div class="button-row one">
+<button class="btn danger" id="fullResetButton" type="button">Reset entire calendar</button>
+</div>
+<input accept=".xlsx,.csv,.json,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv,application/json" hidden="" id="importFileInput" type="file"/>
+<div class="settings-status" id="settingsStatus"></div>
+</div>
+</section>
+</aside>
+</main>
+</div>
 <dialog class="unexcused-dialog" id="unexcusedDialog">
-  <form class="unexcused-dialog-card" id="unexcusedForm" method="dialog">
-    <div class="dialog-header">
-      <div>
-        <h2>Unexcused absence details</h2>
-        <p id="unexcusedDialogDate"></p>
-      </div>
-      <button class="dialog-close" id="unexcusedDialogCloseButton" type="button" aria-label="Close">×</button>
-    </div>
-
-    <div class="dialog-fields">
-      <div class="field-mini">
-        <label for="unexcusedOccurrenceSelect">Occurrence amount</label>
-        <select id="unexcusedOccurrenceSelect" required>
-          <option value="0.5">0.5</option>
-          <option value="1">1.0</option>
-        </select>
-      </div>
-
-      <div class="field-mini">
-        <label for="unexcusedTypeSelect">Arrival or leave type</label>
-        <select id="unexcusedTypeSelect">
-          <option value="">Select</option>
-          <option value="Late arrival">Late arrival</option>
-          <option value="Early leave">Early leave</option>
-        </select>
-      </div>
-
-      <div class="field-mini">
-        <label for="unexcusedPtoInput">Amount of PTO used</label>
-        <input id="unexcusedPtoInput" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0">
-      </div>
-    </div>
-
-    <div class="dialog-actions">
-      <button class="btn" id="unexcusedCancelButton" type="button">Cancel</button>
-      <button class="btn primary" id="unexcusedSaveButton" type="button">Save and Continue</button>
-    </div>
-  </form>
+<form class="unexcused-dialog-card" id="unexcusedForm" method="dialog">
+<div class="dialog-header">
+<div>
+<h2>Unexcused leave details</h2>
+<p id="unexcusedDialogDate"></p>
+</div>
+<button aria-label="Close" class="dialog-close" id="unexcusedDialogCloseButton" type="button">×</button>
+</div>
+<div class="dialog-fields">
+<div class="field-mini">
+<label for="unexcusedOccurrenceSelect">Occurrence amount</label>
+<select id="unexcusedOccurrenceSelect" required="">
+<option value="0.5">0.5</option>
+<option value="1">1.0</option>
+</select>
+</div>
+<div class="field-mini">
+<label for="unexcusedTypeSelect">Arrival or leave type</label>
+<select id="unexcusedTypeSelect">
+<option value="">Select</option>
+<option value="Late arrival">Late arrival</option>
+<option value="Early leave">Early leave</option>
+</select>
+</div>
+<div class="field-mini">
+<label for="unexcusedPtoInput">Amount of PTO used</label>
+<input id="unexcusedPtoInput" inputmode="decimal" min="0" placeholder="0" step="0.01" type="number"/>
+</div>
+</div>
+<div class="dialog-actions">
+<button class="btn" id="unexcusedCancelButton" type="button">Cancel</button>
+<button class="btn primary" id="unexcusedSaveButton" type="button">Save and Continue</button>
+</div>
+</form>
 </dialog>
-
+<dialog class="unexcused-dialog" id="correctiveActionDialog">
+<form class="unexcused-dialog-card" id="correctiveActionForm" method="dialog">
+<div class="dialog-header">
+<div>
+<h2>Corrective action documentation</h2>
+<p>Record the trigger date and the date documentation was submitted.</p>
+</div>
+<button aria-label="Close" class="dialog-close" id="correctiveDialogCloseButton" type="button">×</button>
+</div>
+<div class="dialog-fields">
+<div class="field-mini">
+<label for="correctiveLevelSelect">Corrective action</label>
+<select id="correctiveLevelSelect">
+<option value="1">Verbal Warning</option>
+<option value="2">Written Warning</option>
+<option value="3">Last and Final Warning</option>
+</select>
+</div>
+<div class="field-mini">
+<label for="correctiveTriggerDateInput">Threshold trigger date</label>
+<input id="correctiveTriggerDateInput" type="date"/>
+</div>
+<div class="field-mini">
+<label for="correctiveSubmittedDateInput">Documentation submitted date</label>
+<input id="correctiveSubmittedDateInput" type="date"/>
+</div>
+<div class="dialog-validation" id="correctiveDialogValidation"></div>
+</div>
+<div class="dialog-actions">
+<button class="btn" id="correctiveCancelButton" type="button">Cancel</button>
+<button class="btn documentation-later-button" id="correctiveLaterButton" type="button">Enter documentation later</button><button class="btn primary" id="correctiveSaveButton" type="button">Save documentation</button>
+</div>
+</form>
+</dialog><dialog class="unexcused-dialog corrective-threshold-dialog" id="correctiveThresholdDialog">
+<form class="unexcused-dialog-card" id="correctiveThresholdForm" method="dialog">
+<div class="dialog-header">
+<div>
+<h2 id="correctiveThresholdTitle">Corrective-action threshold reached</h2>
+<p id="correctiveThresholdIntro"></p>
+</div>
+<button aria-label="Close" class="dialog-close" id="correctiveThresholdCloseButton" type="button">×</button>
+</div>
+<div class="dialog-fields">
+<div class="threshold-event-list" id="correctiveThresholdEvents"></div>
+<div class="dialog-validation" id="correctiveThresholdValidation"></div>
+</div>
+<div class="dialog-actions">
+<button class="btn" id="correctiveThresholdCancelButton" type="button">Cancel</button>
+<button class="btn primary" id="correctiveThresholdContinueButton" type="button">Confirm and continue</button>
+</div>
+</form>
+</dialog>
 <script>
 const STORAGE_KEY = "rcAttendanceV1";
-const BACKUP_VERSION = 3;
+const BACKUP_VERSION = 7;
 const CURRENT_YEAR = new Date().getFullYear();
 const MONTH_NAMES = Array.from({ length: 12 }, (_, index) =>
   new Date(2000, index, 1).toLocaleDateString(undefined, { month: "long" })
 );
 const ZONE_COLORS = ["#f0b429", "#2457d6", "#7f56d9", "#16a085", "#d64550", "#e67e22", "#2f80ed"];
+
+const CORRECTIVE_LEVELS = ["N/A", "Verbal Warning", "Written Warning", "Last and Final Warning"];
+const DEFAULT_CORRECTIVE_POLICY = {
+  verbalThreshold: 3,
+  writtenThreshold: 2.5,
+  finalThreshold: 2.5,
+  terminationThreshold: 2,
+  occurrenceWindowDays: 90,
+  warningPeriodDays: 90,
+  documentationDays: 14
+};
+
+const DEFAULT_CORRECTIVE_DISPLAY = {
+  1: { enabled: true, color: "#f6c344", opacity: 22 },
+  2: { enabled: true, color: "#ef8d32", opacity: 25 },
+  3: { enabled: true, color: "#e5484d", opacity: 28 }
+};
 
 let entries = [];
 
@@ -1858,12 +2628,23 @@ const state = {
   unexcusedPickMode: false,
   editingUnexcusedDate: null,
   manualUnexcused: {},
+  manualLeaves: {},
+  capsslLeaves: {},
+  editingManualLeaveDate: null,
+  pendingCorrectivePrompt: null,
+  correctiveSubmissions: [],
+  correctivePolicy: { ...DEFAULT_CORRECTIVE_POLICY },
+  correctiveDisplay: structuredClone(DEFAULT_CORRECTIVE_DISPLAY),
+  editingCorrectiveId: null,
   zones: [],
   annotations: {},
   sourceFileName: "",
   collapsedSections: {
     legend: true,
     unexcused: true,
+    leave: true,
+    capssl: true,
+    corrective: true,
     description: true,
     warning: true,
     custom: true,
@@ -1893,11 +2674,30 @@ const els = {
   sourcePill: document.getElementById("sourcePill"),
   legendContent: document.getElementById("legendContent"),
   unexcusedDateInput: document.getElementById("unexcusedDateInput"),
+  unexcusedDateShell: document.getElementById("unexcusedDateShell"),
   unexcusedDateDisplay: document.getElementById("unexcusedDateDisplay"),
   addUnexcusedByDateButton: document.getElementById("addUnexcusedByDateButton"),
   pickUnexcusedFromCalendarButton: document.getElementById("pickUnexcusedFromCalendarButton"),
   unexcusedPickStatus: document.getElementById("unexcusedPickStatus"),
   unexcusedList: document.getElementById("unexcusedList"),
+  manualLeaveDateShell: document.getElementById("manualLeaveDateShell"),
+  manualLeaveDateDisplay: document.getElementById("manualLeaveDateDisplay"),
+  manualLeaveDateInput: document.getElementById("manualLeaveDateInput"),
+  manualLeaveTypeSelect: document.getElementById("manualLeaveTypeSelect"),
+  manualLeaveStatusSelect: document.getElementById("manualLeaveStatusSelect"),
+  manualLeaveHoursInput: document.getElementById("manualLeaveHoursInput"),
+  manualLeavePtoInput: document.getElementById("manualLeavePtoInput"),
+  manualLeaveNoteInput: document.getElementById("manualLeaveNoteInput"),
+  saveManualLeaveButton: document.getElementById("saveManualLeaveButton"),
+  manualLeaveFormStatus: document.getElementById("manualLeaveFormStatus"),
+  capsslDateShell: document.getElementById("capsslDateShell"),
+  capsslDateDisplay: document.getElementById("capsslDateDisplay"),
+  capsslDateInput: document.getElementById("capsslDateInput"),
+  capsslPtoInput: document.getElementById("capsslPtoInput"),
+  saveCapsslButton: document.getElementById("saveCapsslButton"),
+  capsslFormStatus: document.getElementById("capsslFormStatus"),
+  capsslSummary: document.getElementById("capsslSummary"),
+  capsslList: document.getElementById("capsslList"),
   zoneList: document.getElementById("zoneList"),
   addZoneButton: document.getElementById("addZoneButton"),
   addConsecutiveButton: document.getElementById("addConsecutiveButton"),
@@ -1924,7 +2724,35 @@ const els = {
   unexcusedSaveButton: document.getElementById("unexcusedSaveButton"),
   unexcusedOccurrenceSelect: document.getElementById("unexcusedOccurrenceSelect"),
   unexcusedTypeSelect: document.getElementById("unexcusedTypeSelect"),
-  unexcusedPtoInput: document.getElementById("unexcusedPtoInput")
+  unexcusedPtoInput: document.getElementById("unexcusedPtoInput"),
+  correctiveActionSummary: document.getElementById("correctiveActionSummary"),
+  correctiveShadeControls: document.getElementById("correctiveShadeControls"),
+  addCorrectiveSubmissionButton: document.getElementById("addCorrectiveSubmissionButton"),
+  correctiveActionHistory: document.getElementById("correctiveActionHistory"),
+  verbalThresholdInput: document.getElementById("verbalThresholdInput"),
+  writtenThresholdInput: document.getElementById("writtenThresholdInput"),
+  finalThresholdInput: document.getElementById("finalThresholdInput"),
+  terminationThresholdInput: document.getElementById("terminationThresholdInput"),
+  occurrenceWindowInput: document.getElementById("occurrenceWindowInput"),
+  warningPeriodInput: document.getElementById("warningPeriodInput"),
+  documentationDaysInput: document.getElementById("documentationDaysInput"),
+  correctiveActionDialog: document.getElementById("correctiveActionDialog"),
+  correctiveDialogCloseButton: document.getElementById("correctiveDialogCloseButton"),
+  correctiveCancelButton: document.getElementById("correctiveCancelButton"),
+  correctiveLaterButton: document.getElementById("correctiveLaterButton"),
+  correctiveSaveButton: document.getElementById("correctiveSaveButton"),
+  correctiveLevelSelect: document.getElementById("correctiveLevelSelect"),
+  correctiveTriggerDateInput: document.getElementById("correctiveTriggerDateInput"),
+  correctiveSubmittedDateInput: document.getElementById("correctiveSubmittedDateInput"),
+  correctiveDialogValidation: document.getElementById("correctiveDialogValidation"),
+  correctiveThresholdDialog: document.getElementById("correctiveThresholdDialog"),
+  correctiveThresholdTitle: document.getElementById("correctiveThresholdTitle"),
+  correctiveThresholdIntro: document.getElementById("correctiveThresholdIntro"),
+  correctiveThresholdEvents: document.getElementById("correctiveThresholdEvents"),
+  correctiveThresholdValidation: document.getElementById("correctiveThresholdValidation"),
+  correctiveThresholdCloseButton: document.getElementById("correctiveThresholdCloseButton"),
+  correctiveThresholdCancelButton: document.getElementById("correctiveThresholdCancelButton"),
+  correctiveThresholdContinueButton: document.getElementById("correctiveThresholdContinueButton")
 };
 
 function escapeHtml(value) {
@@ -1985,6 +2813,18 @@ function formatCompactDate(iso) {
   const date = parseLocal(iso);
   const shortYear = String(date.getFullYear()).slice(-2);
   return `${MONTH_NAMES[date.getMonth()].slice(0, 3)} ${date.getDate()}, '${shortYear}`;
+}
+
+function formatFullDate(iso) {
+  return parseLocal(iso).toLocaleDateString(undefined, {
+    month: "long",
+    day: "numeric",
+    year: "numeric"
+  });
+}
+
+function formatFullDateNoComma(iso) {
+  return formatFullDate(iso).replace(",", "");
 }
 
 function monthKey(year, month) {
@@ -2162,6 +3002,95 @@ function normalizeManualUnexcused(data) {
   return result;
 }
 
+function normalizeCorrectivePolicy(policy) {
+  const source = policy && typeof policy === "object" ? policy : {};
+  return {
+    verbalThreshold: Math.max(0.5, Number(source.verbalThreshold || DEFAULT_CORRECTIVE_POLICY.verbalThreshold)),
+    writtenThreshold: Math.max(0.5, Number(source.writtenThreshold || DEFAULT_CORRECTIVE_POLICY.writtenThreshold)),
+    finalThreshold: Math.max(0.5, Number(source.finalThreshold || DEFAULT_CORRECTIVE_POLICY.finalThreshold)),
+    terminationThreshold: Math.max(0.5, Number(source.terminationThreshold || DEFAULT_CORRECTIVE_POLICY.terminationThreshold)),
+    occurrenceWindowDays: Math.max(1, Math.round(Number(source.occurrenceWindowDays || DEFAULT_CORRECTIVE_POLICY.occurrenceWindowDays))),
+    warningPeriodDays: Math.max(1, Math.round(Number(source.warningPeriodDays || DEFAULT_CORRECTIVE_POLICY.warningPeriodDays))),
+    documentationDays: Math.max(1, Math.round(Number(source.documentationDays || DEFAULT_CORRECTIVE_POLICY.documentationDays)))
+  };
+}
+
+function normalizeManualLeaves(data) {
+  if (!data || typeof data !== "object") return {};
+  const result = {};
+
+  Object.entries(data).forEach(([dateIso, record]) => {
+    if (!isValidISO(dateIso) || !record || typeof record !== "object") return;
+    const hoursOff = Math.max(0, Number(record.hoursOff || 0));
+    if (hoursOff <= 0) return;
+
+    result[dateIso] = {
+      type: ["Absence", "Late arrival", "Early leave"].includes(record.type)
+        ? record.type
+        : "Absence",
+      status: record.status === "Unexcused" ? "Unexcused" : "Excused",
+      hoursOff,
+      ptoUsed: Math.max(0, Number(record.ptoUsed || 0)),
+      note: String(record.note || "")
+    };
+  });
+
+  return result;
+}
+
+function normalizeCapsslLeaves(data) {
+  if (!data || typeof data !== "object") return {};
+  const result = {};
+
+  Object.entries(data).forEach(([dateIso, record]) => {
+    if (!isValidISO(dateIso) || !record || typeof record !== "object") return;
+    const ptoUsed = Math.max(8, Number(record.ptoUsed || 8));
+    result[dateIso] = { ptoUsed };
+  });
+
+  return result;
+}
+
+function normalizeCorrectiveDisplay(data) {
+  const source = data && typeof data === "object" ? data : {};
+  const result = {};
+
+  [1, 2, 3].forEach(level => {
+    const fallback = DEFAULT_CORRECTIVE_DISPLAY[level];
+    const record = source[level] || source[String(level)] || {};
+    result[level] = {
+      enabled: record.enabled !== false,
+      color: /^#[0-9a-f]{6}$/i.test(String(record.color || ""))
+        ? record.color
+        : fallback.color,
+      opacity: Math.min(100, Math.max(0, Number(record.opacity ?? fallback.opacity)))
+    };
+  });
+
+  return result;
+}
+
+function normalizeCorrectiveSubmissions(records) {
+  if (!Array.isArray(records)) return [];
+
+  return records.map((record, index) => {
+    const level = Number(record?.level);
+    const triggerDate = String(record?.triggerDate || "");
+    const submittedDate = String(record?.submittedDate || "");
+
+    if (![1, 2, 3].includes(level) || !isValidISO(triggerDate) || !isValidISO(submittedDate)) {
+      return null;
+    }
+
+    return {
+      id: String(record.id || `corrective-${index}-${submittedDate}`),
+      level,
+      triggerDate,
+      submittedDate
+    };
+  }).filter(Boolean);
+}
+
 function persist() {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify({
@@ -2177,6 +3106,11 @@ function persist() {
       selectedMonths: [...state.selectedMonths],
       darkMode: state.darkMode,
       manualUnexcused: state.manualUnexcused,
+      manualLeaves: state.manualLeaves,
+      capsslLeaves: state.capsslLeaves,
+      correctiveSubmissions: state.correctiveSubmissions,
+      correctivePolicy: state.correctivePolicy,
+      correctiveDisplay: state.correctiveDisplay,
       zones: state.zones,
       annotations: state.annotations,
       collapsedSections: state.collapsedSections
@@ -2214,6 +3148,11 @@ function restore() {
     );
     state.darkMode = Boolean(saved.darkMode);
     state.manualUnexcused = normalizeManualUnexcused(saved.manualUnexcused);
+    state.manualLeaves = normalizeManualLeaves(saved.manualLeaves);
+    state.capsslLeaves = normalizeCapsslLeaves(saved.capsslLeaves);
+    state.correctiveSubmissions = normalizeCorrectiveSubmissions(saved.correctiveSubmissions);
+    state.correctivePolicy = normalizeCorrectivePolicy(saved.correctivePolicy);
+    state.correctiveDisplay = normalizeCorrectiveDisplay(saved.correctiveDisplay);
     state.zones = Array.isArray(saved.zones) ? saved.zones.map(normalizeZone).filter(Boolean) : [];
     state.annotations = saved.annotations && typeof saved.annotations === "object" ? saved.annotations : {};
 
@@ -2234,13 +3173,84 @@ function netHoursForDate(dateIso) {
   return rowsOnDate(dateIso).reduce((sum, entry) => sum + Number(entry.hours || 0), 0);
 }
 
+function manualLeaveHoursForDate(dateIso) {
+  const manualHours = Number(state.manualLeaves[dateIso]?.hoursOff || 0);
+  const capsslHours = Number(state.capsslLeaves[dateIso]?.ptoUsed || 0);
+  return Math.max(manualHours, capsslHours);
+}
+
+function totalHoursOffForDate(dateIso) {
+  return netHoursForDate(dateIso) + manualLeaveHoursForDate(dateIso);
+}
+
+function capsslDatesForYear(year) {
+  return Object.keys(state.capsslLeaves)
+    .filter(dateIso => parseLocal(dateIso).getFullYear() === Number(year))
+    .sort();
+}
+
+function capsslStatusForDate(dateIso) {
+  const record = state.capsslLeaves[dateIso];
+  if (!record) return null;
+
+  const yearDates = capsslDatesForYear(parseLocal(dateIso).getFullYear());
+  const rank = yearDates.indexOf(dateIso) + 1;
+
+  return {
+    ...record,
+    rank,
+    protected: rank >= 1 && rank <= 5
+  };
+}
+
+function hexToRgba(hex, opacityPercent) {
+  const { r, g, b } = hexToRgb(hex);
+  const alpha = Math.min(100, Math.max(0, Number(opacityPercent || 0))) / 100;
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
 function occurrenceForDate(dateIso) {
-  const manual = state.manualUnexcused[dateIso];
-  if (manual) return Number(manual.occurrence);
+  const directOccurrence = Number(state.manualUnexcused[dateIso]?.occurrence || 0);
+  const leaveOccurrence = state.manualLeaves[dateIso]?.status === "Unexcused"
+    ? 0.5
+    : 0;
+  const manualTotal = directOccurrence + leaveOccurrence;
+
+  if (manualTotal > 0) return manualTotal;
 
   const hours = netHoursForDate(dateIso);
   if (hours <= 0) return 0;
   return hours >= 8 ? 1 : 0.5;
+}
+
+function combinedUnexcusedRecords() {
+  const records = [];
+
+  Object.entries(state.manualUnexcused).forEach(([date, record]) => {
+    records.push({
+      id: `direct:${date}`,
+      source: "direct",
+      date,
+      amount: Number(record.occurrence || 0),
+      type: record.type || (Number(record.occurrence) === 1 ? "Absence" : "Unexcused leave")
+    });
+  });
+
+  Object.entries(state.manualLeaves).forEach(([date, record]) => {
+    if (record.status !== "Unexcused") return;
+    records.push({
+      id: `leave:${date}`,
+      source: "leave",
+      date,
+      amount: 0.5,
+      type: record.type
+    });
+  });
+
+  return records.sort((a, b) =>
+    a.date.localeCompare(b.date) ||
+    a.source.localeCompare(b.source)
+  );
 }
 
 function selectedOccurrenceTotal() {
@@ -2258,6 +3268,14 @@ function dateSources() {
   });
 
   Object.keys(state.manualUnexcused).forEach(dateIso => {
+    if (isValidISO(dateIso)) dates.push(dateIso);
+  });
+
+  Object.keys(state.manualLeaves).forEach(dateIso => {
+    if (isValidISO(dateIso)) dates.push(dateIso);
+  });
+
+  Object.keys(state.capsslLeaves).forEach(dateIso => {
     if (isValidISO(dateIso)) dates.push(dateIso);
   });
 
@@ -2350,6 +3368,8 @@ function yearOptions() {
   entries.forEach(entry => years.add(parseLocal(entry.date).getFullYear()));
   Object.keys(state.annotations).forEach(dateIso => years.add(parseLocal(dateIso).getFullYear()));
   Object.keys(state.manualUnexcused).forEach(dateIso => years.add(parseLocal(dateIso).getFullYear()));
+  Object.keys(state.manualLeaves).forEach(dateIso => years.add(parseLocal(dateIso).getFullYear()));
+  Object.keys(state.capsslLeaves).forEach(dateIso => years.add(parseLocal(dateIso).getFullYear()));
   state.zones.forEach(zone => {
     years.add(parseLocal(zone.start).getFullYear());
     years.add(parseLocal(zoneEnd(zone)).getFullYear());
@@ -2496,28 +3516,988 @@ function renderLegend() {
 }
 
 function renderUnexcusedList() {
-  const dates = Object.keys(state.manualUnexcused).sort();
+  const records = combinedUnexcusedRecords();
 
-  if (!dates.length) {
-    els.unexcusedList.innerHTML = `<div class="detail-empty">No manually added unexcused absences.</div>`;
+  if (!records.length) {
+    els.unexcusedList.innerHTML = `<div class="detail-empty">No manually added unexcused leave.</div>`;
     return;
   }
 
-  els.unexcusedList.innerHTML = dates.map(dateIso => `
+  els.unexcusedList.innerHTML = records.map(record => `
     <div class="unexcused-list-item">
-      <button class="unexcused-list-main" type="button" data-unexcused-open="${dateIso}">
-        <div class="unexcused-list-date">${formatCompactDate(dateIso)}</div>
+      <button class="unexcused-list-main" type="button" data-unexcused-open="${record.id}">
+        <div class="unexcused-list-date">${formatCompactDate(record.date)}</div>
       </button>
       <div class="unexcused-list-actions">
-        <button class="mini-icon-button" type="button" data-unexcused-edit="${dateIso}">Edit</button>
-        <button class="mini-icon-button danger" type="button" data-unexcused-delete="${dateIso}">Delete</button>
+        <button class="mini-icon-button" type="button" data-unexcused-edit="${record.id}">Edit</button>
+        <button class="mini-icon-button danger" type="button" data-unexcused-delete="${record.id}">Delete</button>
       </div>
     </div>
   `).join("");
 
   els.unexcusedList.querySelectorAll("[data-unexcused-open]").forEach(button => {
     button.addEventListener("click", () => {
-      state.selectedDate = button.dataset.unexcusedOpen;
+      const record = combinedUnexcusedRecords().find(item => item.id === button.dataset.unexcusedOpen);
+      if (!record) return;
+      state.selectedDate = record.date;
+      state.eventSelectedDays = new Set([record.date]);
+      state.eventSelectionAnchor = record.date;
+      renderCalendar();
+      renderDetails();
+    });
+  });
+
+  els.unexcusedList.querySelectorAll("[data-unexcused-edit]").forEach(button => {
+    button.addEventListener("click", () => {
+      const record = combinedUnexcusedRecords().find(item => item.id === button.dataset.unexcusedEdit);
+      if (!record) return;
+
+      if (record.source === "direct") {
+        openUnexcusedDialog(record.date);
+      } else {
+        editManualLeave(record.date);
+        state.collapsedSections.leave = false;
+        applyCollapsedState("leave");
+        persist();
+      }
+    });
+  });
+
+  els.unexcusedList.querySelectorAll("[data-unexcused-delete]").forEach(button => {
+    button.addEventListener("click", () => {
+      const record = combinedUnexcusedRecords().find(item => item.id === button.dataset.unexcusedDelete);
+      if (!record) return;
+      if (!window.confirm(`Delete the unexcused leave entry for ${formatLong(record.date)}?`)) return;
+
+      if (record.source === "direct") delete state.manualUnexcused[record.date];
+      else delete state.manualLeaves[record.date];
+
+      persist();
+      renderAll();
+    });
+  });
+}
+
+
+function correctiveOccurrenceEvents() {
+  return combinedUnexcusedRecords()
+    .map(record => ({
+      id: record.id,
+      source: record.source,
+      sourceDate: record.date,
+      date: record.date,
+      amount: Number(record.amount || 0),
+      type: record.type || "",
+      isAbsence: Number(record.amount) === 1
+    }))
+    .filter(event => isValidISO(event.date) && event.amount > 0)
+    .sort((a, b) =>
+      a.date.localeCompare(b.date) ||
+      a.source.localeCompare(b.source)
+    );
+}
+
+function absenceDatesForDocumentation() {
+  const dates = new Set();
+
+  Object.entries(state.manualUnexcused).forEach(([dateIso, record]) => {
+    if (Number(record.occurrence) === 1) dates.add(dateIso);
+  });
+
+  Object.entries(state.manualLeaves).forEach(([dateIso, record]) => {
+    if (record.type === "Absence" || Number(record.hoursOff) >= 8) dates.add(dateIso);
+  });
+
+  Object.keys(state.capsslLeaves).forEach(dateIso => dates.add(dateIso));
+
+  entries.forEach(entry => {
+    const text = [entry.type, entry.comment, entry.record]
+      .join(" ")
+      .toLowerCase();
+    const fullDay = Number(entry.hours || 0) >= 8;
+    const absenceText = text.includes("absence") ||
+      text.includes("call out") ||
+      text.includes("call-out") ||
+      text.includes("callout");
+
+    if (fullDay || absenceText) dates.add(entry.date);
+  });
+
+  return [...dates].filter(isValidISO).sort();
+}
+
+function correctiveThresholdForLevel(level) {
+  if (level === 0) return state.correctivePolicy.verbalThreshold;
+  if (level === 1) return state.correctivePolicy.writtenThreshold;
+  if (level === 2) return state.correctivePolicy.finalThreshold;
+  return state.correctivePolicy.terminationThreshold;
+}
+
+function nextCorrectiveName(level) {
+  if (level === 0) return "Verbal Warning";
+  if (level === 1) return "Written Warning";
+  if (level === 2) return "Last and Final Warning";
+  return "Termination threshold";
+}
+
+function latestCorrectiveSubmission(todayIso) {
+  return [...state.correctiveSubmissions]
+    .filter(record => record.submittedDate <= todayIso)
+    .sort((a, b) =>
+      a.submittedDate.localeCompare(b.submittedDate) ||
+      a.level - b.level
+    )
+    .at(-1) || null;
+}
+
+function currentCorrectivePeriod(todayIso = toISO(new Date())) {
+  const latest = latestCorrectiveSubmission(todayIso);
+  const warningDays = state.correctivePolicy.warningPeriodDays;
+
+  if (!latest) {
+    return {
+      latestSubmission: null,
+      level: 0,
+      periodStart: null,
+      periodEnd: null,
+      demotions: 0
+    };
+  }
+
+  const elapsedDays = Math.max(0, daysBetween(latest.submittedDate, todayIso));
+  const demotions = Math.floor(elapsedDays / warningDays);
+  const level = Math.max(0, latest.level - demotions);
+  const periodStart = addDays(latest.submittedDate, demotions * warningDays);
+  const periodEnd = addDays(periodStart, warningDays);
+
+  return {
+    latestSubmission: latest,
+    level,
+    periodStart,
+    periodEnd,
+    demotions
+  };
+}
+
+function findRollingThreshold(events, threshold, windowDays, minimumDate = null) {
+  const eligible = events.filter(event =>
+    (!minimumDate || event.date >= minimumDate)
+  );
+
+  let bestProgress = 0;
+  let bestWindowStart = null;
+
+  for (let endIndex = 0; endIndex < eligible.length; endIndex++) {
+    const endDate = eligible[endIndex].date;
+    let startIndex = endIndex;
+
+    while (
+      startIndex > 0 &&
+      daysBetween(eligible[startIndex - 1].date, endDate) < windowDays
+    ) {
+      startIndex--;
+    }
+
+    let total = 0;
+    for (let index = startIndex; index <= endIndex; index++) {
+      total += eligible[index].amount;
+      if (total >= threshold) {
+        return {
+          reached: true,
+          total,
+          triggerDate: endDate,
+          windowStart: eligible[startIndex].date,
+          events: eligible.slice(startIndex, index + 1)
+        };
+      }
+    }
+
+    if (total >= bestProgress) {
+      bestProgress = total;
+      bestWindowStart = eligible[startIndex]?.date || null;
+    }
+  }
+
+  const todayIso = toISO(new Date());
+  const current = eligible.filter(event =>
+    event.date <= todayIso &&
+    daysBetween(event.date, todayIso) < windowDays
+  );
+  const currentTotal = current.reduce((sum, event) => sum + event.amount, 0);
+
+  return {
+    reached: false,
+    total: currentTotal,
+    triggerDate: null,
+    windowStart: current[0]?.date || bestWindowStart,
+    events: current
+  };
+}
+
+function findPeriodThreshold(events, threshold, periodStart, periodEnd, todayIso) {
+  const eligible = events.filter(event =>
+    event.date > periodStart &&
+    event.date < periodEnd &&
+    event.date <= todayIso
+  );
+
+  let total = 0;
+  const contributingEvents = [];
+
+  for (const event of eligible) {
+    total += event.amount;
+    contributingEvents.push(event);
+
+    if (total >= threshold) {
+      return {
+        reached: true,
+        total,
+        triggerDate: event.date,
+        windowStart: periodStart,
+        events: [...contributingEvents]
+      };
+    }
+  }
+
+  return {
+    reached: false,
+    total,
+    triggerDate: null,
+    windowStart: periodStart,
+    events: contributingEvents
+  };
+}
+
+function documentationDeadline(triggerDate) {
+  const baseDays = state.correctivePolicy.documentationDays;
+  const absenceDates = absenceDatesForDocumentation();
+  let extensionDays = 0;
+  let dueDate = addDays(triggerDate, baseDays);
+
+  while (true) {
+    const qualifying = absenceDates.filter(dateIso =>
+      dateIso > triggerDate &&
+      dateIso <= dueDate
+    );
+    const nextExtension = qualifying.length;
+    const nextDueDate = addDays(triggerDate, baseDays + nextExtension);
+
+    if (nextExtension === extensionDays && nextDueDate === dueDate) break;
+    extensionDays = nextExtension;
+    dueDate = nextDueDate;
+  }
+
+  return { dueDate, extensionDays };
+}
+
+function calculateCorrectiveStatus(todayIso = toISO(new Date())) {
+  const period = currentCorrectivePeriod(todayIso);
+  const threshold = correctiveThresholdForLevel(period.level);
+  const events = correctiveOccurrenceEvents();
+
+  const progress = period.level === 0
+    ? findRollingThreshold(
+        events,
+        threshold,
+        state.correctivePolicy.occurrenceWindowDays,
+        period.periodStart
+      )
+    : findPeriodThreshold(
+        events,
+        threshold,
+        period.periodStart,
+        period.periodEnd,
+        todayIso
+      );
+
+  const pendingLevel = progress.reached
+    ? Math.min(4, period.level + 1)
+    : null;
+  const deadline = progress.reached && pendingLevel <= 3
+    ? documentationDeadline(progress.triggerDate)
+    : null;
+
+  return {
+    ...period,
+    threshold,
+    progress,
+    pendingLevel,
+    pendingName: pendingLevel ? nextCorrectiveName(period.level) : null,
+    deadline
+  };
+}
+
+function formatCorrectiveWindow(status) {
+  if (status.level === 0 && !status.periodStart) {
+    return `${state.correctivePolicy.occurrenceWindowDays}-day rolling window`;
+  }
+
+  if (!status.periodStart || !status.periodEnd) return "Not active";
+  return `${formatCompactDate(status.periodStart)}–${formatCompactDate(status.periodEnd)}`;
+}
+
+
+function activeCorrectiveCalendarPeriod() {
+  const status = calculateCorrectiveStatus();
+  if (status.level < 1 || !status.periodStart || !status.periodEnd) return null;
+
+  const display = state.correctiveDisplay[status.level];
+  return {
+    level: status.level,
+    name: CORRECTIVE_LEVELS[status.level],
+    start: status.periodStart,
+    end: status.periodEnd,
+    display
+  };
+}
+
+function correctivePeriodForDate(dateIso) {
+  const active = activeCorrectiveCalendarPeriod();
+  if (!active || dateIso < active.start || dateIso >= active.end) return null;
+  if (!active.display.enabled || Number(active.display.opacity) <= 0) return null;
+  return active;
+}
+
+function correctivePeriodForMonth(year, month) {
+  const active = activeCorrectiveCalendarPeriod();
+  if (!active) return null;
+
+  const monthStart = toISO(new Date(year, month, 1));
+  const nextMonthStart = toISO(new Date(year, month + 1, 1));
+
+  return monthStart < active.end && nextMonthStart > active.start
+    ? active
+    : null;
+}
+
+function renderCorrectiveShadeControls() {
+  els.correctiveShadeControls.innerHTML = [1, 2, 3].map(level => {
+    const setting = state.correctiveDisplay[level];
+    return `
+      <div class="corrective-shade-card">
+        <div class="corrective-shade-head">
+          <div class="corrective-shade-name">${escapeHtml(CORRECTIVE_LEVELS[level])}</div>
+          <label class="corrective-shade-toggle">
+            <input type="checkbox" data-corrective-shade-enabled="${level}" ${setting.enabled ? "checked" : ""}>
+            Shading
+          </label>
+        </div>
+        <div class="corrective-shade-fields">
+          <div class="field-mini">
+            <label>Color</label>
+            <input type="color" value="${escapeHtml(setting.color)}" data-corrective-shade-color="${level}">
+          </div>
+          <div class="field-mini">
+            <label>Transparency / coverage</label>
+            <div class="corrective-opacity-row">
+              <input type="range" min="0" max="100" step="1" value="${setting.opacity}" data-corrective-shade-opacity="${level}">
+              <span class="corrective-opacity-value" data-corrective-opacity-value="${level}">${setting.opacity}%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  els.correctiveShadeControls.querySelectorAll("[data-corrective-shade-enabled]").forEach(input => {
+    input.addEventListener("change", () => {
+      const level = Number(input.dataset.correctiveShadeEnabled);
+      state.correctiveDisplay[level].enabled = input.checked;
+      persist();
+      renderCalendar();
+    });
+  });
+
+  els.correctiveShadeControls.querySelectorAll("[data-corrective-shade-color]").forEach(input => {
+    input.addEventListener("input", () => {
+      const level = Number(input.dataset.correctiveShadeColor);
+      state.correctiveDisplay[level].color = input.value;
+      persist();
+      renderCalendar();
+    });
+  });
+
+  els.correctiveShadeControls.querySelectorAll("[data-corrective-shade-opacity]").forEach(input => {
+    input.addEventListener("input", () => {
+      const level = Number(input.dataset.correctiveShadeOpacity);
+      state.correctiveDisplay[level].opacity = Number(input.value);
+      const value = els.correctiveShadeControls.querySelector(`[data-corrective-opacity-value="${level}"]`);
+      if (value) value.textContent = `${input.value}%`;
+      persist();
+      renderCalendar();
+    });
+  });
+}
+
+function renderCorrectiveActions() {
+  const status = calculateCorrectiveStatus();
+  const levelName = CORRECTIVE_LEVELS[status.level];
+  const progressPercent = Math.min(
+    100,
+    status.threshold > 0
+      ? (status.progress.total / status.threshold) * 100
+      : 0
+  );
+
+  let pendingMarkup = "";
+  if (status.pendingLevel) {
+    if (status.pendingLevel <= 3) {
+      const overdue = status.deadline.dueDate < toISO(new Date());
+      pendingMarkup = `
+        <div class="corrective-pending">
+          <div class="corrective-pending-title">${escapeHtml(status.pendingName)} threshold reached</div>
+          <div class="corrective-pending-meta">
+            Triggered ${formatCompactDate(status.progress.triggerDate)} · Documentation due ${formatCompactDate(status.deadline.dueDate)}
+            ${status.deadline.extensionDays ? ` · ${status.deadline.extensionDays} absence-day extension${status.deadline.extensionDays === 1 ? "" : "s"}` : ""}
+            ${overdue ? " · Overdue" : ""}
+          </div>
+        </div>
+      `;
+    } else {
+      pendingMarkup = `
+        <div class="corrective-pending termination">
+          <div class="corrective-pending-title">Termination threshold reached</div>
+          <div class="corrective-pending-meta">
+            Reached ${status.progress.total.toFixed(1)} occurrence events on ${formatCompactDate(status.progress.triggerDate)}.
+          </div>
+        </div>
+      `;
+    }
+  }
+
+  const suspensionMarkup = (
+    status.level === 3 ||
+    status.pendingLevel === 3 ||
+    status.pendingLevel === 4
+  ) ? `
+    <div class="corrective-suspension">
+      Mandatory unpaid suspension day: manager assignment required.
+    </div>
+  ` : "";
+
+  els.correctiveActionSummary.innerHTML = `
+    <div class="corrective-status-card">
+      <div class="corrective-status-top">
+        <div>
+          <div class="corrective-status-label">Current status</div>
+          <div class="corrective-status-name">${escapeHtml(levelName)}</div>
+        </div>
+        <span class="corrective-level-chip level-${status.level}">${escapeHtml(levelName)}</span>
+      </div>
+
+      <div class="corrective-grid">
+        <div class="corrective-metric">
+          <span>Progress toward next action</span>
+          <strong>${status.progress.total.toFixed(1)} / ${status.threshold.toFixed(1)}</strong>
+        </div>
+        <div class="corrective-metric">
+          <span>Next action</span>
+          <strong>${escapeHtml(nextCorrectiveName(status.level))}</strong>
+        </div>
+        <div class="corrective-metric">
+          <span>Current window</span>
+          <strong>${escapeHtml(formatCorrectiveWindow(status))}</strong>
+        </div>
+        <div class="corrective-metric">
+          <span>Warning expires</span>
+          <strong>${status.periodEnd && status.level > 0 ? formatCompactDate(status.periodEnd) : "N/A"}</strong>
+        </div>
+      </div>
+
+      <div class="corrective-progress" aria-label="${progressPercent.toFixed(0)} percent toward the next corrective action">
+        <span style="width:${progressPercent}%"></span>
+      </div>
+
+      ${pendingMarkup}
+      ${suspensionMarkup}
+    </div>
+  `;
+
+  const records = [...state.correctiveSubmissions].sort((a, b) =>
+    b.submittedDate.localeCompare(a.submittedDate) ||
+    b.level - a.level
+  );
+
+  if (!records.length) {
+    els.correctiveActionHistory.innerHTML = `<div class="detail-empty">No corrective-action documentation has been recorded.</div>`;
+  } else {
+    els.correctiveActionHistory.innerHTML = records.map(record => `
+      <div class="corrective-history-item">
+        <div class="corrective-history-level">${escapeHtml(CORRECTIVE_LEVELS[record.level])}</div>
+        <div class="corrective-history-meta">
+          Triggered ${formatCompactDate(record.triggerDate)} · Submitted ${formatCompactDate(record.submittedDate)}
+        </div>
+        <div class="corrective-history-actions">
+          <button class="mini-icon-button" type="button" data-corrective-edit="${escapeHtml(record.id)}">Edit</button>
+          <button class="mini-icon-button danger" type="button" data-corrective-delete="${escapeHtml(record.id)}">Delete</button>
+        </div>
+      </div>
+    `).join("");
+  }
+
+  els.correctiveActionHistory.querySelectorAll("[data-corrective-edit]").forEach(button => {
+    button.addEventListener("click", () => openCorrectiveDialog(button.dataset.correctiveEdit));
+  });
+
+  els.correctiveActionHistory.querySelectorAll("[data-corrective-delete]").forEach(button => {
+    button.addEventListener("click", () => {
+      const record = state.correctiveSubmissions.find(item => item.id === button.dataset.correctiveDelete);
+      if (!record) return;
+      if (!window.confirm(`Delete the ${CORRECTIVE_LEVELS[record.level]} documentation record?`)) return;
+
+      state.correctiveSubmissions = state.correctiveSubmissions.filter(item => item.id !== record.id);
+      persist();
+      renderAll();
+    });
+  });
+
+  els.verbalThresholdInput.value = state.correctivePolicy.verbalThreshold;
+  els.writtenThresholdInput.value = state.correctivePolicy.writtenThreshold;
+  els.finalThresholdInput.value = state.correctivePolicy.finalThreshold;
+  els.terminationThresholdInput.value = state.correctivePolicy.terminationThreshold;
+  els.occurrenceWindowInput.value = state.correctivePolicy.occurrenceWindowDays;
+  els.warningPeriodInput.value = state.correctivePolicy.warningPeriodDays;
+  els.documentationDaysInput.value = state.correctivePolicy.documentationDays;
+  renderCorrectiveShadeControls();
+}
+
+
+function correctiveThresholdSignature(status) {
+  return status?.pendingLevel && status?.progress?.triggerDate
+    ? `${status.pendingLevel}:${status.progress.triggerDate}`
+    : "";
+}
+
+function maybeOpenCorrectiveThresholdPrompt(previousStatus = null) {
+  const currentStatus = calculateCorrectiveStatus();
+
+  if (!currentStatus.pendingLevel || currentStatus.pendingLevel > 3) return;
+
+  const previousSignature = correctiveThresholdSignature(previousStatus);
+  const currentSignature = correctiveThresholdSignature(currentStatus);
+
+  if (previousSignature === currentSignature) return;
+
+  openCorrectiveThresholdPrompt(currentStatus);
+}
+
+function openCorrectiveThresholdPrompt(status) {
+  const events = Array.isArray(status.progress.events)
+    ? status.progress.events
+    : [];
+
+  if (!events.length) return;
+
+  state.pendingCorrectivePrompt = {
+    pendingLevel: status.pendingLevel,
+    triggerDate: status.progress.triggerDate,
+    events: events.map(event => ({ ...event }))
+  };
+
+  els.correctiveThresholdTitle.textContent =
+    `${CORRECTIVE_LEVELS[status.pendingLevel]} threshold reached`;
+
+  els.correctiveThresholdIntro.textContent =
+    `Confirm the unexcused leave events contributing to this ${status.progress.total.toFixed(1)}-occurrence threshold. Correct any date before continuing to the documentation entry.`;
+
+  els.correctiveThresholdEvents.innerHTML = events.map((event, index) => `
+    <div class="threshold-event-row" data-threshold-row="${index}">
+      <div class="threshold-event-heading">
+        <div class="threshold-event-type">${escapeHtml(event.type || "Unexcused leave")}</div>
+        <div class="threshold-event-amount">${Number(event.amount).toFixed(1)} occurrence</div>
+      </div>
+
+      <div class="field-mini">
+        <label>Contributing date</label>
+        <div class="date-picker-shell threshold-event-date-shell"
+             data-threshold-date-shell="${index}"
+             role="button"
+             tabindex="0"
+             aria-label="Choose the corrected contributing date">
+          <span data-threshold-date-display="${index}">${formatFullDate(event.date)}</span>
+          <input type="date"
+                 value="${event.date}"
+                 tabindex="-1"
+                 data-threshold-date-input="${index}"
+                 aria-label="Choose the corrected contributing date">
+        </div>
+      </div>
+    </div>
+  `).join("");
+
+  events.forEach((_, index) => {
+    const shell = els.correctiveThresholdEvents.querySelector(`[data-threshold-date-shell="${index}"]`);
+    const input = els.correctiveThresholdEvents.querySelector(`[data-threshold-date-input="${index}"]`);
+    const display = els.correctiveThresholdEvents.querySelector(`[data-threshold-date-display="${index}"]`);
+
+    setupDatePickerShell(shell, input, display);
+    input.addEventListener("change", () => {
+      display.textContent = isValidISO(input.value)
+        ? formatFullDate(input.value)
+        : "Choose a date";
+    });
+  });
+
+  els.correctiveThresholdValidation.textContent = "";
+
+  if (typeof els.correctiveThresholdDialog.showModal === "function") {
+    els.correctiveThresholdDialog.showModal();
+  } else {
+    els.correctiveThresholdDialog.setAttribute("open", "");
+  }
+}
+
+function closeCorrectiveThresholdPrompt() {
+  state.pendingCorrectivePrompt = null;
+  els.correctiveThresholdValidation.textContent = "";
+
+  if (typeof els.correctiveThresholdDialog.close === "function") {
+    els.correctiveThresholdDialog.close();
+  } else {
+    els.correctiveThresholdDialog.removeAttribute("open");
+  }
+}
+
+function applyCorrectivePromptDateCorrections() {
+  const prompt = state.pendingCorrectivePrompt;
+  if (!prompt) return false;
+
+  const corrections = prompt.events.map((event, index) => {
+    const input = els.correctiveThresholdEvents.querySelector(`[data-threshold-date-input="${index}"]`);
+    return {
+      source: event.source,
+      oldDate: event.sourceDate,
+      newDate: input?.value || ""
+    };
+  });
+
+  if (corrections.some(item => !isValidISO(item.newDate))) {
+    els.correctiveThresholdValidation.textContent = "Every contributing event needs a valid date.";
+    return false;
+  }
+
+  for (const source of ["direct", "leave"]) {
+    const sourceCorrections = corrections.filter(item => item.source === source);
+    const targetDates = sourceCorrections.map(item => item.newDate);
+
+    if (new Set(targetDates).size !== targetDates.length) {
+      els.correctiveThresholdValidation.textContent =
+        "Two contributing events from the same source cannot use the same date.";
+      return false;
+    }
+
+    const store = source === "direct"
+      ? state.manualUnexcused
+      : state.manualLeaves;
+    const originalDates = new Set(sourceCorrections.map(item => item.oldDate));
+
+    const collision = sourceCorrections.find(item =>
+      item.newDate !== item.oldDate &&
+      store[item.newDate] &&
+      !originalDates.has(item.newDate)
+    );
+
+    if (collision) {
+      els.correctiveThresholdValidation.textContent =
+        `A saved ${source === "direct" ? "unexcused leave" : "Add Other Leave"} entry already exists on ${formatFullDate(collision.newDate)}.`;
+      return false;
+    }
+  }
+
+  const directMoves = corrections.filter(item => item.source === "direct");
+  const leaveMoves = corrections.filter(item => item.source === "leave");
+
+  const directRecords = directMoves.map(item => ({
+    ...item,
+    record: state.manualUnexcused[item.oldDate]
+  }));
+  const leaveRecords = leaveMoves.map(item => ({
+    ...item,
+    record: state.manualLeaves[item.oldDate]
+  }));
+
+  directMoves.forEach(item => delete state.manualUnexcused[item.oldDate]);
+  leaveMoves.forEach(item => delete state.manualLeaves[item.oldDate]);
+
+  directRecords.forEach(item => {
+    state.manualUnexcused[item.newDate] = item.record;
+  });
+  leaveRecords.forEach(item => {
+    state.manualLeaves[item.newDate] = item.record;
+  });
+
+  persist();
+  return true;
+}
+
+function continueFromCorrectiveThresholdPrompt() {
+  if (!applyCorrectivePromptDateCorrections()) return;
+
+  const updatedStatus = calculateCorrectiveStatus();
+
+  if (!updatedStatus.pendingLevel || updatedStatus.pendingLevel > 3) {
+    els.correctiveThresholdValidation.textContent =
+      "The corrected dates no longer meet a corrective-action threshold.";
+    renderAll();
+    return;
+  }
+
+  closeCorrectiveThresholdPrompt();
+  renderAll();
+  openCorrectiveDialog();
+}
+
+function openCorrectiveDialog(recordId = null) {
+  const existing = recordId
+    ? state.correctiveSubmissions.find(record => record.id === recordId)
+    : null;
+  const status = calculateCorrectiveStatus();
+  const suggestedLevel = status.pendingLevel && status.pendingLevel <= 3
+    ? status.pendingLevel
+    : Math.min(3, status.level + 1);
+
+  state.editingCorrectiveId = existing?.id || null;
+  els.correctiveLevelSelect.value = String(existing?.level || suggestedLevel || 1);
+  els.correctiveTriggerDateInput.value = existing?.triggerDate || status.progress.triggerDate || toISO(new Date());
+  els.correctiveSubmittedDateInput.value = existing?.submittedDate || toISO(new Date());
+  els.correctiveDialogValidation.textContent = "";
+
+  if (typeof els.correctiveActionDialog.showModal === "function") {
+    els.correctiveActionDialog.showModal();
+  } else {
+    els.correctiveActionDialog.setAttribute("open", "");
+  }
+}
+
+function closeCorrectiveDialog() {
+  state.editingCorrectiveId = null;
+  els.correctiveDialogValidation.textContent = "";
+
+  if (typeof els.correctiveActionDialog.close === "function") {
+    els.correctiveActionDialog.close();
+  } else {
+    els.correctiveActionDialog.removeAttribute("open");
+  }
+}
+
+function saveCorrectiveDialog() {
+  const level = Number(els.correctiveLevelSelect.value);
+  const triggerDate = els.correctiveTriggerDateInput.value;
+  const submittedDate = els.correctiveSubmittedDateInput.value;
+
+  if (![1, 2, 3].includes(level) || !isValidISO(triggerDate) || !isValidISO(submittedDate)) {
+    els.correctiveDialogValidation.textContent = "Choose a valid action level and both dates.";
+    return;
+  }
+
+  if (submittedDate < triggerDate) {
+    els.correctiveDialogValidation.textContent = "The submitted date cannot be before the trigger date.";
+    return;
+  }
+
+  const record = {
+    id: state.editingCorrectiveId || `corrective-${Date.now()}-${Math.random().toString(16).slice(2)}`,
+    level,
+    triggerDate,
+    submittedDate
+  };
+
+  const existingIndex = state.correctiveSubmissions.findIndex(item => item.id === record.id);
+  if (existingIndex >= 0) state.correctiveSubmissions[existingIndex] = record;
+  else state.correctiveSubmissions.push(record);
+
+  persist();
+  closeCorrectiveDialog();
+  renderAll();
+}
+
+function updateCorrectivePolicyFromInputs() {
+  state.correctivePolicy = normalizeCorrectivePolicy({
+    verbalThreshold: els.verbalThresholdInput.value,
+    writtenThreshold: els.writtenThresholdInput.value,
+    finalThreshold: els.finalThresholdInput.value,
+    terminationThreshold: els.terminationThresholdInput.value,
+    occurrenceWindowDays: els.occurrenceWindowInput.value,
+    warningPeriodDays: els.warningPeriodInput.value,
+    documentationDays: els.documentationDaysInput.value
+  });
+  persist();
+  renderCorrectiveActions();
+}
+
+
+function setupDatePickerShell(shell, input, display) {
+  const openPicker = () => {
+    try {
+      if (typeof input.showPicker === "function") input.showPicker();
+      else {
+        input.focus();
+        input.click();
+      }
+    } catch (_) {
+      input.focus();
+      input.click();
+    }
+  };
+
+  shell.addEventListener("click", openPicker);
+  shell.addEventListener("keydown", event => {
+    if (event.key !== "Enter" && event.key !== " ") return;
+    event.preventDefault();
+    openPicker();
+  });
+
+  input.addEventListener("change", () => {
+    display.textContent = isValidISO(input.value)
+      ? formatCompactDate(input.value)
+      : "Choose a date";
+  });
+}
+
+function clearManualLeaveForm() {
+  state.editingManualLeaveDate = null;
+  els.manualLeaveDateInput.value = "";
+  els.manualLeaveDateDisplay.textContent = "Choose a date";
+  els.manualLeaveTypeSelect.value = "Absence";
+  els.manualLeaveStatusSelect.value = "Excused";
+  els.manualLeaveHoursInput.value = "";
+  els.manualLeavePtoInput.value = "";
+  els.manualLeaveNoteInput.value = "";
+  els.saveManualLeaveButton.textContent = "Save leave";
+}
+
+function saveManualLeave() {
+  const dateIso = els.manualLeaveDateInput.value;
+  const type = els.manualLeaveTypeSelect.value;
+  const status = els.manualLeaveStatusSelect.value;
+  const hoursOff = Number(els.manualLeaveHoursInput.value);
+  const ptoUsed = Math.max(0, Number(els.manualLeavePtoInput.value || 0));
+  const previousCorrectiveStatus = calculateCorrectiveStatus();
+
+  if (!isValidISO(dateIso)) {
+    els.manualLeaveFormStatus.textContent = "Choose a valid date.";
+    return;
+  }
+
+  if (!Number.isFinite(hoursOff) || hoursOff <= 0) {
+    els.manualLeaveFormStatus.textContent = "Enter an hours-off amount greater than zero.";
+    return;
+  }
+
+  if (status === "Unexcused" && type === "Absence") {
+    els.manualLeaveFormStatus.textContent =
+      "Use the Unexcused Leave module for a full unexcused absence. Add Other Leave can record unexcused late arrivals and early leaves.";
+    return;
+  }
+
+  if (state.editingManualLeaveDate && state.editingManualLeaveDate !== dateIso) {
+    delete state.manualLeaves[state.editingManualLeaveDate];
+  }
+
+  state.manualLeaves[dateIso] = {
+    type,
+    status,
+    hoursOff,
+    ptoUsed,
+    note: els.manualLeaveNoteInput.value.trim()
+  };
+
+  persist();
+  clearManualLeaveForm();
+  els.manualLeaveFormStatus.textContent =
+    status === "Unexcused"
+      ? "Unexcused leave saved with a 0.5 occurrence event."
+      : "Leave saved.";
+  renderAll();
+  maybeOpenCorrectiveThresholdPrompt(previousCorrectiveStatus);
+}
+
+function editManualLeave(dateIso) {
+  const record = state.manualLeaves[dateIso];
+  if (!record) return;
+
+  state.editingManualLeaveDate = dateIso;
+  els.manualLeaveDateInput.value = dateIso;
+  els.manualLeaveDateDisplay.textContent = formatCompactDate(dateIso);
+  els.manualLeaveTypeSelect.value = record.type;
+  els.manualLeaveStatusSelect.value = record.status || "Excused";
+  els.manualLeaveHoursInput.value = record.hoursOff;
+  els.manualLeavePtoInput.value = record.ptoUsed;
+  els.manualLeaveNoteInput.value = record.note;
+  els.saveManualLeaveButton.textContent = "Update leave";
+  els.manualLeaveFormStatus.textContent = "Editing saved leave.";
+}
+
+function renderManualLeaves() {
+  // Saved leave entries are intentionally not listed in the Add Other Leave module.
+  // They remain visible and editable from the selected-day Description module.
+}
+
+function saveCapsslLeave() {
+  const dateIso = els.capsslDateInput.value;
+  const ptoUsed = Number(els.capsslPtoInput.value);
+
+  if (!isValidISO(dateIso)) {
+    els.capsslFormStatus.textContent = "Choose a valid date.";
+    return;
+  }
+
+  if (!Number.isFinite(ptoUsed) || ptoUsed < 8) {
+    els.capsslFormStatus.textContent = "CA-PSSL requires at least 8.0 PTO hours.";
+    return;
+  }
+
+  state.capsslLeaves[dateIso] = { ptoUsed };
+  persist();
+
+  const status = capsslStatusForDate(dateIso);
+  els.capsslFormStatus.textContent = status.protected
+    ? `Saved as protected CA-PSSL day ${status.rank} of 5.`
+    : "Saved, but this date falls outside the first five qualifying days for that calendar year.";
+
+  els.capsslDateInput.value = "";
+  els.capsslDateDisplay.textContent = "Choose a date";
+  els.capsslPtoInput.value = "8";
+  renderAll();
+}
+
+function renderCapsslLeaves() {
+  const dates = Object.keys(state.capsslLeaves).sort();
+  const selectedYearDates = capsslDatesForYear(state.selectedYear);
+  const protectedCount = Math.min(5, selectedYearDates.length);
+
+  els.capsslSummary.innerHTML = `
+    ${state.selectedYear}: <strong>${protectedCount} of 5</strong> protected full-day CA-PSSL absences recorded.
+  `;
+
+  if (!dates.length) {
+    els.capsslList.innerHTML = `<div class="detail-empty">No CA-PSSL days have been added.</div>`;
+    return;
+  }
+
+  els.capsslList.innerHTML = dates.map(dateIso => {
+    const status = capsslStatusForDate(dateIso);
+    return `
+      <div class="capssl-list-item">
+        <button class="capssl-list-main" type="button" data-capssl-open="${dateIso}">
+          <div class="capssl-list-date">${formatCompactDate(dateIso)}</div>
+          <div class="capssl-list-meta">
+            ${formatHours(status.ptoUsed)} PTO ·
+            <span class="capssl-status-badge ${status.protected ? "protected" : "outside"}">
+              ${status.protected ? `Protected ${status.rank}/5` : "Outside first 5"}
+            </span>
+          </div>
+        </button>
+        <div class="capssl-list-actions">
+          <button class="mini-icon-button danger" type="button" data-capssl-delete="${dateIso}">Delete</button>
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  els.capsslList.querySelectorAll("[data-capssl-open]").forEach(button => {
+    button.addEventListener("click", () => {
+      state.selectedDate = button.dataset.capsslOpen;
       state.eventSelectedDays = new Set([state.selectedDate]);
       state.eventSelectionAnchor = state.selectedDate;
       renderCalendar();
@@ -2525,15 +4505,11 @@ function renderUnexcusedList() {
     });
   });
 
-  els.unexcusedList.querySelectorAll("[data-unexcused-edit]").forEach(button => {
-    button.addEventListener("click", () => openUnexcusedDialog(button.dataset.unexcusedEdit));
-  });
-
-  els.unexcusedList.querySelectorAll("[data-unexcused-delete]").forEach(button => {
+  els.capsslList.querySelectorAll("[data-capssl-delete]").forEach(button => {
     button.addEventListener("click", () => {
-      const dateIso = button.dataset.unexcusedDelete;
-      if (!window.confirm(`Delete the unexcused absence for ${formatLong(dateIso)}?`)) return;
-      delete state.manualUnexcused[dateIso];
+      const dateIso = button.dataset.capsslDelete;
+      if (!window.confirm(`Delete the CA-PSSL record for ${formatLong(dateIso)}?`)) return;
+      delete state.capsslLeaves[dateIso];
       persist();
       renderAll();
     });
@@ -2583,6 +4559,8 @@ function saveUnexcusedDialog() {
   const dateIso = state.editingUnexcusedDate;
   if (!isValidISO(dateIso)) return;
 
+  const previousCorrectiveStatus = calculateCorrectiveStatus();
+
   state.manualUnexcused[dateIso] = {
     occurrence: Number(els.unexcusedOccurrenceSelect.value) === 1 ? 1 : 0.5,
     type: els.unexcusedTypeSelect.value,
@@ -2595,6 +4573,7 @@ function saveUnexcusedDialog() {
   persist();
   closeUnexcusedDialog();
   renderAll();
+  maybeOpenCorrectiveThresholdPrompt(previousCorrectiveStatus);
 }
 
 function newZone(start, active = true) {
@@ -2765,9 +4744,15 @@ function buildMonth(year, month) {
 
   const title = document.createElement("div");
   title.className = "month-title";
+  const monthCorrectiveWarning = correctivePeriodForMonth(year, month);
   title.innerHTML = `
     <span class="month-name">${escapeHtml(MONTH_NAMES[month])}</span>
     <span class="month-year">${year}</span>
+    ${monthCorrectiveWarning ? `
+      <span class="corrective-month-warning">
+        <span class="corrective-warning-name">${escapeHtml(monthCorrectiveWarning.name)} Active</span>
+      </span>
+    ` : ""}
   `;
   monthElement.appendChild(title);
 
@@ -2797,12 +4782,23 @@ function buildMonth(year, month) {
   for (let day = 1; day <= dayCount; day++) {
     const dateIso = toISO(new Date(year, month, day));
     const dayRows = rowsOnDate(dateIso);
-    const netHours = netHoursForDate(dateIso);
-    const types = [...new Set(dayRows.map(entry => entry.type).filter(Boolean))];
-    const tags = [...new Set(dayRows.map(entry => classifyComment(entry.comment)).filter(Boolean))];
+    const importedHours = netHoursForDate(dateIso);
+    const manualLeave = state.manualLeaves[dateIso];
+    const capssl = capsslStatusForDate(dateIso);
+    const totalHours = totalHoursOffForDate(dateIso);
+    const types = [...new Set([
+      ...dayRows.map(entry => entry.type).filter(Boolean),
+      ...(manualLeave?.ptoUsed > 0 || capssl ? ["PTO"] : [])
+    ])];
+    const tags = [...new Set([
+      ...dayRows.map(entry => classifyComment(entry.comment)).filter(Boolean),
+      ...(manualLeave ? [manualLeave.type] : [])
+    ])];
     const zones = zonesForDate(dateIso);
     const annotation = state.annotations[dateIso];
     const unexcused = state.manualUnexcused[dateIso];
+    const unexcusedManualLeave = manualLeave?.status === "Unexcused";
+    const correctiveShade = correctivePeriodForDate(dateIso);
 
     const button = document.createElement("button");
     button.type = "button";
@@ -2811,13 +4807,19 @@ function buildMonth(year, month) {
     if (state.selectedDate === dateIso) button.classList.add("selected-date");
     if (state.selectedDays.has(dateIso)) button.classList.add("pick-selected");
     if (state.eventSelectedDays.has(dateIso)) button.classList.add("event-selected");
-    if (unexcused) button.classList.add("unexcused");
+    if (unexcused || unexcusedManualLeave) button.classList.add("unexcused");
+    if (correctiveShade) {
+      button.classList.add("corrective-shaded");
+      button.style.setProperty("--corrective-shade-text", contrastText(correctiveShade.display.color));
+    }
 
     const zoneLines = zoneLineMarkup(zones);
-    const hasHoursOffMarker = dayRows.length > 0 || Boolean(unexcused);
+    const hasHoursOffMarker = dayRows.length > 0 || Boolean(unexcused) || Boolean(manualLeave) || Boolean(capssl);
     const fullDayMarker = unexcused
       ? Number(unexcused.occurrence) === 1
-      : netHours >= 8;
+      : unexcusedManualLeave
+        ? false
+        : totalHours >= 8;
     const durationColor = fullDayMarker
       ? "var(--hours-full)"
       : "var(--hours-partial)";
@@ -2844,10 +4846,23 @@ function buildMonth(year, month) {
       </div>
     ` : "";
 
+    const correctiveShadeMarkup = correctiveShade ? `
+      <span class="corrective-period-shade" style="background:${hexToRgba(
+        correctiveShade.display.color,
+        correctiveShade.display.opacity
+      )}"></span>
+    ` : "";
+
+    const capsslMarkup = capssl?.protected
+      ? `<span class="capssl-indicator" title="California protected sick leave · Protected day ${capssl.rank} of 5">CA-PSSL</span>`
+      : "";
+
     button.innerHTML = `
+      ${correctiveShadeMarkup}
       ${zoneLines}
       <div class="day-number-row"><span class="day-number">${day}</span></div>
       ${rowSummary}
+      ${capsslMarkup}
       ${customMarkup}
     `;
 
@@ -2937,6 +4952,8 @@ function renderDetails() {
   const annotation = state.annotations[dateIso];
   const zones = zonesForDate(dateIso);
   const manual = state.manualUnexcused[dateIso];
+  const manualLeave = state.manualLeaves[dateIso];
+  const capssl = capsslStatusForDate(dateIso);
   const dayOccurrence = occurrenceForDate(dateIso);
   const selectedDates = [...state.eventSelectedDays].sort();
   const selectedTotal = selectedOccurrenceTotal();
@@ -2959,6 +4976,44 @@ function renderDetails() {
         · ${manual.ptoUsed} PTO used
       </div>
     </div>
+  ` : "";
+
+  const manualLeaveMarkup = manualLeave ? `
+    <article class="entry-card">
+      <div class="entry-top">
+        <div class="entry-type">${escapeHtml(manualLeave.type)}</div>
+        <div class="entry-hours">${formatHours(manualLeave.hoursOff)}</div>
+      </div>
+      <div class="entry-meta">
+        <span class="badge ${manualLeave.status === "Unexcused" ? "status-denied" : "status-approved"}">
+          ${escapeHtml(manualLeave.status || "Excused")}
+        </span>
+        ${manualLeave.status === "Unexcused" ? `<span class="badge">0.5 occurrence event</span>` : ""}
+        ${manualLeave.ptoUsed > 0 ? `<span class="badge">${formatHours(manualLeave.ptoUsed)} PTO used</span>` : ""}
+      </div>
+      <div class="entry-comment">${manualLeave.note ? escapeHtml(manualLeave.note) : "<em>Manually added leave</em>"}</div>
+      <div class="button-row">
+        <button class="btn" id="editManualLeaveFromDetailsButton" type="button">Edit leave</button>
+        <button class="btn danger" id="deleteManualLeaveFromDetailsButton" type="button">Delete leave</button>
+      </div>
+    </article>
+  ` : "";
+
+  const capsslMarkup = capssl ? `
+    <article class="entry-card">
+      <div class="entry-top">
+        <div class="entry-type">CA-PSSL</div>
+        <div class="entry-hours">${formatHours(capssl.ptoUsed)}</div>
+      </div>
+      <div class="entry-meta">
+        <span class="badge status-approved">${capssl.protected ? `Protected day ${capssl.rank} of 5` : "Outside first five days"}</span>
+      </div>
+      <div class="entry-comment">
+        ${capssl.protected
+          ? "California protected sick leave indicator is active for this date."
+          : "This date is not among the first five qualifying full-day absences of its calendar year."}
+      </div>
+    </article>
   ` : "";
 
   const entryCards = dayRows.length
@@ -3032,6 +5087,8 @@ function renderDetails() {
       <button class="btn" id="clearEventSelectionButton" type="button">Clear event selection</button>
     </div>
 
+    ${manualLeaveMarkup}
+    ${capsslMarkup}
     ${entryCards}
   `;
 
@@ -3054,6 +5111,27 @@ function renderDetails() {
     renderCalendar();
     renderDetails();
   });
+
+  const editManualLeaveFromDetailsButton = document.getElementById("editManualLeaveFromDetailsButton");
+  if (editManualLeaveFromDetailsButton) {
+    editManualLeaveFromDetailsButton.addEventListener("click", () => {
+      editManualLeave(dateIso);
+      state.collapsedSections.leave = false;
+      applyCollapsedState("leave");
+      persist();
+    });
+  }
+
+  const deleteManualLeaveFromDetailsButton = document.getElementById("deleteManualLeaveFromDetailsButton");
+  if (deleteManualLeaveFromDetailsButton) {
+    deleteManualLeaveFromDetailsButton.addEventListener("click", () => {
+      if (!window.confirm(`Delete the saved leave for ${formatLong(dateIso)}?`)) return;
+      delete state.manualLeaves[dateIso];
+      if (state.editingManualLeaveDate === dateIso) clearManualLeaveForm();
+      persist();
+      renderAll();
+    });
+  }
 
   const editUnexcusedButton = document.getElementById("editUnexcusedButton");
   if (editUnexcusedButton) {
@@ -3106,6 +5184,9 @@ function renderAll() {
   renderZoneControls();
   renderLegend();
   renderUnexcusedList();
+  renderManualLeaves();
+  renderCapsslLeaves();
+  renderCorrectiveActions();
   renderSelectionControls();
   renderCollapsedStates();
   renderCalendar();
@@ -3496,6 +5577,11 @@ function exportFullBackup() {
     selectedMonths: [...state.selectedMonths],
     darkMode: state.darkMode,
     manualUnexcused: state.manualUnexcused,
+    manualLeaves: state.manualLeaves,
+    capsslLeaves: state.capsslLeaves,
+    correctiveSubmissions: state.correctiveSubmissions,
+    correctivePolicy: state.correctivePolicy,
+    correctiveDisplay: state.correctiveDisplay,
     zones: state.zones,
     annotations: state.annotations,
     collapsedSections: state.collapsedSections
@@ -3549,6 +5635,26 @@ function importBackupObject(imported, fileName = "") {
 
   if (imported.manualUnexcused) {
     state.manualUnexcused = normalizeManualUnexcused(imported.manualUnexcused);
+  }
+
+  if (imported.manualLeaves) {
+    state.manualLeaves = normalizeManualLeaves(imported.manualLeaves);
+  }
+
+  if (imported.capsslLeaves) {
+    state.capsslLeaves = normalizeCapsslLeaves(imported.capsslLeaves);
+  }
+
+  if (Array.isArray(imported.correctiveSubmissions)) {
+    state.correctiveSubmissions = normalizeCorrectiveSubmissions(imported.correctiveSubmissions);
+  }
+
+  if (imported.correctivePolicy) {
+    state.correctivePolicy = normalizeCorrectivePolicy(imported.correctivePolicy);
+  }
+
+  if (imported.correctiveDisplay) {
+    state.correctiveDisplay = normalizeCorrectiveDisplay(imported.correctiveDisplay);
   }
 
   if (Array.isArray(imported.zones)) {
@@ -3697,11 +5803,46 @@ function setupControls() {
     persist();
   });
 
+  const showUnexcusedDatePicker = () => {
+    try {
+      if (typeof els.unexcusedDateInput.showPicker === "function") {
+        els.unexcusedDateInput.showPicker();
+      } else {
+        els.unexcusedDateInput.focus();
+        els.unexcusedDateInput.click();
+      }
+    } catch (_) {
+      els.unexcusedDateInput.focus();
+      els.unexcusedDateInput.click();
+    }
+  };
+
+  els.unexcusedDateShell.addEventListener("click", showUnexcusedDatePicker);
+  els.unexcusedDateShell.addEventListener("keydown", event => {
+    if (event.key !== "Enter" && event.key !== " ") return;
+    event.preventDefault();
+    showUnexcusedDatePicker();
+  });
+
   els.unexcusedDateInput.addEventListener("change", () => {
     els.unexcusedDateDisplay.textContent = isValidISO(els.unexcusedDateInput.value)
       ? formatCompactDate(els.unexcusedDateInput.value)
       : "Choose a date";
   });
+
+  setupDatePickerShell(
+    els.manualLeaveDateShell,
+    els.manualLeaveDateInput,
+    els.manualLeaveDateDisplay
+  );
+  setupDatePickerShell(
+    els.capsslDateShell,
+    els.capsslDateInput,
+    els.capsslDateDisplay
+  );
+
+  els.saveManualLeaveButton.addEventListener("click", saveManualLeave);
+  els.saveCapsslButton.addEventListener("click", saveCapsslLeave);
 
   els.addUnexcusedByDateButton.addEventListener("click", () => {
     if (!isValidISO(els.unexcusedDateInput.value)) {
@@ -3718,6 +5859,25 @@ function setupControls() {
   els.unexcusedDialogCloseButton.addEventListener("click", closeUnexcusedDialog);
   els.unexcusedCancelButton.addEventListener("click", closeUnexcusedDialog);
   els.unexcusedSaveButton.addEventListener("click", saveUnexcusedDialog);
+
+  els.addCorrectiveSubmissionButton.addEventListener("click", () => openCorrectiveDialog());
+  els.correctiveDialogCloseButton.addEventListener("click", closeCorrectiveDialog);
+  els.correctiveLaterButton.addEventListener("click", closeCorrectiveDialog);
+  els.correctiveThresholdCloseButton.addEventListener("click", closeCorrectiveThresholdPrompt);
+  els.correctiveThresholdCancelButton.addEventListener("click", closeCorrectiveThresholdPrompt);
+  els.correctiveThresholdContinueButton.addEventListener("click", continueFromCorrectiveThresholdPrompt);
+  els.correctiveCancelButton.addEventListener("click", closeCorrectiveDialog);
+  els.correctiveSaveButton.addEventListener("click", saveCorrectiveDialog);
+
+  [
+    els.verbalThresholdInput,
+    els.writtenThresholdInput,
+    els.finalThresholdInput,
+    els.terminationThresholdInput,
+    els.occurrenceWindowInput,
+    els.warningPeriodInput,
+    els.documentationDaysInput
+  ].forEach(input => input.addEventListener("change", updateCorrectivePolicyFromInputs));
 
   els.addZoneButton.addEventListener("click", () => {
     const start = state.selectedDate || `${state.selectedYear}-01-01`;
@@ -3806,7 +5966,7 @@ function setupControls() {
       return;
     }
 
-    if (!window.confirm("Clear all imported spreadsheet rows? Manual unexcused absences, highlights, warning zones, and settings will remain.")) {
+    if (!window.confirm("Clear all imported spreadsheet rows? Manual unexcused leave entries, highlights, warning zones, and settings will remain.")) {
       return;
     }
 
@@ -3822,7 +5982,7 @@ function setupControls() {
 
   els.fullResetButton.addEventListener("click", () => {
     const confirmed = window.confirm(
-      "Reset the entire calendar? This removes imported Excel rows, manually added unexcused absences, custom highlights, warning zones, appearance choices, and saved layout settings."
+      "Reset the entire calendar? This removes imported Excel rows, manually added unexcused leave events, custom highlights, warning zones, appearance choices, and saved layout settings."
     );
     if (!confirmed) return;
 
@@ -3846,12 +6006,22 @@ function setupControls() {
     state.unexcusedPickMode = false;
     state.editingUnexcusedDate = null;
     state.manualUnexcused = {};
+    state.manualLeaves = {};
+    state.capsslLeaves = {};
+    state.editingManualLeaveDate = null;
+    state.correctiveSubmissions = [];
+    state.correctivePolicy = { ...DEFAULT_CORRECTIVE_POLICY };
+    state.correctiveDisplay = structuredClone(DEFAULT_CORRECTIVE_DISPLAY);
+    state.editingCorrectiveId = null;
     state.zones = [];
     state.annotations = {};
     state.sourceFileName = "";
     state.collapsedSections = {
       legend: true,
       unexcused: true,
+      leave: true,
+      capssl: true,
+      corrective: true,
       description: true,
       warning: true,
       custom: true,
@@ -3861,6 +6031,14 @@ function setupControls() {
     localStorage.removeItem(STORAGE_KEY);
     els.unexcusedDateInput.value = "";
     els.unexcusedDateDisplay.textContent = "Choose a date";
+    els.manualLeaveDateInput.value = "";
+    els.manualLeaveDateDisplay.textContent = "Choose a date";
+    els.manualLeaveHoursInput.value = "";
+    els.manualLeavePtoInput.value = "";
+    els.manualLeaveNoteInput.value = "";
+    els.capsslDateInput.value = "";
+    els.capsslDateDisplay.textContent = "Choose a date";
+    els.capsslPtoInput.value = "8";
     els.annotationText.value = "";
     els.annotationColor.value = "#2f80ed";
     els.monthPickerPanel.hidden = true;
@@ -3884,6 +6062,16 @@ document.addEventListener("keydown", event => {
 
   if (els.unexcusedDialog.open) {
     closeUnexcusedDialog();
+    return;
+  }
+
+  if (els.correctiveActionDialog.open) {
+    closeCorrectiveDialog();
+    return;
+  }
+
+  if (els.correctiveThresholdDialog.open) {
+    closeCorrectiveThresholdPrompt();
     return;
   }
 
@@ -3911,9 +6099,5 @@ if (document.readyState === "loading") {
   initializeRcAttendance();
 }
 </script>
-
-
-
-
 </body>
 </html>
