@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Time Off Calendar</title>
+<title>RC Attendance</title>
 <style>
   :root {
     --bg: #f5f7fb;
@@ -85,7 +85,7 @@
     box-shadow: var(--shadow);
     padding: 16px;
     display: grid;
-    grid-template-columns: minmax(240px, 420px) minmax(180px, 240px);
+    grid-template-columns: repeat(6, minmax(150px, 1fr));
     gap: 14px;
     margin-bottom: 16px;
   }
@@ -189,6 +189,260 @@
 
   .dark-mode-toggle input:checked + .dark-toggle-track .dark-toggle-knob {
     transform: translateX(21px);
+  }
+
+  .conditional-control[hidden] {
+    display: none;
+  }
+
+  .month-picker-control {
+    position: relative;
+  }
+
+  .month-picker-button {
+    width: 100%;
+    min-height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    border: 1px solid #cfd6e1;
+    border-radius: 10px;
+    background: #ffffff;
+    padding: 8px 10px;
+    cursor: pointer;
+    text-align: left;
+  }
+
+  .month-picker-panel {
+    position: absolute;
+    left: 0;
+    top: calc(100% + 7px);
+    z-index: 30;
+    width: min(390px, 90vw);
+    padding: 12px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--panel);
+    box-shadow: 0 18px 40px rgba(16, 24, 40, 0.2);
+  }
+
+  .month-picker-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .month-picker-heading span {
+    color: var(--muted);
+    font-size: 0.66rem;
+    line-height: 1.3;
+    text-align: right;
+  }
+
+  .month-checkbox-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  .month-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 36px;
+    padding: 6px 7px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.73rem;
+    font-weight: 750;
+  }
+
+  .month-checkbox input {
+    accent-color: var(--accent);
+  }
+
+  .unexcused-add-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 11px;
+  }
+
+  .unexcused-confirm-button {
+    width: 100%;
+    min-height: 40px;
+  }
+
+  .unexcused-calendar-button-row {
+    margin-top: 12px;
+  }
+
+  .unexcused-calendar-button-row .btn {
+    min-height: 44px;
+  }
+
+  .date-picker-shell {
+    position: relative;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    border: 1px solid #cfd6e1;
+    border-radius: 9px;
+    background: #ffffff;
+    padding: 8px 10px;
+    color: #344054;
+    font-size: 0.76rem;
+    font-weight: 750;
+    cursor: pointer;
+    overflow: hidden;
+  }
+
+  .date-picker-shell::after {
+    content: "▾";
+    margin-left: auto;
+    color: #667085;
+    font-size: 0.72rem;
+  }
+
+  .date-picker-shell input[type="date"] {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  .unexcused-list-date {
+    white-space: nowrap;
+  }
+
+  .unexcused-pick-status {
+    min-height: 1.2em;
+    margin-top: 7px;
+    color: var(--muted);
+    font-size: 0.68rem;
+    line-height: 1.35;
+  }
+
+  body.unexcused-pick-mode .day-cell {
+    cursor: crosshair;
+  }
+
+  body.unexcused-pick-mode .calendar-panel {
+    box-shadow: 0 0 0 3px rgba(217, 45, 32, 0.28), var(--shadow);
+  }
+
+  .unexcused-list-item {
+    display: block;
+  }
+
+  .unexcused-list-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 5px;
+    margin-top: 7px;
+    padding-top: 6px;
+    border-top: 1px solid var(--soft-line);
+  }
+
+  .unexcused-list-main {
+    width: 100%;
+    min-width: 0;
+    border: 0;
+    background: transparent;
+    padding: 0;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .unexcused-list-main:hover .unexcused-list-date {
+    text-decoration: underline;
+  }
+
+  .mini-icon-button {
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    background: transparent;
+    padding: 4px 6px;
+    cursor: pointer;
+    font-size: 0.64rem;
+    font-weight: 850;
+  }
+
+  .mini-icon-button.danger {
+    color: var(--denied);
+    border-color: #e4a4aa;
+  }
+
+  .unexcused-dialog {
+    width: min(520px, calc(100vw - 28px));
+    border: 0;
+    border-radius: 16px;
+    padding: 0;
+    background: transparent;
+    color: var(--text);
+  }
+
+  .unexcused-dialog::backdrop {
+    background: rgba(15, 23, 42, 0.58);
+    backdrop-filter: blur(2px);
+  }
+
+  .unexcused-dialog-card {
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    background: var(--panel);
+    box-shadow: 0 24px 70px rgba(0,0,0,0.28);
+    overflow: hidden;
+  }
+
+  .dialog-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 18px 18px 13px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .dialog-header h2 {
+    margin: 0;
+    font-size: 1.08rem;
+  }
+
+  .dialog-header p {
+    margin: 4px 0 0;
+    color: var(--muted);
+    font-size: 0.78rem;
+  }
+
+  .dialog-close {
+    width: 30px;
+    height: 30px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: transparent;
+    cursor: pointer;
+    font-size: 1.15rem;
+    line-height: 1;
+  }
+
+  .dialog-fields {
+    display: grid;
+    gap: 12px;
+    padding: 16px 18px 6px;
+  }
+
+  .dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 14px 18px 18px;
   }
 
   .data-empty {
@@ -1156,13 +1410,14 @@
   }
 
   @media (max-width: 1450px) {
+    .controls { grid-template-columns: repeat(3, minmax(160px, 1fr)); }
     .months-grid { grid-template-columns: repeat(2, minmax(280px, 1fr)); }
     .workspace { grid-template-columns: 170px minmax(0, 1fr) 330px; }
   }
 
   @media (max-width: 1080px) {
     .app-shell { padding: 14px; }
-    .controls { grid-template-columns: 1fr; }
+    .controls { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .topbar { flex-direction: column; gap: 9px; }
     .controls { grid-template-columns: 1fr; }
     .workspace { grid-template-columns: 1fr; }
@@ -1192,22 +1447,193 @@
     .months-grid { grid-template-columns: repeat(3, 1fr); }
     .month { break-inside: avoid; }
   }
+
+  body.dark-mode {
+    --bg: #0b1017;
+    --panel: #151d28;
+    --text: #edf2f7;
+    --muted: #aeb9c8;
+    --line: #3a485b;
+    --soft-line: #344154;
+    --grid-line: #667489;
+    --grid-line-strong: #8793a5;
+  }
+
+  body.dark-mode .calendar-panel {
+    background: #182230;
+    border-color: #425167;
+    box-shadow: 0 12px 34px rgba(0, 0, 0, 0.34);
+  }
+
+  body.dark-mode .month {
+    background: #263244;
+    color: #f2f5f9;
+    border-color: #758298;
+  }
+
+  body.dark-mode .day-cell {
+    background: #303e51;
+    color: #f4f7fb;
+    border-color: #667489;
+  }
+
+  body.dark-mode .day-cell:hover {
+    background: #3b4b61;
+  }
+
+  body.dark-mode .month-title {
+    background: #3a4960;
+    color: #ffffff;
+    border-color: #8793a5;
+  }
+
+  body.dark-mode .month-name {
+    color: #ffffff;
+  }
+
+  body.dark-mode .month-year {
+    color: #c6cfdb;
+  }
+
+  body.dark-mode .weekday {
+    background: #344257;
+    color: #dce3ec;
+    border-color: #667489;
+  }
+
+  body.dark-mode .day-spacer {
+    background: #222d3c;
+    border-color: #667489;
+  }
+
+  body.dark-mode .day-number {
+    color: #ffffff;
+  }
+
+  body.dark-mode .month-picker-button,
+  body.dark-mode .month-picker-panel,
+  body.dark-mode .unexcused-dialog-card {
+    background: #202b3a;
+    color: #f4f7fb;
+    border-color: #536176;
+  }
+
+  body.dark-mode .month-checkbox {
+    background: #293648;
+    color: #edf2f7;
+    border-color: #536176;
+  }
+
+  body.dark-mode .month-checkbox:hover {
+    background: #34445a;
+  }
+
+  body.dark-mode .custom-note {
+    box-shadow: 0 0 0 1px rgba(255,255,255,0.14);
+  }
+
+
+  body.dark-mode .legend-sidebar .legend-item,
+  body.dark-mode .legend-sidebar .legend-group-label,
+  body.dark-mode .legend-sidebar .legend-item span,
+  body.dark-mode [data-section-id="unexcused"] .legend-group-label,
+  body.dark-mode [data-section-id="unexcused"] .unexcused-list-date,
+  body.dark-mode [data-section-id="unexcused"] .detail-empty,
+  body.dark-mode [data-section-id="unexcused"] .section-subtitle,
+  body.dark-mode [data-section-id="unexcused"] .unexcused-pick-status {
+    color: #ffffff;
+  }
+
+  body.dark-mode .date-picker-shell {
+    background: #293648;
+    color: #ffffff;
+    border-color: #637188;
+  }
+
+  body.dark-mode .date-picker-shell::after {
+    color: #d8e0ea;
+  }
+
+  body.dark-mode .unexcused-list-actions {
+    border-top-color: #526176;
+  }
+
+  body.dark-mode .mini-icon-button {
+    color: #ffffff;
+    border-color: #637188;
+  }
+
+  body.dark-mode .mini-icon-button.danger {
+    color: #ffb6bf;
+    border-color: #a35b66;
+  }
+
 </style>
 </head>
 <body>
 <div class="app-shell">
   <div class="topbar">
     <div class="title-block">
-      <h1>Time Off Calendar</h1>
-      <p>Import an Excel workbook to build a calendar across any dates.</p>
+      <h1>RC Attendance</h1>
+      <p>Import attendance data or use the calendar as a blank scratch workspace.</p>
     </div>
     <div class="source-pill" id="sourcePill"></div>
   </div>
 
   <section class="controls" aria-label="Calendar controls">
     <div class="control-group">
-      <label class="control-label" for="viewSelect">Calendar view</label>
-      <select id="viewSelect"></select>
+      <label class="control-label" for="calendarViewSelect">Calendar view</label>
+      <select id="calendarViewSelect">
+        <option value="all">All available months</option>
+        <option value="warning">Warning-zone months</option>
+      </select>
+    </div>
+
+    <div class="control-group">
+      <label class="control-label" for="dateFilterSelect">Date selection</label>
+      <select id="dateFilterSelect">
+        <option value="year">By calendar year</option>
+        <option value="months">Specific months</option>
+      </select>
+    </div>
+
+    <div class="control-group conditional-control" id="yearControl">
+      <label class="control-label" for="yearSelect">Year</label>
+      <select id="yearSelect"></select>
+    </div>
+
+    <div class="control-group conditional-control" id="yearStartControl">
+      <label class="control-label" for="yearStartMonthSelect">Starting month</label>
+      <select id="yearStartMonthSelect"></select>
+    </div>
+
+    <div class="control-group conditional-control" id="yearCountControl">
+      <label class="control-label" for="yearMonthCountSelect">Months shown</label>
+      <select id="yearMonthCountSelect">
+        <option value="3">3 months</option>
+        <option value="6">6 months</option>
+        <option value="9">9 months</option>
+        <option value="12">12 months</option>
+      </select>
+    </div>
+
+    <div class="control-group conditional-control month-picker-control" id="monthPickerControl">
+      <span class="control-label">Selected months</span>
+      <button class="month-picker-button" id="monthPickerButton" type="button" aria-expanded="false">
+        <span id="monthPickerSummary">Choose months</span>
+        <span aria-hidden="true">▾</span>
+      </button>
+      <div class="month-picker-panel" id="monthPickerPanel" hidden>
+        <div class="month-picker-heading">
+          <strong id="monthPickerYearLabel"></strong>
+          <span>Click individually or Shift-click for a range.</span>
+        </div>
+        <div class="month-checkbox-grid" id="monthCheckboxGrid"></div>
+        <div class="button-row">
+          <button class="btn" id="selectYearMonthsButton" type="button">Select this year</button>
+          <button class="btn" id="clearYearMonthsButton" type="button">Clear this year</button>
+        </div>
+      </div>
     </div>
 
     <div class="control-group">
@@ -1236,10 +1662,30 @@
 
       <section class="sidebar-section collapsible-section collapsed" data-section-id="unexcused">
         <button class="collapsible-header" type="button" data-collapse-toggle="unexcused" aria-expanded="false">
-          <span class="section-title">Unexcused events</span>
+          <span class="section-title">Unexcused Absence</span>
           <span class="collapse-icon" aria-hidden="true">+</span>
         </button>
         <div class="collapsible-content" data-collapse-content="unexcused">
+          <p class="section-subtitle">Add one date at a time using the date picker or select the date directly from the full calendar.</p>
+
+          <div class="unexcused-add-grid">
+            <div class="field-mini">
+              <label for="unexcusedDateInput">Specific date</label>
+              <div class="date-picker-shell">
+                <span id="unexcusedDateDisplay">Choose a date</span>
+                <input id="unexcusedDateInput" type="date" aria-label="Choose an unexcused absence date">
+              </div>
+            </div>
+
+            <button class="btn primary unexcused-confirm-button" id="addUnexcusedByDateButton" type="button">Confirm date</button>
+          </div>
+
+          <div class="button-row one unexcused-calendar-button-row">
+            <button class="btn" id="pickUnexcusedFromCalendarButton" type="button">Choose from full calendar</button>
+          </div>
+          <div class="unexcused-pick-status" id="unexcusedPickStatus"></div>
+
+          <div class="legend-group-label">Saved unexcused absences</div>
           <div class="unexcused-list" id="unexcusedList"></div>
         </div>
       </section>
@@ -1326,6 +1772,9 @@
           <div class="button-row one">
             <button class="btn danger" id="clearExcelDataButton" type="button">Clear Excel data</button>
           </div>
+          <div class="button-row one">
+            <button class="btn danger" id="fullResetButton" type="button">Reset entire calendar</button>
+          </div>
           <input id="importFileInput" type="file"
             accept=".xlsx,.csv,.json,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv,application/json"
             hidden>
@@ -1337,15 +1786,68 @@
 </div>
 
 
+
+<dialog class="unexcused-dialog" id="unexcusedDialog">
+  <form class="unexcused-dialog-card" id="unexcusedForm" method="dialog">
+    <div class="dialog-header">
+      <div>
+        <h2>Unexcused absence details</h2>
+        <p id="unexcusedDialogDate"></p>
+      </div>
+      <button class="dialog-close" id="unexcusedDialogCloseButton" type="button" aria-label="Close">×</button>
+    </div>
+
+    <div class="dialog-fields">
+      <div class="field-mini">
+        <label for="unexcusedOccurrenceSelect">Occurrence amount</label>
+        <select id="unexcusedOccurrenceSelect" required>
+          <option value="0.5">0.5</option>
+          <option value="1">1.0</option>
+        </select>
+      </div>
+
+      <div class="field-mini">
+        <label for="unexcusedTypeSelect">Arrival or leave type</label>
+        <select id="unexcusedTypeSelect">
+          <option value="">Select</option>
+          <option value="Late arrival">Late arrival</option>
+          <option value="Early leave">Early leave</option>
+        </select>
+      </div>
+
+      <div class="field-mini">
+        <label for="unexcusedPtoInput">Amount of PTO used</label>
+        <input id="unexcusedPtoInput" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0">
+      </div>
+    </div>
+
+    <div class="dialog-actions">
+      <button class="btn" id="unexcusedCancelButton" type="button">Cancel</button>
+      <button class="btn primary" id="unexcusedSaveButton" type="button">Save and Continue</button>
+    </div>
+  </form>
+</dialog>
+
 <script>
-const STORAGE_KEY = "timeOffCalendarModularV1";
-const BACKUP_VERSION = 2;
+const STORAGE_KEY = "rcAttendanceV1";
+const BACKUP_VERSION = 3;
+const CURRENT_YEAR = new Date().getFullYear();
+const MONTH_NAMES = Array.from({ length: 12 }, (_, index) =>
+  new Date(2000, index, 1).toLocaleDateString(undefined, { month: "long" })
+);
 const ZONE_COLORS = ["#f0b429", "#2457d6", "#7f56d9", "#16a085", "#d64550", "#e67e22", "#2f80ed"];
 
 let entries = [];
 
 const state = {
-  view: "all",
+  calendarView: "all",
+  dateFilter: "year",
+  selectedYear: CURRENT_YEAR,
+  yearStartMonth: 0,
+  yearMonthCount: 12,
+  dateSelectionDefaultVersion: 1,
+  selectedMonths: new Set(),
+  monthSelectionAnchor: null,
   darkMode: false,
   selectedDate: null,
   selectionMode: false,
@@ -1353,6 +1855,9 @@ const state = {
   lastSelectionDate: null,
   eventSelectedDays: new Set(),
   eventSelectionAnchor: null,
+  unexcusedPickMode: false,
+  editingUnexcusedDate: null,
+  manualUnexcused: {},
   zones: [],
   annotations: {},
   sourceFileName: "",
@@ -1367,11 +1872,31 @@ const state = {
 };
 
 const els = {
-  viewSelect: document.getElementById("viewSelect"),
+  calendarViewSelect: document.getElementById("calendarViewSelect"),
+  dateFilterSelect: document.getElementById("dateFilterSelect"),
+  yearSelect: document.getElementById("yearSelect"),
+  yearStartMonthSelect: document.getElementById("yearStartMonthSelect"),
+  yearMonthCountSelect: document.getElementById("yearMonthCountSelect"),
+  yearControl: document.getElementById("yearControl"),
+  yearStartControl: document.getElementById("yearStartControl"),
+  yearCountControl: document.getElementById("yearCountControl"),
+  monthPickerControl: document.getElementById("monthPickerControl"),
+  monthPickerButton: document.getElementById("monthPickerButton"),
+  monthPickerPanel: document.getElementById("monthPickerPanel"),
+  monthPickerSummary: document.getElementById("monthPickerSummary"),
+  monthPickerYearLabel: document.getElementById("monthPickerYearLabel"),
+  monthCheckboxGrid: document.getElementById("monthCheckboxGrid"),
+  selectYearMonthsButton: document.getElementById("selectYearMonthsButton"),
+  clearYearMonthsButton: document.getElementById("clearYearMonthsButton"),
   darkModeToggle: document.getElementById("darkModeToggle"),
   monthsGrid: document.getElementById("monthsGrid"),
   sourcePill: document.getElementById("sourcePill"),
   legendContent: document.getElementById("legendContent"),
+  unexcusedDateInput: document.getElementById("unexcusedDateInput"),
+  unexcusedDateDisplay: document.getElementById("unexcusedDateDisplay"),
+  addUnexcusedByDateButton: document.getElementById("addUnexcusedByDateButton"),
+  pickUnexcusedFromCalendarButton: document.getElementById("pickUnexcusedFromCalendarButton"),
+  unexcusedPickStatus: document.getElementById("unexcusedPickStatus"),
   unexcusedList: document.getElementById("unexcusedList"),
   zoneList: document.getElementById("zoneList"),
   addZoneButton: document.getElementById("addZoneButton"),
@@ -1387,9 +1912,19 @@ const els = {
   importFileButton: document.getElementById("importFileButton"),
   importFileInput: document.getElementById("importFileInput"),
   clearExcelDataButton: document.getElementById("clearExcelDataButton"),
+  fullResetButton: document.getElementById("fullResetButton"),
   settingsStatus: document.getElementById("settingsStatus"),
   detailContent: document.getElementById("detailContent"),
-  rightSidebar: document.getElementById("rightSidebar")
+  rightSidebar: document.getElementById("rightSidebar"),
+  unexcusedDialog: document.getElementById("unexcusedDialog"),
+  unexcusedForm: document.getElementById("unexcusedForm"),
+  unexcusedDialogDate: document.getElementById("unexcusedDialogDate"),
+  unexcusedDialogCloseButton: document.getElementById("unexcusedDialogCloseButton"),
+  unexcusedCancelButton: document.getElementById("unexcusedCancelButton"),
+  unexcusedSaveButton: document.getElementById("unexcusedSaveButton"),
+  unexcusedOccurrenceSelect: document.getElementById("unexcusedOccurrenceSelect"),
+  unexcusedTypeSelect: document.getElementById("unexcusedTypeSelect"),
+  unexcusedPtoInput: document.getElementById("unexcusedPtoInput")
 };
 
 function escapeHtml(value) {
@@ -1414,8 +1949,9 @@ function toISO(date) {
 }
 
 function isValidISO(value) {
-  return /^\d{4}-\d{2}-\d{2}$/.test(String(value || "")) &&
-    !Number.isNaN(parseLocal(value).getTime());
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(String(value || ""))) return false;
+  const date = parseLocal(value);
+  return !Number.isNaN(date.getTime()) && toISO(date) === value;
 }
 
 function addDays(iso, amount) {
@@ -1445,36 +1981,45 @@ function formatShort(iso) {
   });
 }
 
+function formatCompactDate(iso) {
+  const date = parseLocal(iso);
+  const shortYear = String(date.getFullYear()).slice(-2);
+  return `${MONTH_NAMES[date.getMonth()].slice(0, 3)} ${date.getDate()}, '${shortYear}`;
+}
+
 function monthKey(year, month) {
   return `${year}-${String(month + 1).padStart(2, "0")}`;
 }
 
-function monthStartIso(year, month) {
-  return toISO(new Date(year, month, 1));
-}
-
-function monthEndIso(year, month) {
-  return toISO(new Date(year, month + 1, 0));
+function monthPairFromKey(key) {
+  const [year, month] = String(key).split("-").map(Number);
+  return [year, month - 1];
 }
 
 function monthsBetween(startIso, endIso) {
   if (!startIso || !endIso) return [];
-  const output = [];
   const startDate = parseLocal(startIso);
   const endDate = parseLocal(endIso);
   const cursor = new Date(startDate.getFullYear(), startDate.getMonth(), 1);
   const end = new Date(endDate.getFullYear(), endDate.getMonth(), 1);
+  const months = [];
 
   while (cursor <= end) {
-    output.push([cursor.getFullYear(), cursor.getMonth()]);
+    months.push([cursor.getFullYear(), cursor.getMonth()]);
     cursor.setMonth(cursor.getMonth() + 1);
   }
-  return output;
+
+  return months;
 }
 
 function formatHours(value) {
   const rounded = Math.round((Number(value || 0) + Number.EPSILON) * 100) / 100;
   return `${Number.isInteger(rounded) ? rounded.toFixed(0) : rounded.toFixed(2).replace(/0$/, "")} h`;
+}
+
+function formatOccurrence(value) {
+  const amount = Number(value || 0);
+  return `${amount.toFixed(1)} ${amount === 1 ? "event" : "events"}`;
 }
 
 function typeColor(type) {
@@ -1532,11 +2077,9 @@ function normalizeImportedDate(value) {
   if (typeof value === "number" && Number.isFinite(value)) {
     const milliseconds = Math.round((value - 25569) * 86400 * 1000);
     const date = new Date(milliseconds);
+
     if (!Number.isNaN(date.getTime())) {
-      const year = date.getUTCFullYear();
-      const month = String(date.getUTCMonth() + 1).padStart(2, "0");
-      const day = String(date.getUTCDate()).padStart(2, "0");
-      return `${year}-${month}-${day}`;
+      return `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(2, "0")}-${String(date.getUTCDate()).padStart(2, "0")}`;
     }
   }
 
@@ -1565,14 +2108,13 @@ function sanitizeEntry(raw, index = 0) {
   const date = normalizeImportedDate(raw?.date);
   if (!date) return null;
 
-  const hours = parseHours(raw?.hours);
   return {
     id: String(raw?.id || `entry-${date}-${index}-${Math.random().toString(16).slice(2)}`),
     sourceRow: Number(raw?.sourceRow || index + 1),
     date,
     dayOfWeek: String(raw?.dayOfWeek || parseLocal(date).toLocaleDateString(undefined, { weekday: "long" })),
     type: String(raw?.type || "Unspecified"),
-    hours: Number.isFinite(hours) ? hours : 0,
+    hours: parseHours(raw?.hours),
     unit: String(raw?.unit || "Hours"),
     comment: String(raw?.comment || ""),
     status: String(raw?.status || "Unspecified"),
@@ -1582,8 +2124,7 @@ function sanitizeEntry(raw, index = 0) {
 }
 
 function sanitizeEntries(rows) {
-  if (!Array.isArray(rows)) return [];
-  return rows.map(sanitizeEntry).filter(Boolean);
+  return Array.isArray(rows) ? rows.map(sanitizeEntry).filter(Boolean) : [];
 }
 
 function normalizeZone(zone, index = 0) {
@@ -1604,14 +2145,38 @@ function normalizeZone(zone, index = 0) {
   };
 }
 
+function normalizeManualUnexcused(data) {
+  if (!data || typeof data !== "object") return {};
+  const result = {};
+
+  Object.entries(data).forEach(([dateIso, record]) => {
+    if (!isValidISO(dateIso) || !record || typeof record !== "object") return;
+    const occurrence = Number(record.occurrence);
+    result[dateIso] = {
+      occurrence: occurrence === 1 ? 1 : 0.5,
+      type: ["Late arrival", "Early leave"].includes(record.type) ? record.type : "",
+      ptoUsed: Math.max(0, Number(record.ptoUsed || 0))
+    };
+  });
+
+  return result;
+}
+
 function persist() {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify({
       version: BACKUP_VERSION,
       entries,
       sourceFileName: state.sourceFileName,
-      view: state.view,
+      calendarView: state.calendarView,
+      dateFilter: state.dateFilter,
+      selectedYear: state.selectedYear,
+      yearStartMonth: state.yearStartMonth,
+      yearMonthCount: state.yearMonthCount,
+      dateSelectionDefaultVersion: state.dateSelectionDefaultVersion,
+      selectedMonths: [...state.selectedMonths],
       darkMode: state.darkMode,
+      manualUnexcused: state.manualUnexcused,
       zones: state.zones,
       annotations: state.annotations,
       collapsedSections: state.collapsedSections
@@ -1626,14 +2191,31 @@ function restore() {
 
     entries = sanitizeEntries(saved.entries);
     state.sourceFileName = String(saved.sourceFileName || "");
-    state.view = typeof saved.view === "string" ? saved.view : "all";
+    state.calendarView = ["all", "warning"].includes(saved.calendarView) ? saved.calendarView : "all";
+    state.dateFilter = ["year", "months"].includes(saved.dateFilter) ? saved.dateFilter : "year";
+    state.selectedYear = Number.isInteger(Number(saved.selectedYear)) ? Number(saved.selectedYear) : CURRENT_YEAR;
+    state.yearStartMonth = Math.min(11, Math.max(0, Number(saved.yearStartMonth || 0)));
+    state.yearMonthCount = [3, 6, 9, 12].includes(Number(saved.yearMonthCount))
+      ? Number(saved.yearMonthCount)
+      : 12;
+
+    const savedDefaultVersion = Number(saved.dateSelectionDefaultVersion || 0);
+    if (savedDefaultVersion < 1) {
+      state.dateFilter = "year";
+      state.dateSelectionDefaultVersion = 1;
+    } else {
+      state.dateSelectionDefaultVersion = savedDefaultVersion;
+    }
+
+    state.selectedMonths = new Set(
+      Array.isArray(saved.selectedMonths)
+        ? saved.selectedMonths.filter(value => /^\d{4}-\d{2}$/.test(String(value)))
+        : []
+    );
     state.darkMode = Boolean(saved.darkMode);
-    state.zones = Array.isArray(saved.zones)
-      ? saved.zones.map(normalizeZone).filter(Boolean)
-      : [];
-    state.annotations = saved.annotations && typeof saved.annotations === "object"
-      ? saved.annotations
-      : {};
+    state.manualUnexcused = normalizeManualUnexcused(saved.manualUnexcused);
+    state.zones = Array.isArray(saved.zones) ? saved.zones.map(normalizeZone).filter(Boolean) : [];
+    state.annotations = saved.annotations && typeof saved.annotations === "object" ? saved.annotations : {};
 
     if (saved.collapsedSections && typeof saved.collapsedSections === "object") {
       state.collapsedSections = {
@@ -1642,28 +2224,6 @@ function restore() {
       };
     }
   } catch (_) {}
-}
-
-function newZone(start, active = true) {
-  return {
-    id: `zone-${Date.now()}-${Math.random().toString(16).slice(2)}`,
-    start,
-    color: ZONE_COLORS[state.zones.length % ZONE_COLORS.length],
-    thickness: 6,
-    active
-  };
-}
-
-function zoneEnd(zone) {
-  return addDays(zone.start, 89);
-}
-
-function activeZones() {
-  return state.zones.filter(zone => zone.active);
-}
-
-function zonesForDate(dateIso) {
-  return activeZones().filter(zone => dateIso >= zone.start && dateIso <= zoneEnd(zone));
 }
 
 function rowsOnDate(dateIso) {
@@ -1675,14 +2235,12 @@ function netHoursForDate(dateIso) {
 }
 
 function occurrenceForDate(dateIso) {
+  const manual = state.manualUnexcused[dateIso];
+  if (manual) return Number(manual.occurrence);
+
   const hours = netHoursForDate(dateIso);
   if (hours <= 0) return 0;
   return hours >= 8 ? 1 : 0.5;
-}
-
-function formatOccurrence(value) {
-  const amount = Number(value || 0);
-  return `${amount.toFixed(1)} ${amount === 1 ? "event" : "events"}`;
 }
 
 function selectedOccurrenceTotal() {
@@ -1692,20 +2250,6 @@ function selectedOccurrenceTotal() {
   );
 }
 
-function isUnexcusedEntry(entry) {
-  const text = [entry.type, entry.comment, entry.record, entry.status]
-    .join(" ")
-    .toLowerCase();
-
-  return text.includes("unexcused") ||
-    text.includes("no approval") ||
-    text.includes("without approval");
-}
-
-function unexcusedRowsForDate(dateIso) {
-  return rowsOnDate(dateIso).filter(isUnexcusedEntry);
-}
-
 function dateSources() {
   const dates = entries.map(entry => entry.date).filter(isValidISO);
 
@@ -1713,9 +2257,13 @@ function dateSources() {
     if (isValidISO(dateIso)) dates.push(dateIso);
   });
 
+  Object.keys(state.manualUnexcused).forEach(dateIso => {
+    if (isValidISO(dateIso)) dates.push(dateIso);
+  });
+
   state.zones.forEach(zone => {
     if (!isValidISO(zone.start)) return;
-    dates.push(zone.start, zoneEnd(zone));
+    dates.push(zone.start, addDays(zone.start, 89));
   });
 
   return dates;
@@ -1723,71 +2271,194 @@ function dateSources() {
 
 function calendarBounds() {
   const dates = dateSources().sort();
-  if (!dates.length) return null;
+  if (!dates.length) {
+    return {
+      start: `${state.selectedYear}-01-01`,
+      end: `${state.selectedYear}-12-31`
+    };
+  }
   return { start: dates[0], end: dates.at(-1) };
 }
 
-function availableMonths() {
+function allAvailableMonths() {
   const bounds = calendarBounds();
-  return bounds ? monthsBetween(bounds.start, bounds.end) : [];
+  return monthsBetween(bounds.start, bounds.end);
 }
 
-function warningMonthsSet() {
+function activeZones() {
+  return state.zones.filter(zone => zone.active);
+}
+
+function zoneEnd(zone) {
+  return addDays(zone.start, 89);
+}
+
+function zonesForDate(dateIso) {
+  return activeZones().filter(zone => dateIso >= zone.start && dateIso <= zoneEnd(zone));
+}
+
+function warningMonths() {
   const set = new Set();
+
   activeZones().forEach(zone => {
     monthsBetween(zone.start, zoneEnd(zone)).forEach(([year, month]) => {
       set.add(monthKey(year, month));
     });
   });
+
   return set;
 }
 
-function visibleMonths() {
-  const months = availableMonths();
+function yearMonths() {
+  const count = state.yearMonthCount;
+  const maximumStart = Math.max(0, 12 - count);
+  const start = Math.min(state.yearStartMonth, maximumStart);
 
-  if (state.view === "all") return months;
-
-  if (state.view === "warning") {
-    const warningSet = warningMonthsSet();
-    return months.filter(([year, month]) => warningSet.has(monthKey(year, month)));
-  }
-
-  return months.filter(([year, month]) => monthKey(year, month) === state.view);
+  return Array.from({ length: count }, (_, offset) => [
+    state.selectedYear,
+    start + offset
+  ]);
 }
 
-function refreshViewOptions() {
-  const months = availableMonths();
-  const previous = state.view;
-  els.viewSelect.innerHTML = "";
+function specificMonths() {
+  return [...state.selectedMonths]
+    .sort()
+    .map(monthPairFromKey)
+    .filter(([year, month]) => Number.isFinite(year) && month >= 0 && month <= 11);
+}
 
-  const allOption = document.createElement("option");
-  allOption.value = "all";
-  allOption.textContent = "All months";
-  els.viewSelect.appendChild(allOption);
+function visibleMonths() {
+  let months;
 
-  const warningOption = document.createElement("option");
-  warningOption.value = "warning";
-  warningOption.textContent = "Warning-zone months";
-  els.viewSelect.appendChild(warningOption);
+  if (state.dateFilter === "months") {
+    months = specificMonths();
+  } else {
+    months = yearMonths();
+  }
 
-  months.forEach(([year, month]) => {
-    const option = document.createElement("option");
-    option.value = monthKey(year, month);
-    option.textContent = new Date(year, month, 1).toLocaleDateString(undefined, {
-      month: "long",
-      year: "numeric"
-    });
-    els.viewSelect.appendChild(option);
+  if (state.calendarView === "warning") {
+    const allowed = warningMonths();
+    months = months.filter(([year, month]) => allowed.has(monthKey(year, month)));
+  }
+
+  return months;
+}
+
+function yearOptions() {
+  const years = new Set([CURRENT_YEAR, state.selectedYear]);
+
+  entries.forEach(entry => years.add(parseLocal(entry.date).getFullYear()));
+  Object.keys(state.annotations).forEach(dateIso => years.add(parseLocal(dateIso).getFullYear()));
+  Object.keys(state.manualUnexcused).forEach(dateIso => years.add(parseLocal(dateIso).getFullYear()));
+  state.zones.forEach(zone => {
+    years.add(parseLocal(zone.start).getFullYear());
+    years.add(parseLocal(zoneEnd(zone)).getFullYear());
   });
 
-  const validValues = new Set([
-    "all",
-    "warning",
-    ...months.map(([year, month]) => monthKey(year, month))
-  ]);
+  for (let year = CURRENT_YEAR - 15; year <= CURRENT_YEAR + 15; year++) {
+    years.add(year);
+  }
 
-  state.view = validValues.has(previous) ? previous : "all";
-  els.viewSelect.value = state.view;
+  return [...years].filter(Number.isFinite).sort((a, b) => a - b);
+}
+
+function refreshYearOptions() {
+  els.yearSelect.innerHTML = "";
+
+  yearOptions().forEach(year => {
+    const option = document.createElement("option");
+    option.value = String(year);
+    option.textContent = String(year);
+    els.yearSelect.appendChild(option);
+  });
+
+  const other = document.createElement("option");
+  other.value = "other";
+  other.textContent = "Other year…";
+  els.yearSelect.appendChild(other);
+  els.yearSelect.value = String(state.selectedYear);
+}
+
+function refreshStartMonthOptions() {
+  const maximumStart = Math.max(0, 12 - state.yearMonthCount);
+  state.yearStartMonth = Math.min(state.yearStartMonth, maximumStart);
+  els.yearStartMonthSelect.innerHTML = "";
+  MONTH_NAMES.forEach((name, index) => {
+    const option = document.createElement("option");
+    option.value = String(index);
+    option.textContent = name;
+    els.yearStartMonthSelect.appendChild(option);
+  });
+  els.yearStartMonthSelect.value = String(state.yearStartMonth);
+}
+
+function ensureMonthSelectionDefaults() {
+  if (state.selectedMonths.size) return;
+  for (let month = 0; month < 12; month++) {
+    state.selectedMonths.add(monthKey(state.selectedYear, month));
+  }
+}
+
+function refreshMonthPicker() {
+  els.monthPickerYearLabel.textContent = String(state.selectedYear);
+  els.monthCheckboxGrid.innerHTML = "";
+
+  MONTH_NAMES.forEach((name, month) => {
+    const key = monthKey(state.selectedYear, month);
+    const label = document.createElement("label");
+    label.className = "month-checkbox";
+    label.innerHTML = `
+      <input type="checkbox" data-month-key="${key}" ${state.selectedMonths.has(key) ? "checked" : ""}>
+      <span>${escapeHtml(name)}</span>
+    `;
+
+    const checkbox = label.querySelector("input");
+    checkbox.addEventListener("click", event => {
+      event.stopPropagation();
+      const clickedMonth = month;
+
+      if (event.shiftKey && state.monthSelectionAnchor != null) {
+        const start = Math.min(state.monthSelectionAnchor, clickedMonth);
+        const end = Math.max(state.monthSelectionAnchor, clickedMonth);
+        const shouldSelect = checkbox.checked;
+
+        for (let index = start; index <= end; index++) {
+          const rangeKey = monthKey(state.selectedYear, index);
+          if (shouldSelect) state.selectedMonths.add(rangeKey);
+          else state.selectedMonths.delete(rangeKey);
+        }
+      } else {
+        if (checkbox.checked) state.selectedMonths.add(key);
+        else state.selectedMonths.delete(key);
+      }
+
+      state.monthSelectionAnchor = clickedMonth;
+      persist();
+      refreshMonthPicker();
+      renderCalendar();
+    });
+
+    els.monthCheckboxGrid.appendChild(label);
+  });
+
+  const selected = [...state.selectedMonths].sort();
+  els.monthPickerSummary.textContent = selected.length
+    ? `${selected.length} month${selected.length === 1 ? "" : "s"} selected`
+    : "Choose months";
+}
+
+function updateControlVisibility() {
+  const yearMode = state.dateFilter === "year";
+  const monthsMode = state.dateFilter === "months";
+
+  els.yearControl.hidden = !(yearMode || monthsMode);
+  els.yearStartControl.hidden = !yearMode;
+  els.yearCountControl.hidden = !yearMode;
+  els.monthPickerControl.hidden = !monthsMode;
+
+  els.calendarViewSelect.value = state.calendarView;
+  els.dateFilterSelect.value = state.dateFilter;
+  els.yearMonthCountSelect.value = String(state.yearMonthCount);
 }
 
 function applyDarkMode() {
@@ -1797,7 +2468,7 @@ function applyDarkMode() {
 
 function updateSourcePill() {
   if (!entries.length) {
-    els.sourcePill.textContent = "No Excel data loaded · blank slate";
+    els.sourcePill.textContent = `Scratch calendar · ${state.selectedYear}`;
     return;
   }
 
@@ -1809,7 +2480,7 @@ function updateSourcePill() {
 
 function renderLegend() {
   els.legendContent.innerHTML = `
-    <div class="legend-group-label">Hours away</div>
+    <div class="legend-group-label">Hours off</div>
     <div class="legend-list">
       <div class="legend-item"><span class="legend-line" style="background:var(--hours-full)"></span><span>8 hours or more</span></div>
       <div class="legend-item"><span class="legend-line" style="background:var(--hours-partial)"></span><span>Less than 8 hours</span></div>
@@ -1825,26 +2496,115 @@ function renderLegend() {
 }
 
 function renderUnexcusedList() {
-  const grouped = new Map();
-
-  entries.filter(isUnexcusedEntry).forEach(entry => {
-    if (!grouped.has(entry.date)) grouped.set(entry.date, []);
-    grouped.get(entry.date).push(entry);
-  });
-
-  const dates = [...grouped.keys()].sort();
+  const dates = Object.keys(state.manualUnexcused).sort();
 
   if (!dates.length) {
-    els.unexcusedList.innerHTML = `<div class="detail-empty">No unexcused events identified in the imported rows.</div>`;
+    els.unexcusedList.innerHTML = `<div class="detail-empty">No manually added unexcused absences.</div>`;
     return;
   }
 
   els.unexcusedList.innerHTML = dates.map(dateIso => `
     <div class="unexcused-list-item">
-      <div class="unexcused-list-date">${formatShort(dateIso)}</div>
-      <div class="unexcused-list-meta">${formatHours(netHoursForDate(dateIso))} · ${formatOccurrence(occurrenceForDate(dateIso))}</div>
+      <button class="unexcused-list-main" type="button" data-unexcused-open="${dateIso}">
+        <div class="unexcused-list-date">${formatCompactDate(dateIso)}</div>
+      </button>
+      <div class="unexcused-list-actions">
+        <button class="mini-icon-button" type="button" data-unexcused-edit="${dateIso}">Edit</button>
+        <button class="mini-icon-button danger" type="button" data-unexcused-delete="${dateIso}">Delete</button>
+      </div>
     </div>
   `).join("");
+
+  els.unexcusedList.querySelectorAll("[data-unexcused-open]").forEach(button => {
+    button.addEventListener("click", () => {
+      state.selectedDate = button.dataset.unexcusedOpen;
+      state.eventSelectedDays = new Set([state.selectedDate]);
+      state.eventSelectionAnchor = state.selectedDate;
+      renderCalendar();
+      renderDetails();
+    });
+  });
+
+  els.unexcusedList.querySelectorAll("[data-unexcused-edit]").forEach(button => {
+    button.addEventListener("click", () => openUnexcusedDialog(button.dataset.unexcusedEdit));
+  });
+
+  els.unexcusedList.querySelectorAll("[data-unexcused-delete]").forEach(button => {
+    button.addEventListener("click", () => {
+      const dateIso = button.dataset.unexcusedDelete;
+      if (!window.confirm(`Delete the unexcused absence for ${formatLong(dateIso)}?`)) return;
+      delete state.manualUnexcused[dateIso];
+      persist();
+      renderAll();
+    });
+  });
+}
+
+function setUnexcusedPickMode(enabled) {
+  state.unexcusedPickMode = enabled;
+  document.body.classList.toggle("unexcused-pick-mode", enabled);
+  els.pickUnexcusedFromCalendarButton.textContent = enabled
+    ? "Cancel calendar selection"
+    : "Choose from full calendar";
+  els.unexcusedPickStatus.textContent = enabled
+    ? "Click one date on the full calendar."
+    : "";
+}
+
+function openUnexcusedDialog(dateIso) {
+  if (!isValidISO(dateIso)) return;
+
+  state.editingUnexcusedDate = dateIso;
+  const existing = state.manualUnexcused[dateIso];
+
+  els.unexcusedDialogDate.textContent = formatLong(dateIso);
+  els.unexcusedOccurrenceSelect.value = String(existing?.occurrence ?? 0.5);
+  els.unexcusedTypeSelect.value = existing?.type ?? "";
+  els.unexcusedPtoInput.value = existing?.ptoUsed ?? "";
+  setUnexcusedPickMode(false);
+
+  if (typeof els.unexcusedDialog.showModal === "function") {
+    els.unexcusedDialog.showModal();
+  } else {
+    els.unexcusedDialog.setAttribute("open", "");
+  }
+}
+
+function closeUnexcusedDialog() {
+  state.editingUnexcusedDate = null;
+  if (typeof els.unexcusedDialog.close === "function") {
+    els.unexcusedDialog.close();
+  } else {
+    els.unexcusedDialog.removeAttribute("open");
+  }
+}
+
+function saveUnexcusedDialog() {
+  const dateIso = state.editingUnexcusedDate;
+  if (!isValidISO(dateIso)) return;
+
+  state.manualUnexcused[dateIso] = {
+    occurrence: Number(els.unexcusedOccurrenceSelect.value) === 1 ? 1 : 0.5,
+    type: els.unexcusedTypeSelect.value,
+    ptoUsed: Math.max(0, Number(els.unexcusedPtoInput.value || 0))
+  };
+
+  state.selectedDate = dateIso;
+  state.eventSelectedDays = new Set([dateIso]);
+  state.eventSelectionAnchor = dateIso;
+  persist();
+  closeUnexcusedDialog();
+  renderAll();
+}
+
+function newZone(start, active = true) {
+  return {
+    id: `zone-${Date.now()}-${Math.random().toString(16).slice(2)}`,
+    start,
+    color: ZONE_COLORS[state.zones.length % ZONE_COLORS.length],
+    thickness: 6,
+    active
+  };
 }
 
 function renderZoneControls() {
@@ -2005,26 +2765,26 @@ function buildMonth(year, month) {
 
   const title = document.createElement("div");
   title.className = "month-title";
-  const monthName = new Date(year, month, 1).toLocaleDateString(undefined, { month: "long" });
   title.innerHTML = `
-    <span class="month-name">${escapeHtml(monthName)}</span>
+    <span class="month-name">${escapeHtml(MONTH_NAMES[month])}</span>
     <span class="month-year">${year}</span>
   `;
   monthElement.appendChild(title);
 
   const weekdayRow = document.createElement("div");
   weekdayRow.className = "weekday-row";
+
   ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].forEach(day => {
     const cell = document.createElement("div");
     cell.className = "weekday";
     cell.textContent = day;
     weekdayRow.appendChild(cell);
   });
+
   monthElement.appendChild(weekdayRow);
 
   const grid = document.createElement("div");
   grid.className = "days-grid";
-
   const firstDay = new Date(year, month, 1).getDay();
   const dayCount = new Date(year, month + 1, 0).getDate();
 
@@ -2042,7 +2802,7 @@ function buildMonth(year, month) {
     const tags = [...new Set(dayRows.map(entry => classifyComment(entry.comment)).filter(Boolean))];
     const zones = zonesForDate(dateIso);
     const annotation = state.annotations[dateIso];
-    const unexcused = unexcusedRowsForDate(dateIso).length > 0;
+    const unexcused = state.manualUnexcused[dateIso];
 
     const button = document.createElement("button");
     button.type = "button";
@@ -2054,10 +2814,18 @@ function buildMonth(year, month) {
     if (unexcused) button.classList.add("unexcused");
 
     const zoneLines = zoneLineMarkup(zones);
-    const durationColor = netHours >= 8 ? "var(--hours-full)" : "var(--hours-partial)";
-    const durationLabel = netHours >= 8 ? "8 hours or more" : "Less than 8 hours";
+    const hasHoursOffMarker = dayRows.length > 0 || Boolean(unexcused);
+    const fullDayMarker = unexcused
+      ? Number(unexcused.occurrence) === 1
+      : netHours >= 8;
+    const durationColor = fullDayMarker
+      ? "var(--hours-full)"
+      : "var(--hours-partial)";
+    const durationLabel = fullDayMarker
+      ? "8 hours or more"
+      : "Less than 8 hours";
 
-    const rowSummary = dayRows.length ? `
+    const rowSummary = hasHoursOffMarker ? `
       <div class="type-bars" aria-label="${durationLabel}; ${types.map(escapeHtml).join(", ")}">
         <span class="type-bar" title="${durationLabel}" style="background:${durationColor}"></span>
         <span class="classification-bars">
@@ -2084,6 +2852,11 @@ function buildMonth(year, month) {
     `;
 
     button.addEventListener("click", event => {
+      if (state.unexcusedPickMode) {
+        openUnexcusedDialog(dateIso);
+        return;
+      }
+
       if (state.selectionMode) {
         toggleDaySelection(dateIso, event.shiftKey);
         renderCalendar();
@@ -2131,8 +2904,8 @@ function renderCalendar() {
     const message = document.createElement("div");
     message.className = "data-empty";
     message.innerHTML = `
-      <strong>No calendar data yet</strong>
-      Import an .xlsx or .csv workbook from the Save and data section. The calendar will automatically span the earliest through latest dates found in the file.
+      <strong>No months match the current selection</strong>
+      Choose a calendar year, select one or more specific months, or activate a warning zone.
     `;
     els.monthsGrid.appendChild(message);
     return;
@@ -2163,7 +2936,7 @@ function renderDetails() {
   const dayRows = rowsOnDate(dateIso);
   const annotation = state.annotations[dateIso];
   const zones = zonesForDate(dateIso);
-  const unexcusedRows = unexcusedRowsForDate(dateIso);
+  const manual = state.manualUnexcused[dateIso];
   const dayOccurrence = occurrenceForDate(dateIso);
   const selectedDates = [...state.eventSelectedDays].sort();
   const selectedTotal = selectedOccurrenceTotal();
@@ -2171,12 +2944,27 @@ function renderDetails() {
   const zoneBadges = zones.map(zone => {
     const index = state.zones.findIndex(item => item.id === zone.id);
     const dayNumber = daysBetween(zone.start, dateIso) + 1;
-    return `<span class="badge" style="background:${escapeHtml(zone.color)};color:${contrastText(zone.color)}">Zone ${index + 1}, Day ${dayNumber}</span>`;
+
+    return `<span class="badge" style="background:${escapeHtml(zone.color)};color:${contrastText(zone.color)}">
+      Zone ${index + 1}, Day ${dayNumber}
+    </span>`;
   }).join("");
+
+  const manualMarkup = manual ? `
+    <div class="unexcused-detail">
+      <div class="unexcused-title">Unexcused</div>
+      <div class="unexcused-meta">
+        ${formatOccurrence(manual.occurrence)}
+        ${manual.type ? ` · ${escapeHtml(manual.type)}` : ""}
+        · ${manual.ptoUsed} PTO used
+      </div>
+    </div>
+  ` : "";
 
   const entryCards = dayRows.length
     ? dayRows.map(entry => {
         const approved = entry.status.toLowerCase() === "approved";
+
         return `
           <article class="entry-card">
             <div class="entry-top">
@@ -2187,29 +2975,19 @@ function renderDetails() {
               <span class="badge ${approved ? "status-approved" : "status-denied"}">${escapeHtml(entry.status)}</span>
               <span class="badge ${entry.recordKind === "Correction" ? "kind-correction" : ""}">${escapeHtml(entry.recordKind)}</span>
               ${classifyComment(entry.comment) ? `<span class="badge">${escapeHtml(classifyComment(entry.comment))}</span>` : ""}
-              ${isUnexcusedEntry(entry) ? `<span class="badge" style="background:#fee4e2;color:#b42318">Unexcused</span>` : ""}
             </div>
             <div class="entry-comment">${entry.comment ? escapeHtml(entry.comment) : "<em>No comment recorded</em>"}</div>
             <div class="entry-source">Imported row ${entry.sourceRow}</div>
           </article>
         `;
       }).join("")
-    : `<div class="footnote">No imported time-off rows are recorded for this date.</div>`;
-
-  const unexcusedMarkup = unexcusedRows.length ? `
-    <div class="unexcused-detail">
-      <div class="unexcused-title">Unexcused</div>
-      <div class="unexcused-meta">
-        ${unexcusedRows.length} matching imported ${unexcusedRows.length === 1 ? "row" : "rows"} · ${formatOccurrence(dayOccurrence)}
-      </div>
-    </div>
-  ` : "";
+    : `<div class="footnote">No imported attendance rows are recorded for this date.</div>`;
 
   els.detailContent.innerHTML = `
     <div class="detail-header">
       <div class="detail-date">${formatLong(dateIso)}</div>
       <div class="detail-badges">${zoneBadges}</div>
-      ${unexcusedMarkup}
+      ${manualMarkup}
       ${annotation ? `
         <div class="date-custom-note" style="background:${escapeHtml(annotation.color)};color:${contrastText(annotation.color)}">
           ${escapeHtml(annotation.description)}
@@ -2229,13 +3007,20 @@ function renderDetails() {
     </div>
 
     <div class="event-selection-note">
-      Ctrl-click or Command-click individual dates. Shift-click selects the continuous range from the most recent anchor date.
+      Ctrl-click or Command-click individual dates. Shift-click selects a continuous range from the most recent anchor.
     </div>
 
     <div class="button-row">
       <button class="btn warning" id="addZoneHereButton" type="button">Add zone here</button>
       <button class="btn" id="selectDayButton" type="button">Add to day selection</button>
     </div>
+
+    ${manual ? `
+      <div class="button-row">
+        <button class="btn" id="editUnexcusedButton" type="button">Edit unexcused details</button>
+        <button class="btn danger" id="deleteUnexcusedButton" type="button">Delete unexcused details</button>
+      </div>
+    ` : ""}
 
     ${annotation ? `
       <div class="button-row one">
@@ -2270,9 +3055,23 @@ function renderDetails() {
     renderDetails();
   });
 
-  const removeButton = document.getElementById("removeCurrentHighlightButton");
-  if (removeButton) {
-    removeButton.addEventListener("click", () => {
+  const editUnexcusedButton = document.getElementById("editUnexcusedButton");
+  if (editUnexcusedButton) {
+    editUnexcusedButton.addEventListener("click", () => openUnexcusedDialog(dateIso));
+  }
+
+  const deleteUnexcusedButton = document.getElementById("deleteUnexcusedButton");
+  if (deleteUnexcusedButton) {
+    deleteUnexcusedButton.addEventListener("click", () => {
+      delete state.manualUnexcused[dateIso];
+      persist();
+      renderAll();
+    });
+  }
+
+  const removeHighlightButton = document.getElementById("removeCurrentHighlightButton");
+  if (removeHighlightButton) {
+    removeHighlightButton.addEventListener("click", () => {
       delete state.annotations[dateIso];
       persist();
       renderAll();
@@ -2298,7 +3097,10 @@ function renderCollapsedStates() {
 }
 
 function renderAll() {
-  refreshViewOptions();
+  refreshYearOptions();
+  refreshStartMonthOptions();
+  refreshMonthPicker();
+  updateControlVisibility();
   applyDarkMode();
   updateSourcePill();
   renderZoneControls();
@@ -2308,9 +3110,10 @@ function renderAll() {
   renderCollapsedStates();
   renderCalendar();
   renderDetails();
+  setUnexcusedPickMode(state.unexcusedPickMode);
 }
 
-/* Spreadsheet parsing */
+/* Spreadsheet import */
 
 function normalizeHeader(value) {
   return String(value ?? "")
@@ -2359,7 +3162,7 @@ function matrixToEntries(matrix) {
 
   const headerRowIndex = findHeaderRow(matrix);
   if (headerRowIndex < 0) {
-    throw new Error("Could not find Date, Type, and Hours columns.");
+    throw new Error("Could not find Date, Type, and Hours or Requested columns.");
   }
 
   const headers = matrix[headerRowIndex] || [];
@@ -2662,12 +3465,16 @@ async function importSpreadsheet(file) {
 
   entries = matrixToEntries(matrix);
   state.sourceFileName = file.name;
-  state.view = "all";
+  state.calendarView = "all";
+  state.dateFilter = "year";
   state.selectedDate = null;
   state.eventSelectedDays.clear();
   state.eventSelectionAnchor = null;
   state.selectedDays.clear();
   state.lastSelectionDate = null;
+
+  const firstYear = parseLocal(entries.map(entry => entry.date).sort()[0]).getFullYear();
+  state.selectedYear = firstYear;
 
   persist();
   renderAll();
@@ -2675,13 +3482,20 @@ async function importSpreadsheet(file) {
 
 function exportFullBackup() {
   const payload = {
-    app: "Time Off Calendar",
+    app: "RC Attendance",
     version: BACKUP_VERSION,
     exportedAt: new Date().toISOString(),
     entries,
     sourceFileName: state.sourceFileName,
-    view: state.view,
+    calendarView: state.calendarView,
+    dateFilter: state.dateFilter,
+    selectedYear: state.selectedYear,
+    yearStartMonth: state.yearStartMonth,
+    yearMonthCount: state.yearMonthCount,
+    dateSelectionDefaultVersion: state.dateSelectionDefaultVersion,
+    selectedMonths: [...state.selectedMonths],
     darkMode: state.darkMode,
+    manualUnexcused: state.manualUnexcused,
     zones: state.zones,
     annotations: state.annotations,
     collapsedSections: state.collapsedSections
@@ -2693,7 +3507,7 @@ function exportFullBackup() {
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
   link.href = url;
-  link.download = `time-off-calendar-full-backup-${toISO(new Date())}.json`;
+  link.download = `rc-attendance-full-backup-${toISO(new Date())}.json`;
   document.body.appendChild(link);
   link.click();
   link.remove();
@@ -2705,18 +3519,37 @@ function importBackupObject(imported, fileName = "") {
     throw new Error("The JSON backup is invalid.");
   }
 
-  if (Array.isArray(imported.entries)) {
-    entries = sanitizeEntries(imported.entries);
-  }
+  if (Array.isArray(imported.entries)) entries = sanitizeEntries(imported.entries);
+  if (typeof imported.sourceFileName === "string") state.sourceFileName = imported.sourceFileName;
+  else if (fileName && !state.sourceFileName) state.sourceFileName = fileName;
 
-  if (typeof imported.sourceFileName === "string") {
-    state.sourceFileName = imported.sourceFileName;
-  } else if (fileName && !state.sourceFileName) {
-    state.sourceFileName = fileName;
-  }
+  state.calendarView = ["all", "warning"].includes(imported.calendarView)
+    ? imported.calendarView
+    : state.calendarView;
+  state.dateFilter = ["year", "months"].includes(imported.dateFilter)
+    ? imported.dateFilter
+    : "year";
+  state.selectedYear = Number.isInteger(Number(imported.selectedYear))
+    ? Number(imported.selectedYear)
+    : state.selectedYear;
+  state.yearStartMonth = Math.min(11, Math.max(0, Number(imported.yearStartMonth || 0)));
+  state.yearMonthCount = [3, 6, 9, 12].includes(Number(imported.yearMonthCount))
+    ? Number(imported.yearMonthCount)
+    : state.yearMonthCount;
+  state.dateSelectionDefaultVersion = Math.max(
+    1,
+    Number(imported.dateSelectionDefaultVersion || 0)
+  );
+  state.selectedMonths = new Set(
+    Array.isArray(imported.selectedMonths)
+      ? imported.selectedMonths.filter(value => /^\d{4}-\d{2}$/.test(String(value)))
+      : []
+  );
+  state.darkMode = Boolean(imported.darkMode);
 
-  if (typeof imported.view === "string") state.view = imported.view;
-  if (typeof imported.darkMode === "boolean") state.darkMode = imported.darkMode;
+  if (imported.manualUnexcused) {
+    state.manualUnexcused = normalizeManualUnexcused(imported.manualUnexcused);
+  }
 
   if (Array.isArray(imported.zones)) {
     state.zones = imported.zones.map(normalizeZone).filter(Boolean);
@@ -2782,9 +3615,79 @@ function setupCollapsibles() {
 }
 
 function setupControls() {
-  els.viewSelect.addEventListener("change", () => {
-    state.view = els.viewSelect.value;
+  els.calendarViewSelect.addEventListener("change", () => {
+    state.calendarView = els.calendarViewSelect.value;
     persist();
+    renderCalendar();
+  });
+
+  els.dateFilterSelect.addEventListener("change", () => {
+    state.dateFilter = els.dateFilterSelect.value;
+    if (state.dateFilter === "months") ensureMonthSelectionDefaults();
+    persist();
+    renderAll();
+  });
+
+  els.yearSelect.addEventListener("change", () => {
+    if (els.yearSelect.value === "other") {
+      const response = window.prompt("Enter the calendar year:", String(state.selectedYear));
+      const year = Number(response);
+
+      if (Number.isInteger(year) && year >= 1 && year <= 9999) {
+        state.selectedYear = year;
+      }
+    } else {
+      state.selectedYear = Number(els.yearSelect.value);
+    }
+
+    state.monthSelectionAnchor = null;
+    persist();
+    renderAll();
+  });
+
+  els.yearStartMonthSelect.addEventListener("change", () => {
+    state.yearStartMonth = Number(els.yearStartMonthSelect.value);
+    persist();
+    renderCalendar();
+  });
+
+  els.yearMonthCountSelect.addEventListener("change", () => {
+    state.yearMonthCount = Number(els.yearMonthCountSelect.value);
+    const maximumStart = Math.max(0, 12 - state.yearMonthCount);
+    state.yearStartMonth = Math.min(state.yearStartMonth, maximumStart);
+    persist();
+    renderAll();
+  });
+
+  els.monthPickerButton.addEventListener("click", event => {
+    event.stopPropagation();
+    const willOpen = els.monthPickerPanel.hidden;
+    els.monthPickerPanel.hidden = !willOpen;
+    els.monthPickerButton.setAttribute("aria-expanded", String(willOpen));
+  });
+
+  els.monthPickerPanel.addEventListener("click", event => event.stopPropagation());
+
+  document.addEventListener("click", () => {
+    els.monthPickerPanel.hidden = true;
+    els.monthPickerButton.setAttribute("aria-expanded", "false");
+  });
+
+  els.selectYearMonthsButton.addEventListener("click", () => {
+    for (let month = 0; month < 12; month++) {
+      state.selectedMonths.add(monthKey(state.selectedYear, month));
+    }
+    persist();
+    refreshMonthPicker();
+    renderCalendar();
+  });
+
+  els.clearYearMonthsButton.addEventListener("click", () => {
+    for (let month = 0; month < 12; month++) {
+      state.selectedMonths.delete(monthKey(state.selectedYear, month));
+    }
+    persist();
+    refreshMonthPicker();
     renderCalendar();
   });
 
@@ -2794,9 +3697,30 @@ function setupControls() {
     persist();
   });
 
+  els.unexcusedDateInput.addEventListener("change", () => {
+    els.unexcusedDateDisplay.textContent = isValidISO(els.unexcusedDateInput.value)
+      ? formatCompactDate(els.unexcusedDateInput.value)
+      : "Choose a date";
+  });
+
+  els.addUnexcusedByDateButton.addEventListener("click", () => {
+    if (!isValidISO(els.unexcusedDateInput.value)) {
+      els.unexcusedPickStatus.textContent = "Choose a valid date first.";
+      return;
+    }
+    openUnexcusedDialog(els.unexcusedDateInput.value);
+  });
+
+  els.pickUnexcusedFromCalendarButton.addEventListener("click", () => {
+    setUnexcusedPickMode(!state.unexcusedPickMode);
+  });
+
+  els.unexcusedDialogCloseButton.addEventListener("click", closeUnexcusedDialog);
+  els.unexcusedCancelButton.addEventListener("click", closeUnexcusedDialog);
+  els.unexcusedSaveButton.addEventListener("click", saveUnexcusedDialog);
+
   els.addZoneButton.addEventListener("click", () => {
-    const bounds = calendarBounds();
-    const start = state.selectedDate || bounds?.start || toISO(new Date());
+    const start = state.selectedDate || `${state.selectedYear}-01-01`;
     state.zones.push(newZone(start, true));
     persist();
     renderAll();
@@ -2805,10 +3729,9 @@ function setupControls() {
   els.addConsecutiveButton.addEventListener("click", () => {
     const candidates = activeZones().length ? activeZones() : state.zones;
     const latestEnd = candidates.map(zoneEnd).sort().at(-1);
-    const bounds = calendarBounds();
     const start = latestEnd
       ? addDays(latestEnd, 1)
-      : (state.selectedDate || bounds?.start || toISO(new Date()));
+      : (state.selectedDate || `${state.selectedYear}-01-01`);
 
     state.zones.push(newZone(start, true));
     persist();
@@ -2883,29 +3806,91 @@ function setupControls() {
       return;
     }
 
-    if (!window.confirm("Clear all currently imported spreadsheet rows? Custom highlights, warning zones, and appearance settings will remain.")) {
+    if (!window.confirm("Clear all imported spreadsheet rows? Manual unexcused absences, highlights, warning zones, and settings will remain.")) {
       return;
     }
 
     entries = [];
     state.sourceFileName = "";
-    state.view = "all";
     state.selectedDate = null;
     state.eventSelectedDays.clear();
     state.eventSelectionAnchor = null;
-
     persist();
     renderAll();
     els.settingsStatus.textContent = "Imported spreadsheet rows cleared.";
   });
+
+  els.fullResetButton.addEventListener("click", () => {
+    const confirmed = window.confirm(
+      "Reset the entire calendar? This removes imported Excel rows, manually added unexcused absences, custom highlights, warning zones, appearance choices, and saved layout settings."
+    );
+    if (!confirmed) return;
+
+    entries = [];
+
+    state.calendarView = "all";
+    state.dateFilter = "year";
+    state.selectedYear = CURRENT_YEAR;
+    state.yearStartMonth = 0;
+    state.yearMonthCount = 12;
+    state.dateSelectionDefaultVersion = 1;
+    state.selectedMonths = new Set();
+    state.monthSelectionAnchor = null;
+    state.darkMode = false;
+    state.selectedDate = null;
+    state.selectionMode = false;
+    state.selectedDays = new Set();
+    state.lastSelectionDate = null;
+    state.eventSelectedDays = new Set();
+    state.eventSelectionAnchor = null;
+    state.unexcusedPickMode = false;
+    state.editingUnexcusedDate = null;
+    state.manualUnexcused = {};
+    state.zones = [];
+    state.annotations = {};
+    state.sourceFileName = "";
+    state.collapsedSections = {
+      legend: true,
+      unexcused: true,
+      description: true,
+      warning: true,
+      custom: true,
+      save: true
+    };
+
+    localStorage.removeItem(STORAGE_KEY);
+    els.unexcusedDateInput.value = "";
+    els.unexcusedDateDisplay.textContent = "Choose a date";
+    els.annotationText.value = "";
+    els.annotationColor.value = "#2f80ed";
+    els.monthPickerPanel.hidden = true;
+    closeUnexcusedDialog();
+    setUnexcusedPickMode(false);
+    renderAll();
+    els.settingsStatus.textContent = "The entire calendar has been reset.";
+  });
 }
 
-restore();
-setupControls();
-setupCollapsibles();
+function initializeRcAttendance() {
+  restore();
+  setupControls();
+  setupCollapsibles();
+  persist();
+  renderAll();
+}
 
 document.addEventListener("keydown", event => {
   if (event.key !== "Escape") return;
+
+  if (els.unexcusedDialog.open) {
+    closeUnexcusedDialog();
+    return;
+  }
+
+  if (state.unexcusedPickMode) {
+    setUnexcusedPickMode(false);
+    return;
+  }
 
   state.selectedDate = null;
   state.eventSelectedDays.clear();
@@ -2920,8 +3905,15 @@ document.addEventListener("keydown", event => {
 
 els.annotationText.addEventListener("input", renderSelectionControls);
 
-renderAll();
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initializeRcAttendance, { once: true });
+} else {
+  initializeRcAttendance();
+}
 </script>
+
+
+
 
 </body>
 </html>
