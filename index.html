@@ -1,0 +1,2927 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Time Off Calendar</title>
+<style>
+  :root {
+    --bg: #f5f7fb;
+    --panel: #ffffff;
+    --text: #182235;
+    --muted: #667085;
+    --line: #dce2eb;
+    --soft-line: #edf0f4;
+    --accent: #2457d6;
+    --accent-soft: #eaf0ff;
+    --hours-full: #d64550;
+    --hours-partial: #2f80ed;
+    --pto: #2e9d58;
+    --floating: #f0b429;
+    --lwop: #7f56d9;
+    --other: #667085;
+    --approved: #16835b;
+    --denied: #c43d4b;
+    --correction: #b54708;
+    --selection: #7c3aed;
+    --unexcused: #d92d20;
+    --grid-line: #aeb8c7;
+    --grid-line-strong: #8f9bad;
+    --shadow: 0 10px 28px rgba(20, 34, 58, 0.08);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+
+  button, input, select, textarea { font: inherit; }
+  button { color: inherit; }
+
+  .app-shell {
+    max-width: none;
+    margin: 0;
+    padding: 18px 0.5in 24px;
+  }
+
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+    align-items: flex-start;
+    margin-bottom: 18px;
+  }
+
+  .title-block h1 {
+    margin: 0 0 5px;
+    font-size: clamp(1.55rem, 2.2vw, 2.25rem);
+    letter-spacing: -0.03em;
+  }
+
+  .title-block p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+
+  .source-pill {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 8px 12px;
+    color: var(--muted);
+    font-size: 0.82rem;
+    white-space: nowrap;
+  }
+
+  .controls {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    padding: 16px;
+    display: grid;
+    grid-template-columns: minmax(240px, 420px) minmax(180px, 240px);
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+
+  .control-group { min-width: 0; }
+
+  .control-label {
+    display: block;
+    margin-bottom: 7px;
+    color: #475467;
+    font-size: 0.76rem;
+    font-weight: 800;
+    letter-spacing: 0.035em;
+    text-transform: uppercase;
+  }
+
+  select, input[type="date"], input[type="text"], textarea {
+    width: 100%;
+    min-height: 42px;
+    border: 1px solid #cfd6e1;
+    border-radius: 10px;
+    background: #fff;
+    padding: 8px 10px;
+    color: var(--text);
+    outline: none;
+  }
+
+  textarea {
+    min-height: 66px;
+    resize: vertical;
+  }
+
+  select:focus, input:focus, textarea:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(36, 87, 214, 0.12);
+  }
+
+  input[type="color"] {
+    width: 46px;
+    height: 38px;
+    padding: 2px;
+    border: 1px solid #cfd6e1;
+    border-radius: 9px;
+    background: #fff;
+    cursor: pointer;
+  }
+
+  .control-note {
+    border: 1px solid #d7deea;
+    border-radius: 12px;
+    background: #fafbfc;
+    padding: 11px 12px;
+    color: var(--muted);
+    font-size: 0.83rem;
+    line-height: 1.4;
+  }
+
+  .dark-mode-toggle {
+    min-height: 42px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    color: #344054;
+    font-size: 0.84rem;
+    font-weight: 800;
+    user-select: none;
+  }
+
+  .dark-mode-toggle input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .dark-toggle-track {
+    position: relative;
+    width: 46px;
+    height: 25px;
+    flex: 0 0 auto;
+    border-radius: 999px;
+    background: #b7c0cd;
+    transition: background 0.18s ease;
+  }
+
+  .dark-toggle-knob {
+    position: absolute;
+    width: 19px;
+    height: 19px;
+    left: 3px;
+    top: 3px;
+    border-radius: 50%;
+    background: #ffffff;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.28);
+    transition: transform 0.18s ease;
+  }
+
+  .dark-mode-toggle input:checked + .dark-toggle-track {
+    background: #667eea;
+  }
+
+  .dark-mode-toggle input:checked + .dark-toggle-track .dark-toggle-knob {
+    transform: translateX(21px);
+  }
+
+  .data-empty {
+    grid-column: 1 / -1;
+    border: 2px dashed #b8c2d1;
+    border-radius: 14px;
+    padding: 42px 24px;
+    text-align: center;
+    background: #fafbfc;
+    color: #667085;
+    line-height: 1.55;
+  }
+
+  .data-empty strong {
+    display: block;
+    margin-bottom: 5px;
+    color: #344054;
+    font-size: 1rem;
+  }
+
+  body.dark-mode {
+    --bg: #10141c;
+    --panel: #19212d;
+    --text: #edf2f7;
+    --muted: #a8b3c2;
+    --line: #3a4657;
+    --soft-line: #344052;
+    --grid-line: #526074;
+    --grid-line-strong: #7b8798;
+    color-scheme: dark;
+  }
+
+  body.dark-mode .source-pill,
+  body.dark-mode .controls,
+  body.dark-mode .calendar-panel,
+  body.dark-mode .sidebar,
+  body.dark-mode .sidebar-section,
+  body.dark-mode .month,
+  body.dark-mode .day-cell,
+  body.dark-mode .entry-card,
+  body.dark-mode .event-summary-card,
+  body.dark-mode .zone-card,
+  body.dark-mode .mini-stat {
+    background: var(--panel);
+    color: var(--text);
+  }
+
+  body.dark-mode .month-title,
+  body.dark-mode .weekday,
+  body.dark-mode .day-spacer,
+  body.dark-mode .control-note,
+  body.dark-mode .collapse-icon,
+  body.dark-mode .selection-mode,
+  body.dark-mode .data-empty {
+    background: #202a38;
+    color: var(--text);
+  }
+
+  body.dark-mode .month-name,
+  body.dark-mode .data-empty strong,
+  body.dark-mode .dark-mode-toggle {
+    color: #f4f7fb;
+  }
+
+  body.dark-mode .month-year,
+  body.dark-mode .control-label,
+  body.dark-mode .section-subtitle,
+  body.dark-mode .entry-comment,
+  body.dark-mode .settings-status,
+  body.dark-mode .detail-empty,
+  body.dark-mode .unexcused-list-meta,
+  body.dark-mode .event-selection-note {
+    color: var(--muted);
+  }
+
+  body.dark-mode select,
+  body.dark-mode input[type="date"],
+  body.dark-mode input[type="text"],
+  body.dark-mode textarea,
+  body.dark-mode .field-mini select {
+    background: #111827;
+    color: #eef2f7;
+    border-color: #4a586c;
+  }
+
+  body.dark-mode .btn {
+    background: #253143;
+    border-color: #4d5b6f;
+    color: #eef2f7;
+  }
+
+  body.dark-mode .btn:hover {
+    background: #303d51;
+  }
+
+  body.dark-mode .btn.primary {
+    background: #4664d8;
+    border-color: #4664d8;
+  }
+
+  body.dark-mode .btn.warning {
+    background: #433817;
+    border-color: #8b742b;
+    color: #ffe79b;
+  }
+
+  body.dark-mode .btn.danger {
+    background: #3d2025;
+    border-color: #98505b;
+    color: #ffb6bf;
+  }
+
+  body.dark-mode .day-cell:hover {
+    background: #263246;
+  }
+
+  body.dark-mode .day-tag {
+    background: rgba(48, 61, 81, 0.95);
+    color: #d9e1ec;
+  }
+
+  body.dark-mode .unexcused-list-item {
+    color: #f2f4f7;
+  }
+
+  .workspace {
+    display: grid;
+    grid-template-columns: 180px minmax(0, 1fr) 360px;
+    gap: 10px;
+    align-items: start;
+  }
+
+  .calendar-panel, .sidebar {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+  }
+
+  .calendar-panel {
+    padding: 10px;
+    min-width: 0;
+  }
+
+  .sidebar {
+    padding: 9px;
+    position: sticky;
+    top: 16px;
+    max-height: calc(100vh - 32px);
+    overflow: auto;
+  }
+
+  .sidebar-section {
+    border: 1px solid var(--line);
+    border-radius: 13px;
+    padding: 10px;
+    margin-bottom: 12px;
+    background: white;
+  }
+
+  .sidebar-section:last-child { margin-bottom: 0; }
+
+  .section-title {
+    margin: 0 0 9px;
+    font-size: 0.93rem;
+    font-weight: 850;
+    letter-spacing: -0.01em;
+  }
+
+  .collapsible-header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    border: 0;
+    background: transparent;
+    padding: 0;
+    cursor: pointer;
+    text-align: left;
+  }
+
+  .collapsible-header .section-title {
+    margin: 0;
+  }
+
+  .collapse-icon {
+    flex: 0 0 auto;
+    width: 24px;
+    height: 24px;
+    display: grid;
+    place-items: center;
+    border: 1px solid #cfd6e1;
+    border-radius: 7px;
+    color: #475467;
+    background: #f8fafc;
+    font-size: 0.92rem;
+    font-weight: 900;
+    line-height: 1;
+  }
+
+  .collapsible-header:hover .collapse-icon {
+    background: #eef2f7;
+  }
+
+  .collapsible-content {
+    margin-top: 9px;
+  }
+
+  .collapsible-section.collapsed .collapsible-content {
+    display: none;
+  }
+
+  .detail-empty {
+    color: var(--muted);
+    font-size: 0.75rem;
+    line-height: 1.45;
+    padding: 2px 0;
+  }
+
+  .section-subtitle {
+    margin: -3px 0 11px;
+    color: var(--muted);
+    font-size: 0.74rem;
+    line-height: 1.4;
+  }
+
+  .months-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(260px, 1fr));
+    gap: 14px;
+  }
+
+  .months-grid.single {
+    grid-template-columns: minmax(0, 830px);
+    justify-content: center;
+  }
+
+  .month {
+    border: 2px solid var(--grid-line-strong);
+    border-radius: 13px;
+    overflow: hidden;
+    background: white;
+  }
+
+  .month-title {
+    padding: 12px;
+    border-bottom: 2px solid var(--grid-line-strong);
+    font-size: 1.08rem;
+    letter-spacing: -0.015em;
+    background: #eef1f4;
+  }
+
+  .month-name {
+    font-weight: 1000;
+    color: #101828;
+  }
+
+  .month-year {
+    margin-left: 5px;
+    font-weight: 400;
+    color: #667085;
+  }
+
+  .weekday-row, .days-grid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+  }
+
+  .weekday {
+    text-align: center;
+    padding: 7px 1px;
+    color: var(--muted);
+    font-size: 0.67rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--grid-line);
+  }
+
+  .day-spacer {
+    min-height: 94px;
+    border-right: 1px solid var(--grid-line);
+    border-bottom: 1px solid var(--grid-line);
+    background: #f8fafc;
+  }
+
+  .day-cell {
+    appearance: none;
+    width: 100%;
+    min-height: 94px;
+    border: 0;
+    border-right: 1px solid var(--grid-line);
+    border-bottom: 1px solid var(--grid-line);
+    background-color: white;
+    background-repeat: no-repeat;
+    padding: 6px;
+    text-align: left;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .day-cell:hover {
+    z-index: 2;
+    box-shadow: inset 0 0 0 2px rgba(36, 87, 214, 0.24);
+  }
+
+  .day-cell.selected-date {
+    z-index: 3;
+    box-shadow: inset 0 0 0 3px var(--accent);
+  }
+
+  .day-cell.pick-selected {
+    z-index: 4;
+    box-shadow: inset 0 0 0 3px var(--selection);
+  }
+
+  .day-cell.pick-selected::before {
+    content: "";
+    position: absolute;
+    inset: 4px;
+    border: 1px dashed rgba(124, 58, 237, 0.9);
+    border-radius: 5px;
+    pointer-events: none;
+  }
+
+  .day-cell.selected-date.pick-selected {
+    box-shadow: inset 0 0 0 3px var(--accent), inset 0 0 0 6px var(--selection);
+  }
+
+  .day-cell.unexcused {
+    outline: 4px solid var(--unexcused);
+    outline-offset: -4px;
+    z-index: 1;
+  }
+
+  .day-cell.unexcused:hover {
+    outline-width: 4px;
+  }
+
+  .zone-line {
+    position: absolute;
+    left: 0;
+    right: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .event-selected::after {
+    content: "✓";
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    width: 17px;
+    height: 17px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: #101828;
+    color: #ffffff;
+    font-size: 0.67rem;
+    font-weight: 950;
+    z-index: 5;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.28);
+  }
+
+  .zone-line-preview {
+    display: inline-block;
+    width: 22px;
+    border-radius: 999px;
+    flex: 0 0 auto;
+  }
+
+  .fixed-warning-symbol {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 20px;
+    height: 18px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 1px;
+    clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+    font-size: 0.7rem;
+    font-weight: 950;
+    line-height: 1;
+    z-index: 5;
+  }
+
+  .fixed-warning-symbol.yellow {
+    background: #f0b429;
+    color: #332700;
+  }
+
+  .fixed-warning-symbol.red {
+    background: #d92d20;
+    color: #ffffff;
+  }
+
+  .fixed-warning-symbol.purple {
+    background: #7f56d9;
+    color: #ffffff;
+  }
+
+  .fixed-warning-detail {
+    margin-top: 9px;
+    border: 2px solid;
+    border-radius: 9px;
+    padding: 9px;
+    font-size: 0.76rem;
+    font-weight: 800;
+    line-height: 1.4;
+  }
+
+  .fixed-warning-detail.yellow {
+    border-color: #d4a017;
+    background: #fff8dc;
+    color: #624b00;
+  }
+
+  .fixed-warning-detail.red {
+    border-color: #d92d20;
+    background: #fff1f0;
+    color: #8f1d15;
+  }
+
+  .fixed-warning-detail.purple {
+    border-color: #7f56d9;
+    background: #f5f0ff;
+    color: #56339b;
+  }
+
+  .settings-status {
+    min-height: 1.1em;
+    margin-top: 7px;
+    color: var(--muted);
+    font-size: 0.67rem;
+    line-height: 1.35;
+  }
+
+  .unexcused-legend {
+    width: 17px;
+    height: 14px;
+    border: 4px solid var(--unexcused);
+    border-radius: 3px;
+  }
+
+  .unexcused-detail {
+    margin-top: 10px;
+    border: 2px solid var(--unexcused);
+    border-radius: 10px;
+    padding: 10px;
+    background: #fff3f2;
+  }
+
+  .unexcused-title {
+    color: var(--unexcused);
+    font-weight: 950;
+    font-size: 0.84rem;
+  }
+
+  .unexcused-meta {
+    margin-top: 5px;
+    color: #7a271a;
+    font-size: 0.77rem;
+    line-height: 1.45;
+  }
+
+  .day-number-row {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    position: relative;
+    z-index: 1;
+  }
+
+  .day-number {
+    font-size: 0.94rem;
+    font-weight: 950;
+    line-height: 1;
+  }
+
+  .zone-index-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 2px;
+    max-width: 72%;
+  }
+
+  .zone-index {
+    border-radius: 999px;
+    padding: 1px 4px;
+    font-size: 0.53rem;
+    font-weight: 900;
+    line-height: 1.35;
+    border: 1px solid rgba(0,0,0,0.18);
+    white-space: nowrap;
+  }
+
+  .type-bars {
+    display: flex;
+    gap: 3px;
+    margin-top: 8px;
+    min-height: 7px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .type-bar {
+    height: 7px;
+    flex: 1;
+    min-width: 6px;
+    border-radius: 999px;
+  }
+
+  .classification-bars {
+    display: flex;
+    flex: 1;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  .classification-bars .type-bar {
+    min-width: 0;
+  }
+
+  .day-tag {
+    display: inline-block;
+    max-width: 100%;
+    margin-top: 6px;
+    padding: 2px 5px;
+    border-radius: 999px;
+    background: rgba(238, 242, 247, 0.92);
+    color: #475467;
+    font-size: 0.58rem;
+    font-weight: 850;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    position: relative;
+    z-index: 1;
+  }
+
+  .custom-note {
+    margin-top: 5px;
+    border-radius: 5px;
+    padding: 3px 5px;
+    font-size: 0.59rem;
+    font-weight: 850;
+    line-height: 1.18;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+    border: 1px solid rgba(0,0,0,0.14);
+  }
+
+  .custom-highlight-edge {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 5px;
+    z-index: 1;
+  }
+
+  .day-denied {
+    position: absolute;
+    right: 5px;
+    bottom: 5px;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--denied);
+    z-index: 2;
+  }
+
+  .calendar-message {
+    border: 1px dashed #c9d1df;
+    border-radius: 12px;
+    padding: 26px;
+    color: var(--muted);
+    text-align: center;
+    background: #fafbfc;
+  }
+
+  .legend-list {
+    display: grid;
+    gap: 8px;
+  }
+
+  .legend-item {
+    display: grid;
+    grid-template-columns: 20px minmax(0, 1fr);
+    gap: 8px;
+    align-items: center;
+    color: #475467;
+    font-size: 0.76rem;
+    line-height: 1.3;
+  }
+
+  .legend-swatch {
+    width: 17px;
+    height: 11px;
+    border-radius: 3px;
+    border: 1px solid rgba(0,0,0,0.12);
+  }
+
+  .legend-line {
+    height: 5px;
+    border-radius: 999px;
+  }
+
+  .legend-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    margin-left: 4px;
+  }
+
+  .legend-outline {
+    width: 17px;
+    height: 14px;
+    border: 2px solid var(--accent);
+    border-radius: 3px;
+  }
+
+  .legend-selection {
+    width: 17px;
+    height: 14px;
+    border: 2px dashed var(--selection);
+    border-radius: 3px;
+  }
+
+  .legend-group-label {
+    margin: 12px 0 7px;
+    color: #475467;
+    font-size: 0.69rem;
+    font-weight: 850;
+    text-transform: uppercase;
+    letter-spacing: 0.035em;
+  }
+
+  .unexcused-list {
+    display: grid;
+    gap: 7px;
+  }
+
+  .unexcused-list-item {
+    border-left: 4px solid var(--unexcused);
+    padding: 4px 0 4px 7px;
+  }
+
+  .unexcused-list-date {
+    color: #7a271a;
+    font-size: 0.69rem;
+    font-weight: 950;
+  }
+
+  .unexcused-list-meta {
+    margin-top: 1px;
+    color: var(--muted);
+    font-size: 0.63rem;
+    line-height: 1.25;
+  }
+
+
+  .zone-list {
+    display: grid;
+    gap: 9px;
+  }
+
+  .zone-card {
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 9px;
+    background: #fafbfc;
+  }
+
+  .zone-card.inactive { opacity: 0.68; }
+
+  .zone-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  .zone-name {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-weight: 850;
+    font-size: 0.8rem;
+  }
+
+  .zone-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: #475467;
+    font-size: 0.68rem;
+    font-weight: 750;
+  }
+
+  .zone-toggle input { accent-color: var(--accent); }
+
+  .zone-delete {
+    border: 0;
+    background: transparent;
+    color: var(--denied);
+    padding: 2px 4px;
+    cursor: pointer;
+    font-size: 0.7rem;
+    font-weight: 800;
+  }
+
+  .zone-fields {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(105px, auto);
+    gap: 7px;
+    align-items: end;
+  }
+
+  .field-mini select {
+    min-height: 38px;
+    font-size: 0.76rem;
+    padding: 6px 8px;
+  }
+
+  .field-mini label {
+    display: block;
+    color: var(--muted);
+    font-size: 0.64rem;
+    font-weight: 800;
+    margin-bottom: 4px;
+  }
+
+  .field-mini input[type="date"] {
+    min-height: 38px;
+    font-size: 0.76rem;
+  }
+
+  .zone-range {
+    margin-top: 7px;
+    color: var(--muted);
+    font-size: 0.68rem;
+    line-height: 1.35;
+  }
+
+  .button-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 7px;
+    margin-top: 9px;
+  }
+
+  .button-row.one { grid-template-columns: 1fr; }
+
+  .btn {
+    border: 1px solid #cfd6e1;
+    border-radius: 9px;
+    background: white;
+    padding: 8px 9px;
+    cursor: pointer;
+    font-weight: 800;
+    font-size: 0.73rem;
+  }
+
+  .btn:hover { background: #f7f9fc; }
+
+  .btn.primary {
+    border-color: var(--accent);
+    background: var(--accent);
+    color: white;
+  }
+
+  .btn.primary:hover { background: #1d49b7; }
+
+  .btn.warning {
+    border-color: #d8b34d;
+    background: #fffbec;
+    color: #765700;
+  }
+
+  .btn.danger {
+    border-color: #e4a4aa;
+    color: var(--denied);
+  }
+
+  .btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  .selection-mode {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 9px;
+    border: 1px solid #d9cff5;
+    background: #f8f5ff;
+    border-radius: 10px;
+    padding: 8px 9px;
+    margin-bottom: 9px;
+  }
+
+  .selection-mode label {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 0.75rem;
+    font-weight: 850;
+  }
+
+  .selection-mode input { accent-color: var(--selection); }
+
+  .selection-count {
+    color: var(--selection);
+    font-size: 0.7rem;
+    font-weight: 850;
+    white-space: nowrap;
+  }
+
+  .annotation-fields {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 7px;
+    align-items: end;
+  }
+
+  .annotation-help {
+    margin-top: 8px;
+    color: var(--muted);
+    font-size: 0.68rem;
+    line-height: 1.4;
+  }
+
+  .detail-header {
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .event-summary-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin: 10px 0 2px;
+  }
+
+  .event-summary-card {
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    padding: 9px;
+    background: #fafbfc;
+  }
+
+  .event-summary-card span {
+    display: block;
+    color: var(--muted);
+    font-size: 0.65rem;
+    font-weight: 750;
+    margin-bottom: 4px;
+  }
+
+  .event-summary-card strong {
+    display: block;
+    font-size: 1rem;
+    font-weight: 950;
+  }
+
+  .event-selection-note {
+    margin-top: 8px;
+    color: var(--muted);
+    font-size: 0.67rem;
+    line-height: 1.42;
+  }
+
+  .detail-date {
+    font-size: 1.08rem;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+  }
+
+  .detail-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 7px;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 999px;
+    padding: 4px 7px;
+    font-size: 0.66rem;
+    font-weight: 850;
+    background: #eef2f7;
+    color: #475467;
+  }
+
+  .status-approved { background: #e8f7f0; color: var(--approved); }
+  .status-denied { background: #fdeced; color: var(--denied); }
+  .kind-correction { background: #fff3e8; color: var(--correction); }
+
+  .entry-card {
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 10px;
+    margin-top: 8px;
+  }
+
+  .entry-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .entry-type { font-weight: 850; }
+  .entry-hours { font-weight: 900; white-space: nowrap; }
+  .entry-hours.negative { color: var(--correction); }
+
+  .entry-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 7px;
+  }
+
+  .entry-comment {
+    margin-top: 8px;
+    color: #475467;
+    font-size: 0.8rem;
+    line-height: 1.42;
+    overflow-wrap: anywhere;
+  }
+
+  .entry-source {
+    margin-top: 7px;
+    color: #98a2b3;
+    font-size: 0.65rem;
+  }
+
+  .date-custom-note {
+    margin-top: 9px;
+    border-radius: 8px;
+    padding: 8px;
+    border: 1px solid rgba(0,0,0,0.14);
+    font-size: 0.76rem;
+    font-weight: 800;
+  }
+
+  .footnote {
+    margin-top: 10px;
+    color: var(--muted);
+    font-size: 0.67rem;
+    line-height: 1.42;
+  }
+
+  @media (max-width: 1450px) {
+    .months-grid { grid-template-columns: repeat(2, minmax(280px, 1fr)); }
+    .workspace { grid-template-columns: 170px minmax(0, 1fr) 330px; }
+  }
+
+  @media (max-width: 1080px) {
+    .app-shell { padding: 14px; }
+    .controls { grid-template-columns: 1fr; }
+    .topbar { flex-direction: column; gap: 9px; }
+    .controls { grid-template-columns: 1fr; }
+    .workspace { grid-template-columns: 1fr; }
+    .sidebar { position: static; max-height: none; }
+    .legend-sidebar { order: 1; }
+    .calendar-panel { order: 2; }
+    .right-sidebar { order: 3; }
+    .months-grid { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 580px) {
+    .controls { grid-template-columns: 1fr; }
+    .control-note { grid-column: auto; }
+    .calendar-panel { padding: 8px; }
+    .day-cell, .day-spacer { min-height: 78px; }
+    .day-tag { display: none; }
+    .source-pill { white-space: normal; }
+    .workspace { gap: 10px; }
+  }
+
+  @media print {
+    body { background: white; }
+    .app-shell { max-width: none; padding: 0; }
+    .controls, .sidebar, .source-pill { display: none !important; }
+    .workspace { display: block; }
+    .calendar-panel { box-shadow: none; border: 0; }
+    .months-grid { grid-template-columns: repeat(3, 1fr); }
+    .month { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="app-shell">
+  <div class="topbar">
+    <div class="title-block">
+      <h1>Time Off Calendar</h1>
+      <p>Import an Excel workbook to build a calendar across any dates.</p>
+    </div>
+    <div class="source-pill" id="sourcePill"></div>
+  </div>
+
+  <section class="controls" aria-label="Calendar controls">
+    <div class="control-group">
+      <label class="control-label" for="viewSelect">Calendar view</label>
+      <select id="viewSelect"></select>
+    </div>
+
+    <div class="control-group">
+      <span class="control-label">Appearance</span>
+      <label class="dark-mode-toggle" for="darkModeToggle">
+        <input id="darkModeToggle" type="checkbox">
+        <span class="dark-toggle-track" aria-hidden="true">
+          <span class="dark-toggle-knob"></span>
+        </span>
+        <span>Dark mode</span>
+      </label>
+    </div>
+  </section>
+
+  <main class="workspace">
+    <aside class="sidebar legend-sidebar">
+      <section class="sidebar-section collapsible-section collapsed" data-section-id="legend">
+        <button class="collapsible-header" type="button" data-collapse-toggle="legend" aria-expanded="false">
+          <span class="section-title">Legend</span>
+          <span class="collapse-icon" aria-hidden="true">+</span>
+        </button>
+        <div class="collapsible-content" data-collapse-content="legend">
+          <div id="legendContent"></div>
+        </div>
+      </section>
+
+      <section class="sidebar-section collapsible-section collapsed" data-section-id="unexcused">
+        <button class="collapsible-header" type="button" data-collapse-toggle="unexcused" aria-expanded="false">
+          <span class="section-title">Unexcused events</span>
+          <span class="collapse-icon" aria-hidden="true">+</span>
+        </button>
+        <div class="collapsible-content" data-collapse-content="unexcused">
+          <div class="unexcused-list" id="unexcusedList"></div>
+        </div>
+      </section>
+    </aside>
+
+    <section class="calendar-panel">
+      <div class="months-grid" id="monthsGrid"></div>
+    </section>
+
+    <aside class="sidebar right-sidebar" id="rightSidebar">
+      <section class="sidebar-section collapsible-section collapsed" data-section-id="description">
+        <button class="collapsible-header" type="button" data-collapse-toggle="description" aria-expanded="false">
+          <span class="section-title">Description</span>
+          <span class="collapse-icon" aria-hidden="true">+</span>
+        </button>
+        <div class="collapsible-content" data-collapse-content="description">
+          <div id="detailContent">
+            <div class="detail-empty">No day selected.</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="sidebar-section collapsible-section collapsed" data-section-id="warning">
+        <button class="collapsible-header" type="button" data-collapse-toggle="warning" aria-expanded="false">
+          <span class="section-title">90-day warning zones</span>
+          <span class="collapse-icon" aria-hidden="true">+</span>
+        </button>
+        <div class="collapsible-content" data-collapse-content="warning">
+          <p class="section-subtitle">Zone 1 uses the top edge and Zone 2 uses the bottom edge. Additional zones alternate and stack inward.</p>
+          <div class="zone-list" id="zoneList"></div>
+          <div class="button-row">
+            <button class="btn warning" id="addZoneButton" type="button">Add zone</button>
+            <button class="btn warning" id="addConsecutiveButton" type="button">Add consecutive</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="sidebar-section collapsible-section collapsed" data-section-id="custom">
+        <button class="collapsible-header" type="button" data-collapse-toggle="custom" aria-expanded="false">
+          <span class="section-title">Custom day highlights</span>
+          <span class="collapse-icon" aria-hidden="true">+</span>
+        </button>
+        <div class="collapsible-content" data-collapse-content="custom">
+          <div class="selection-mode">
+            <label><input id="selectionMode" type="checkbox"> Select calendar days</label>
+            <span class="selection-count" id="selectionCount">0 selected</span>
+          </div>
+
+          <div class="annotation-fields">
+            <div class="field-mini">
+              <label for="annotationText">Text shown in day cells</label>
+              <textarea id="annotationText" maxlength="160" placeholder="Example: Doctor appointment"></textarea>
+            </div>
+            <div class="field-mini">
+              <label for="annotationColor">Color</label>
+              <input id="annotationColor" type="color" value="#2f80ed">
+            </div>
+          </div>
+
+          <div class="button-row">
+            <button class="btn primary" id="applyAnnotationButton" type="button">Apply to selected</button>
+            <button class="btn danger" id="removeAnnotationButton" type="button">Erase highlights from selected</button>
+          </div>
+          <div class="button-row one">
+            <button class="btn" id="clearSelectionButton" type="button">Clear day selection</button>
+          </div>
+          <div class="annotation-help">Applying a new highlight to a day replaces that day's previous custom highlight. This does not alter warning zones or time-off data.</div>
+        </div>
+      </section>
+
+      <section class="sidebar-section collapsible-section collapsed" data-section-id="save">
+        <button class="collapsible-header" type="button" data-collapse-toggle="save" aria-expanded="false">
+          <span class="section-title">Save and data</span>
+          <span class="collapse-icon" aria-hidden="true">+</span>
+        </button>
+        <div class="collapsible-content" data-collapse-content="save">
+          <p class="section-subtitle">
+            Import an Excel workbook to replace the current spreadsheet rows. A full JSON backup stores the Excel-derived rows together with highlights, zones, appearance, and layout settings.
+          </p>
+          <div class="button-row">
+            <button class="btn primary" id="exportBackupButton" type="button">Export full backup</button>
+            <button class="btn" id="importFileButton" type="button">Import Excel or backup</button>
+          </div>
+          <div class="button-row one">
+            <button class="btn danger" id="clearExcelDataButton" type="button">Clear Excel data</button>
+          </div>
+          <input id="importFileInput" type="file"
+            accept=".xlsx,.csv,.json,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv,application/json"
+            hidden>
+          <div class="settings-status" id="settingsStatus"></div>
+        </div>
+      </section>
+    </aside>
+  </main>
+</div>
+
+
+<script>
+const STORAGE_KEY = "timeOffCalendarModularV1";
+const BACKUP_VERSION = 2;
+const ZONE_COLORS = ["#f0b429", "#2457d6", "#7f56d9", "#16a085", "#d64550", "#e67e22", "#2f80ed"];
+
+let entries = [];
+
+const state = {
+  view: "all",
+  darkMode: false,
+  selectedDate: null,
+  selectionMode: false,
+  selectedDays: new Set(),
+  lastSelectionDate: null,
+  eventSelectedDays: new Set(),
+  eventSelectionAnchor: null,
+  zones: [],
+  annotations: {},
+  sourceFileName: "",
+  collapsedSections: {
+    legend: true,
+    unexcused: true,
+    description: true,
+    warning: true,
+    custom: true,
+    save: true
+  }
+};
+
+const els = {
+  viewSelect: document.getElementById("viewSelect"),
+  darkModeToggle: document.getElementById("darkModeToggle"),
+  monthsGrid: document.getElementById("monthsGrid"),
+  sourcePill: document.getElementById("sourcePill"),
+  legendContent: document.getElementById("legendContent"),
+  unexcusedList: document.getElementById("unexcusedList"),
+  zoneList: document.getElementById("zoneList"),
+  addZoneButton: document.getElementById("addZoneButton"),
+  addConsecutiveButton: document.getElementById("addConsecutiveButton"),
+  selectionMode: document.getElementById("selectionMode"),
+  selectionCount: document.getElementById("selectionCount"),
+  annotationText: document.getElementById("annotationText"),
+  annotationColor: document.getElementById("annotationColor"),
+  applyAnnotationButton: document.getElementById("applyAnnotationButton"),
+  removeAnnotationButton: document.getElementById("removeAnnotationButton"),
+  clearSelectionButton: document.getElementById("clearSelectionButton"),
+  exportBackupButton: document.getElementById("exportBackupButton"),
+  importFileButton: document.getElementById("importFileButton"),
+  importFileInput: document.getElementById("importFileInput"),
+  clearExcelDataButton: document.getElementById("clearExcelDataButton"),
+  settingsStatus: document.getElementById("settingsStatus"),
+  detailContent: document.getElementById("detailContent"),
+  rightSidebar: document.getElementById("rightSidebar")
+};
+
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function parseLocal(iso) {
+  const [year, month, day] = String(iso).split("-").map(Number);
+  return new Date(year, month - 1, day);
+}
+
+function toISO(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+function isValidISO(value) {
+  return /^\d{4}-\d{2}-\d{2}$/.test(String(value || "")) &&
+    !Number.isNaN(parseLocal(value).getTime());
+}
+
+function addDays(iso, amount) {
+  const date = parseLocal(iso);
+  date.setDate(date.getDate() + amount);
+  return toISO(date);
+}
+
+function daysBetween(startIso, endIso) {
+  return Math.round((parseLocal(endIso) - parseLocal(startIso)) / 86400000);
+}
+
+function formatLong(iso) {
+  return parseLocal(iso).toLocaleDateString(undefined, {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+    year: "numeric"
+  });
+}
+
+function formatShort(iso) {
+  return parseLocal(iso).toLocaleDateString(undefined, {
+    month: "short",
+    day: "numeric",
+    year: "numeric"
+  });
+}
+
+function monthKey(year, month) {
+  return `${year}-${String(month + 1).padStart(2, "0")}`;
+}
+
+function monthStartIso(year, month) {
+  return toISO(new Date(year, month, 1));
+}
+
+function monthEndIso(year, month) {
+  return toISO(new Date(year, month + 1, 0));
+}
+
+function monthsBetween(startIso, endIso) {
+  if (!startIso || !endIso) return [];
+  const output = [];
+  const startDate = parseLocal(startIso);
+  const endDate = parseLocal(endIso);
+  const cursor = new Date(startDate.getFullYear(), startDate.getMonth(), 1);
+  const end = new Date(endDate.getFullYear(), endDate.getMonth(), 1);
+
+  while (cursor <= end) {
+    output.push([cursor.getFullYear(), cursor.getMonth()]);
+    cursor.setMonth(cursor.getMonth() + 1);
+  }
+  return output;
+}
+
+function formatHours(value) {
+  const rounded = Math.round((Number(value || 0) + Number.EPSILON) * 100) / 100;
+  return `${Number.isInteger(rounded) ? rounded.toFixed(0) : rounded.toFixed(2).replace(/0$/, "")} h`;
+}
+
+function typeColor(type) {
+  const key = String(type || "").toLowerCase();
+  if (key === "pto" || key.includes("paid time")) return "var(--pto)";
+  if (key.includes("floating")) return "var(--floating)";
+  if (key.includes("without pay") || key.includes("lwop")) return "var(--lwop)";
+  return "var(--other)";
+}
+
+function classifyComment(comment) {
+  const text = String(comment || "").toLowerCase();
+  if (/\bcall[\s-]?out\b/.test(text)) return "Call out";
+  if (/\blate\b|\btardy\b/.test(text)) return "Late arrival";
+  if (/\bleft\s+early\b|\bleave\s+early\b|\bearly departure\b/.test(text)) return "Left early";
+  return "";
+}
+
+function hexToRgb(hex) {
+  const clean = String(hex || "#000000").replace("#", "");
+  const full = clean.length === 3 ? clean.split("").map(char => char + char).join("") : clean;
+  return {
+    r: parseInt(full.slice(0, 2), 16),
+    g: parseInt(full.slice(2, 4), 16),
+    b: parseInt(full.slice(4, 6), 16)
+  };
+}
+
+function contrastText(hex) {
+  const { r, g, b } = hexToRgb(hex);
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+  return luminance > 0.62 ? "#182235" : "#ffffff";
+}
+
+function parseHours(value) {
+  if (typeof value === "number") return Number.isFinite(value) ? value : 0;
+  if (value == null || value === "") return 0;
+
+  const text = String(value).trim();
+  const clockMatch = text.match(/^(-?\d+):(\d{1,2})$/);
+  if (clockMatch) {
+    const sign = Number(clockMatch[1]) < 0 ? -1 : 1;
+    return sign * (Math.abs(Number(clockMatch[1])) + Number(clockMatch[2]) / 60);
+  }
+
+  const numberMatch = text.replace(/,/g, "").match(/-?\d+(?:\.\d+)?/);
+  return numberMatch ? Number(numberMatch[0]) : 0;
+}
+
+function normalizeImportedDate(value) {
+  if (value instanceof Date && !Number.isNaN(value.getTime())) {
+    return toISO(value);
+  }
+
+  if (typeof value === "number" && Number.isFinite(value)) {
+    const milliseconds = Math.round((value - 25569) * 86400 * 1000);
+    const date = new Date(milliseconds);
+    if (!Number.isNaN(date.getTime())) {
+      const year = date.getUTCFullYear();
+      const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+      const day = String(date.getUTCDate()).padStart(2, "0");
+      return `${year}-${month}-${day}`;
+    }
+  }
+
+  const text = String(value ?? "").trim();
+  if (!text) return null;
+
+  const isoMatch = text.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+  if (isoMatch) {
+    const iso = `${isoMatch[1]}-${String(isoMatch[2]).padStart(2, "0")}-${String(isoMatch[3]).padStart(2, "0")}`;
+    return isValidISO(iso) ? iso : null;
+  }
+
+  const usMatch = text.match(/^(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{2,4})$/);
+  if (usMatch) {
+    let year = Number(usMatch[3]);
+    if (year < 100) year += year >= 70 ? 1900 : 2000;
+    const iso = `${year}-${String(usMatch[1]).padStart(2, "0")}-${String(usMatch[2]).padStart(2, "0")}`;
+    return isValidISO(iso) ? iso : null;
+  }
+
+  const parsed = new Date(text);
+  return Number.isNaN(parsed.getTime()) ? null : toISO(parsed);
+}
+
+function sanitizeEntry(raw, index = 0) {
+  const date = normalizeImportedDate(raw?.date);
+  if (!date) return null;
+
+  const hours = parseHours(raw?.hours);
+  return {
+    id: String(raw?.id || `entry-${date}-${index}-${Math.random().toString(16).slice(2)}`),
+    sourceRow: Number(raw?.sourceRow || index + 1),
+    date,
+    dayOfWeek: String(raw?.dayOfWeek || parseLocal(date).toLocaleDateString(undefined, { weekday: "long" })),
+    type: String(raw?.type || "Unspecified"),
+    hours: Number.isFinite(hours) ? hours : 0,
+    unit: String(raw?.unit || "Hours"),
+    comment: String(raw?.comment || ""),
+    status: String(raw?.status || "Unspecified"),
+    recordKind: String(raw?.recordKind || (String(raw?.record || "").toLowerCase().includes("correction") ? "Correction" : "Request")),
+    record: String(raw?.record || "")
+  };
+}
+
+function sanitizeEntries(rows) {
+  if (!Array.isArray(rows)) return [];
+  return rows.map(sanitizeEntry).filter(Boolean);
+}
+
+function normalizeZone(zone, index = 0) {
+  if (!zone || !isValidISO(zone.start)) return null;
+  const color = /^#[0-9a-f]{6}$/i.test(String(zone.color || ""))
+    ? zone.color
+    : ZONE_COLORS[index % ZONE_COLORS.length];
+  const thickness = [2, 4, 6, 8, 10].includes(Number(zone.thickness))
+    ? Number(zone.thickness)
+    : 6;
+
+  return {
+    id: String(zone.id || `zone-${Date.now()}-${index}`),
+    start: zone.start,
+    color,
+    thickness,
+    active: Boolean(zone.active)
+  };
+}
+
+function persist() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      version: BACKUP_VERSION,
+      entries,
+      sourceFileName: state.sourceFileName,
+      view: state.view,
+      darkMode: state.darkMode,
+      zones: state.zones,
+      annotations: state.annotations,
+      collapsedSections: state.collapsedSections
+    }));
+  } catch (_) {}
+}
+
+function restore() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
+    if (!saved || typeof saved !== "object") return;
+
+    entries = sanitizeEntries(saved.entries);
+    state.sourceFileName = String(saved.sourceFileName || "");
+    state.view = typeof saved.view === "string" ? saved.view : "all";
+    state.darkMode = Boolean(saved.darkMode);
+    state.zones = Array.isArray(saved.zones)
+      ? saved.zones.map(normalizeZone).filter(Boolean)
+      : [];
+    state.annotations = saved.annotations && typeof saved.annotations === "object"
+      ? saved.annotations
+      : {};
+
+    if (saved.collapsedSections && typeof saved.collapsedSections === "object") {
+      state.collapsedSections = {
+        ...state.collapsedSections,
+        ...saved.collapsedSections
+      };
+    }
+  } catch (_) {}
+}
+
+function newZone(start, active = true) {
+  return {
+    id: `zone-${Date.now()}-${Math.random().toString(16).slice(2)}`,
+    start,
+    color: ZONE_COLORS[state.zones.length % ZONE_COLORS.length],
+    thickness: 6,
+    active
+  };
+}
+
+function zoneEnd(zone) {
+  return addDays(zone.start, 89);
+}
+
+function activeZones() {
+  return state.zones.filter(zone => zone.active);
+}
+
+function zonesForDate(dateIso) {
+  return activeZones().filter(zone => dateIso >= zone.start && dateIso <= zoneEnd(zone));
+}
+
+function rowsOnDate(dateIso) {
+  return entries.filter(entry => entry.date === dateIso);
+}
+
+function netHoursForDate(dateIso) {
+  return rowsOnDate(dateIso).reduce((sum, entry) => sum + Number(entry.hours || 0), 0);
+}
+
+function occurrenceForDate(dateIso) {
+  const hours = netHoursForDate(dateIso);
+  if (hours <= 0) return 0;
+  return hours >= 8 ? 1 : 0.5;
+}
+
+function formatOccurrence(value) {
+  const amount = Number(value || 0);
+  return `${amount.toFixed(1)} ${amount === 1 ? "event" : "events"}`;
+}
+
+function selectedOccurrenceTotal() {
+  return [...state.eventSelectedDays].reduce(
+    (sum, dateIso) => sum + occurrenceForDate(dateIso),
+    0
+  );
+}
+
+function isUnexcusedEntry(entry) {
+  const text = [entry.type, entry.comment, entry.record, entry.status]
+    .join(" ")
+    .toLowerCase();
+
+  return text.includes("unexcused") ||
+    text.includes("no approval") ||
+    text.includes("without approval");
+}
+
+function unexcusedRowsForDate(dateIso) {
+  return rowsOnDate(dateIso).filter(isUnexcusedEntry);
+}
+
+function dateSources() {
+  const dates = entries.map(entry => entry.date).filter(isValidISO);
+
+  Object.keys(state.annotations).forEach(dateIso => {
+    if (isValidISO(dateIso)) dates.push(dateIso);
+  });
+
+  state.zones.forEach(zone => {
+    if (!isValidISO(zone.start)) return;
+    dates.push(zone.start, zoneEnd(zone));
+  });
+
+  return dates;
+}
+
+function calendarBounds() {
+  const dates = dateSources().sort();
+  if (!dates.length) return null;
+  return { start: dates[0], end: dates.at(-1) };
+}
+
+function availableMonths() {
+  const bounds = calendarBounds();
+  return bounds ? monthsBetween(bounds.start, bounds.end) : [];
+}
+
+function warningMonthsSet() {
+  const set = new Set();
+  activeZones().forEach(zone => {
+    monthsBetween(zone.start, zoneEnd(zone)).forEach(([year, month]) => {
+      set.add(monthKey(year, month));
+    });
+  });
+  return set;
+}
+
+function visibleMonths() {
+  const months = availableMonths();
+
+  if (state.view === "all") return months;
+
+  if (state.view === "warning") {
+    const warningSet = warningMonthsSet();
+    return months.filter(([year, month]) => warningSet.has(monthKey(year, month)));
+  }
+
+  return months.filter(([year, month]) => monthKey(year, month) === state.view);
+}
+
+function refreshViewOptions() {
+  const months = availableMonths();
+  const previous = state.view;
+  els.viewSelect.innerHTML = "";
+
+  const allOption = document.createElement("option");
+  allOption.value = "all";
+  allOption.textContent = "All months";
+  els.viewSelect.appendChild(allOption);
+
+  const warningOption = document.createElement("option");
+  warningOption.value = "warning";
+  warningOption.textContent = "Warning-zone months";
+  els.viewSelect.appendChild(warningOption);
+
+  months.forEach(([year, month]) => {
+    const option = document.createElement("option");
+    option.value = monthKey(year, month);
+    option.textContent = new Date(year, month, 1).toLocaleDateString(undefined, {
+      month: "long",
+      year: "numeric"
+    });
+    els.viewSelect.appendChild(option);
+  });
+
+  const validValues = new Set([
+    "all",
+    "warning",
+    ...months.map(([year, month]) => monthKey(year, month))
+  ]);
+
+  state.view = validValues.has(previous) ? previous : "all";
+  els.viewSelect.value = state.view;
+}
+
+function applyDarkMode() {
+  document.body.classList.toggle("dark-mode", state.darkMode);
+  els.darkModeToggle.checked = state.darkMode;
+}
+
+function updateSourcePill() {
+  if (!entries.length) {
+    els.sourcePill.textContent = "No Excel data loaded · blank slate";
+    return;
+  }
+
+  const dates = entries.map(entry => entry.date).sort();
+  const filename = state.sourceFileName ? ` · ${state.sourceFileName}` : "";
+  els.sourcePill.textContent =
+    `${entries.length} workbook rows · ${formatShort(dates[0])} to ${formatShort(dates.at(-1))}${filename}`;
+}
+
+function renderLegend() {
+  els.legendContent.innerHTML = `
+    <div class="legend-group-label">Hours away</div>
+    <div class="legend-list">
+      <div class="legend-item"><span class="legend-line" style="background:var(--hours-full)"></span><span>8 hours or more</span></div>
+      <div class="legend-item"><span class="legend-line" style="background:var(--hours-partial)"></span><span>Less than 8 hours</span></div>
+    </div>
+
+    <div class="legend-group-label">Leave classification</div>
+    <div class="legend-list">
+      <div class="legend-item"><span class="legend-line" style="background:var(--pto)"></span><span>PTO</span></div>
+      <div class="legend-item"><span class="legend-line" style="background:var(--lwop)"></span><span>Leave Without Pay</span></div>
+      <div class="legend-item"><span class="legend-line" style="background:var(--floating)"></span><span>Floating Holiday</span></div>
+    </div>
+  `;
+}
+
+function renderUnexcusedList() {
+  const grouped = new Map();
+
+  entries.filter(isUnexcusedEntry).forEach(entry => {
+    if (!grouped.has(entry.date)) grouped.set(entry.date, []);
+    grouped.get(entry.date).push(entry);
+  });
+
+  const dates = [...grouped.keys()].sort();
+
+  if (!dates.length) {
+    els.unexcusedList.innerHTML = `<div class="detail-empty">No unexcused events identified in the imported rows.</div>`;
+    return;
+  }
+
+  els.unexcusedList.innerHTML = dates.map(dateIso => `
+    <div class="unexcused-list-item">
+      <div class="unexcused-list-date">${formatShort(dateIso)}</div>
+      <div class="unexcused-list-meta">${formatHours(netHoursForDate(dateIso))} · ${formatOccurrence(occurrenceForDate(dateIso))}</div>
+    </div>
+  `).join("");
+}
+
+function renderZoneControls() {
+  els.zoneList.innerHTML = state.zones.length
+    ? ""
+    : `<div class="detail-empty">No warning zones have been added.</div>`;
+
+  state.zones.forEach((zone, index) => {
+    const card = document.createElement("div");
+    card.className = `zone-card${zone.active ? "" : " inactive"}`;
+    card.innerHTML = `
+      <div class="zone-header">
+        <div class="zone-name">
+          <span class="zone-line-preview" style="background:${escapeHtml(zone.color)};height:${zone.thickness}px"></span>
+          Zone ${index + 1}
+        </div>
+        <div style="display:flex;align-items:center;gap:5px">
+          <label class="zone-toggle">
+            <input type="checkbox" data-zone-active="${escapeHtml(zone.id)}" ${zone.active ? "checked" : ""}>
+            Active
+          </label>
+          <button class="zone-delete" type="button" data-zone-delete="${escapeHtml(zone.id)}">Remove</button>
+        </div>
+      </div>
+      <div class="zone-fields">
+        <div class="field-mini">
+          <label>Start date</label>
+          <input type="date" value="${escapeHtml(zone.start)}" data-zone-start="${escapeHtml(zone.id)}">
+        </div>
+        <div class="field-mini">
+          <label>Color</label>
+          <input type="color" value="${escapeHtml(zone.color)}" data-zone-color="${escapeHtml(zone.id)}">
+        </div>
+        <div class="field-mini">
+          <label>Line thickness</label>
+          <select data-zone-thickness="${escapeHtml(zone.id)}">
+            ${[2, 4, 6, 8, 10].map(value =>
+              `<option value="${value}" ${zone.thickness === value ? "selected" : ""}>${value}px</option>`
+            ).join("")}
+          </select>
+        </div>
+      </div>
+      <div class="zone-range">Day 1: ${formatShort(zone.start)} · Day 90: ${formatShort(zoneEnd(zone))}</div>
+    `;
+    els.zoneList.appendChild(card);
+  });
+
+  els.zoneList.querySelectorAll("[data-zone-active]").forEach(input => {
+    input.addEventListener("change", () => {
+      const zone = state.zones.find(item => item.id === input.dataset.zoneActive);
+      if (!zone) return;
+      zone.active = input.checked;
+      persist();
+      renderAll();
+    });
+  });
+
+  els.zoneList.querySelectorAll("[data-zone-start]").forEach(input => {
+    input.addEventListener("change", () => {
+      const zone = state.zones.find(item => item.id === input.dataset.zoneStart);
+      if (!zone || !isValidISO(input.value)) return;
+      zone.start = input.value;
+      persist();
+      renderAll();
+    });
+  });
+
+  els.zoneList.querySelectorAll("[data-zone-color]").forEach(input => {
+    input.addEventListener("change", () => {
+      const zone = state.zones.find(item => item.id === input.dataset.zoneColor);
+      if (!zone) return;
+      zone.color = input.value;
+      persist();
+      renderAll();
+    });
+  });
+
+  els.zoneList.querySelectorAll("[data-zone-thickness]").forEach(select => {
+    select.addEventListener("change", () => {
+      const zone = state.zones.find(item => item.id === select.dataset.zoneThickness);
+      if (!zone) return;
+      zone.thickness = Number(select.value);
+      persist();
+      renderAll();
+    });
+  });
+
+  els.zoneList.querySelectorAll("[data-zone-delete]").forEach(button => {
+    button.addEventListener("click", () => {
+      state.zones = state.zones.filter(zone => zone.id !== button.dataset.zoneDelete);
+      persist();
+      renderAll();
+    });
+  });
+}
+
+function zoneLineMarkup(zones) {
+  let topOffset = 0;
+  let bottomOffset = 0;
+
+  return zones.map(zone => {
+    const zoneIndex = state.zones.findIndex(savedZone => savedZone.id === zone.id);
+    const edge = zoneIndex % 2 === 0 ? "top" : "bottom";
+    const offset = edge === "top" ? topOffset : bottomOffset;
+
+    if (edge === "top") topOffset += zone.thickness + 2;
+    else bottomOffset += zone.thickness + 2;
+
+    return `<span class="zone-line" style="${edge}:${offset}px;height:${zone.thickness}px;background:${escapeHtml(zone.color)}"></span>`;
+  }).join("");
+}
+
+function toggleEventSelection(dateIso) {
+  if (state.eventSelectedDays.has(dateIso)) {
+    state.eventSelectedDays.delete(dateIso);
+  } else {
+    state.eventSelectedDays.add(dateIso);
+  }
+  state.eventSelectionAnchor = dateIso;
+}
+
+function selectEventRange(dateIso, additive = false) {
+  const anchor = state.eventSelectionAnchor || state.selectedDate || dateIso;
+  const start = anchor <= dateIso ? anchor : dateIso;
+  const end = anchor <= dateIso ? dateIso : anchor;
+
+  if (!additive) state.eventSelectedDays.clear();
+
+  let cursor = start;
+  while (cursor <= end) {
+    state.eventSelectedDays.add(cursor);
+    cursor = addDays(cursor, 1);
+  }
+}
+
+function toggleDaySelection(dateIso, shiftKey) {
+  if (shiftKey && state.lastSelectionDate) {
+    const start = state.lastSelectionDate <= dateIso ? state.lastSelectionDate : dateIso;
+    const end = state.lastSelectionDate <= dateIso ? dateIso : state.lastSelectionDate;
+    let cursor = start;
+
+    while (cursor <= end) {
+      state.selectedDays.add(cursor);
+      cursor = addDays(cursor, 1);
+    }
+  } else if (state.selectedDays.has(dateIso)) {
+    state.selectedDays.delete(dateIso);
+  } else {
+    state.selectedDays.add(dateIso);
+  }
+
+  state.lastSelectionDate = dateIso;
+}
+
+function buildMonth(year, month) {
+  const monthElement = document.createElement("section");
+  monthElement.className = "month";
+
+  const title = document.createElement("div");
+  title.className = "month-title";
+  const monthName = new Date(year, month, 1).toLocaleDateString(undefined, { month: "long" });
+  title.innerHTML = `
+    <span class="month-name">${escapeHtml(monthName)}</span>
+    <span class="month-year">${year}</span>
+  `;
+  monthElement.appendChild(title);
+
+  const weekdayRow = document.createElement("div");
+  weekdayRow.className = "weekday-row";
+  ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].forEach(day => {
+    const cell = document.createElement("div");
+    cell.className = "weekday";
+    cell.textContent = day;
+    weekdayRow.appendChild(cell);
+  });
+  monthElement.appendChild(weekdayRow);
+
+  const grid = document.createElement("div");
+  grid.className = "days-grid";
+
+  const firstDay = new Date(year, month, 1).getDay();
+  const dayCount = new Date(year, month + 1, 0).getDate();
+
+  for (let index = 0; index < firstDay; index++) {
+    const spacer = document.createElement("div");
+    spacer.className = "day-spacer";
+    grid.appendChild(spacer);
+  }
+
+  for (let day = 1; day <= dayCount; day++) {
+    const dateIso = toISO(new Date(year, month, day));
+    const dayRows = rowsOnDate(dateIso);
+    const netHours = netHoursForDate(dateIso);
+    const types = [...new Set(dayRows.map(entry => entry.type).filter(Boolean))];
+    const tags = [...new Set(dayRows.map(entry => classifyComment(entry.comment)).filter(Boolean))];
+    const zones = zonesForDate(dateIso);
+    const annotation = state.annotations[dateIso];
+    const unexcused = unexcusedRowsForDate(dateIso).length > 0;
+
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "day-cell";
+
+    if (state.selectedDate === dateIso) button.classList.add("selected-date");
+    if (state.selectedDays.has(dateIso)) button.classList.add("pick-selected");
+    if (state.eventSelectedDays.has(dateIso)) button.classList.add("event-selected");
+    if (unexcused) button.classList.add("unexcused");
+
+    const zoneLines = zoneLineMarkup(zones);
+    const durationColor = netHours >= 8 ? "var(--hours-full)" : "var(--hours-partial)";
+    const durationLabel = netHours >= 8 ? "8 hours or more" : "Less than 8 hours";
+
+    const rowSummary = dayRows.length ? `
+      <div class="type-bars" aria-label="${durationLabel}; ${types.map(escapeHtml).join(", ")}">
+        <span class="type-bar" title="${durationLabel}" style="background:${durationColor}"></span>
+        <span class="classification-bars">
+          ${types.map(type =>
+            `<span class="type-bar" title="${escapeHtml(type)}" style="background:${typeColor(type)}"></span>`
+          ).join("")}
+        </span>
+      </div>
+      ${tags.length ? `<span class="day-tag">${escapeHtml(tags.join(" · "))}</span>` : ""}
+    ` : "";
+
+    const customMarkup = annotation ? `
+      <span class="custom-highlight-edge" style="background:${escapeHtml(annotation.color)}"></span>
+      <div class="custom-note" style="background:${escapeHtml(annotation.color)};color:${contrastText(annotation.color)}">
+        ${escapeHtml(annotation.description)}
+      </div>
+    ` : "";
+
+    button.innerHTML = `
+      ${zoneLines}
+      <div class="day-number-row"><span class="day-number">${day}</span></div>
+      ${rowSummary}
+      ${customMarkup}
+    `;
+
+    button.addEventListener("click", event => {
+      if (state.selectionMode) {
+        toggleDaySelection(dateIso, event.shiftKey);
+        renderCalendar();
+        renderSelectionControls();
+        return;
+      }
+
+      if (event.shiftKey) {
+        selectEventRange(dateIso, event.ctrlKey || event.metaKey);
+      } else if (event.ctrlKey || event.metaKey) {
+        toggleEventSelection(dateIso);
+      } else {
+        state.eventSelectedDays.clear();
+        state.eventSelectedDays.add(dateIso);
+        state.eventSelectionAnchor = dateIso;
+      }
+
+      state.selectedDate = dateIso;
+      renderCalendar();
+      renderDetails();
+      els.rightSidebar.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    grid.appendChild(button);
+  }
+
+  const occupied = firstDay + dayCount;
+  const trailing = (7 - (occupied % 7)) % 7;
+
+  for (let index = 0; index < trailing; index++) {
+    const spacer = document.createElement("div");
+    spacer.className = "day-spacer";
+    grid.appendChild(spacer);
+  }
+
+  monthElement.appendChild(grid);
+  return monthElement;
+}
+
+function renderCalendar() {
+  els.monthsGrid.innerHTML = "";
+  const months = visibleMonths();
+
+  if (!months.length) {
+    const message = document.createElement("div");
+    message.className = "data-empty";
+    message.innerHTML = `
+      <strong>No calendar data yet</strong>
+      Import an .xlsx or .csv workbook from the Save and data section. The calendar will automatically span the earliest through latest dates found in the file.
+    `;
+    els.monthsGrid.appendChild(message);
+    return;
+  }
+
+  els.monthsGrid.classList.toggle("single", months.length === 1);
+  months.forEach(([year, month]) => {
+    els.monthsGrid.appendChild(buildMonth(year, month));
+  });
+}
+
+function renderSelectionControls() {
+  els.selectionMode.checked = state.selectionMode;
+  const count = state.selectedDays.size;
+  els.selectionCount.textContent = `${count} selected`;
+  els.applyAnnotationButton.disabled = !count || !els.annotationText.value.trim();
+  els.removeAnnotationButton.disabled = !count;
+  els.clearSelectionButton.disabled = !count;
+}
+
+function renderDetails() {
+  if (!state.selectedDate) {
+    els.detailContent.innerHTML = `<div class="detail-empty">No day selected.</div>`;
+    return;
+  }
+
+  const dateIso = state.selectedDate;
+  const dayRows = rowsOnDate(dateIso);
+  const annotation = state.annotations[dateIso];
+  const zones = zonesForDate(dateIso);
+  const unexcusedRows = unexcusedRowsForDate(dateIso);
+  const dayOccurrence = occurrenceForDate(dateIso);
+  const selectedDates = [...state.eventSelectedDays].sort();
+  const selectedTotal = selectedOccurrenceTotal();
+
+  const zoneBadges = zones.map(zone => {
+    const index = state.zones.findIndex(item => item.id === zone.id);
+    const dayNumber = daysBetween(zone.start, dateIso) + 1;
+    return `<span class="badge" style="background:${escapeHtml(zone.color)};color:${contrastText(zone.color)}">Zone ${index + 1}, Day ${dayNumber}</span>`;
+  }).join("");
+
+  const entryCards = dayRows.length
+    ? dayRows.map(entry => {
+        const approved = entry.status.toLowerCase() === "approved";
+        return `
+          <article class="entry-card">
+            <div class="entry-top">
+              <div class="entry-type">${escapeHtml(entry.type)}</div>
+              <div class="entry-hours ${entry.hours < 0 ? "negative" : ""}">${formatHours(entry.hours)}</div>
+            </div>
+            <div class="entry-meta">
+              <span class="badge ${approved ? "status-approved" : "status-denied"}">${escapeHtml(entry.status)}</span>
+              <span class="badge ${entry.recordKind === "Correction" ? "kind-correction" : ""}">${escapeHtml(entry.recordKind)}</span>
+              ${classifyComment(entry.comment) ? `<span class="badge">${escapeHtml(classifyComment(entry.comment))}</span>` : ""}
+              ${isUnexcusedEntry(entry) ? `<span class="badge" style="background:#fee4e2;color:#b42318">Unexcused</span>` : ""}
+            </div>
+            <div class="entry-comment">${entry.comment ? escapeHtml(entry.comment) : "<em>No comment recorded</em>"}</div>
+            <div class="entry-source">Imported row ${entry.sourceRow}</div>
+          </article>
+        `;
+      }).join("")
+    : `<div class="footnote">No imported time-off rows are recorded for this date.</div>`;
+
+  const unexcusedMarkup = unexcusedRows.length ? `
+    <div class="unexcused-detail">
+      <div class="unexcused-title">Unexcused</div>
+      <div class="unexcused-meta">
+        ${unexcusedRows.length} matching imported ${unexcusedRows.length === 1 ? "row" : "rows"} · ${formatOccurrence(dayOccurrence)}
+      </div>
+    </div>
+  ` : "";
+
+  els.detailContent.innerHTML = `
+    <div class="detail-header">
+      <div class="detail-date">${formatLong(dateIso)}</div>
+      <div class="detail-badges">${zoneBadges}</div>
+      ${unexcusedMarkup}
+      ${annotation ? `
+        <div class="date-custom-note" style="background:${escapeHtml(annotation.color)};color:${contrastText(annotation.color)}">
+          ${escapeHtml(annotation.description)}
+        </div>
+      ` : ""}
+    </div>
+
+    <div class="event-summary-grid">
+      <div class="event-summary-card">
+        <span>Selected day</span>
+        <strong>${formatOccurrence(dayOccurrence)}</strong>
+      </div>
+      <div class="event-summary-card">
+        <span>${selectedDates.length} selected ${selectedDates.length === 1 ? "day" : "days"}</span>
+        <strong>${formatOccurrence(selectedTotal)}</strong>
+      </div>
+    </div>
+
+    <div class="event-selection-note">
+      Ctrl-click or Command-click individual dates. Shift-click selects the continuous range from the most recent anchor date.
+    </div>
+
+    <div class="button-row">
+      <button class="btn warning" id="addZoneHereButton" type="button">Add zone here</button>
+      <button class="btn" id="selectDayButton" type="button">Add to day selection</button>
+    </div>
+
+    ${annotation ? `
+      <div class="button-row one">
+        <button class="btn danger" id="removeCurrentHighlightButton" type="button">Remove this custom highlight</button>
+      </div>
+    ` : ""}
+
+    <div class="button-row one">
+      <button class="btn" id="clearEventSelectionButton" type="button">Clear event selection</button>
+    </div>
+
+    ${entryCards}
+  `;
+
+  document.getElementById("addZoneHereButton").addEventListener("click", () => {
+    state.zones.push(newZone(dateIso, true));
+    persist();
+    renderAll();
+  });
+
+  document.getElementById("selectDayButton").addEventListener("click", () => {
+    state.selectedDays.add(dateIso);
+    state.lastSelectionDate = dateIso;
+    state.selectionMode = true;
+    renderAll();
+  });
+
+  document.getElementById("clearEventSelectionButton").addEventListener("click", () => {
+    state.eventSelectedDays.clear();
+    state.eventSelectionAnchor = null;
+    renderCalendar();
+    renderDetails();
+  });
+
+  const removeButton = document.getElementById("removeCurrentHighlightButton");
+  if (removeButton) {
+    removeButton.addEventListener("click", () => {
+      delete state.annotations[dateIso];
+      persist();
+      renderAll();
+    });
+  }
+}
+
+function applyCollapsedState(sectionId) {
+  const section = document.querySelector(`[data-section-id="${sectionId}"]`);
+  const toggle = document.querySelector(`[data-collapse-toggle="${sectionId}"]`);
+  if (!section || !toggle) return;
+
+  const collapsed = Boolean(state.collapsedSections[sectionId]);
+  section.classList.toggle("collapsed", collapsed);
+  toggle.setAttribute("aria-expanded", String(!collapsed));
+
+  const icon = toggle.querySelector(".collapse-icon");
+  if (icon) icon.textContent = collapsed ? "+" : "−";
+}
+
+function renderCollapsedStates() {
+  Object.keys(state.collapsedSections).forEach(applyCollapsedState);
+}
+
+function renderAll() {
+  refreshViewOptions();
+  applyDarkMode();
+  updateSourcePill();
+  renderZoneControls();
+  renderLegend();
+  renderUnexcusedList();
+  renderSelectionControls();
+  renderCollapsedStates();
+  renderCalendar();
+  renderDetails();
+}
+
+/* Spreadsheet parsing */
+
+function normalizeHeader(value) {
+  return String(value ?? "")
+    .trim()
+    .toLowerCase()
+    .replace(/[_-]+/g, " ")
+    .replace(/\s+/g, " ");
+}
+
+function findColumn(headers, aliases) {
+  const normalized = headers.map(normalizeHeader);
+
+  for (const alias of aliases) {
+    const exact = normalized.indexOf(alias);
+    if (exact >= 0) return exact;
+  }
+
+  for (let index = 0; index < normalized.length; index++) {
+    if (aliases.some(alias => normalized[index].includes(alias))) return index;
+  }
+
+  return -1;
+}
+
+function findHeaderRow(matrix) {
+  const limit = Math.min(matrix.length, 30);
+
+  for (let rowIndex = 0; rowIndex < limit; rowIndex++) {
+    const row = matrix[rowIndex] || [];
+    const dateColumn = findColumn(row, ["date", "time off date", "absence date"]);
+    const hoursColumn = findColumn(row, ["hours", "hour", "duration", "amount", "requested", "requested hours"]);
+    const typeColumn = findColumn(row, ["type", "time off type", "absence type", "leave type"]);
+
+    if (dateColumn >= 0 && hoursColumn >= 0 && typeColumn >= 0) {
+      return rowIndex;
+    }
+  }
+
+  return -1;
+}
+
+function matrixToEntries(matrix) {
+  if (!Array.isArray(matrix) || !matrix.length) {
+    throw new Error("The spreadsheet did not contain readable rows.");
+  }
+
+  const headerRowIndex = findHeaderRow(matrix);
+  if (headerRowIndex < 0) {
+    throw new Error("Could not find Date, Type, and Hours columns.");
+  }
+
+  const headers = matrix[headerRowIndex] || [];
+  const columns = {
+    date: findColumn(headers, ["date", "time off date", "absence date"]),
+    dayOfWeek: findColumn(headers, ["day of week", "weekday", "day"]),
+    type: findColumn(headers, ["type", "time off type", "absence type", "leave type"]),
+    hours: findColumn(headers, ["hours", "hour", "duration", "amount", "requested", "requested hours"]),
+    unit: findColumn(headers, ["unit", "units", "unit of time"]),
+    comment: findColumn(headers, ["comment", "comments", "note", "notes", "reason"]),
+    status: findColumn(headers, ["status", "approval status"]),
+    record: findColumn(headers, ["record", "record type", "request", "transaction", "description", "view more"])
+  };
+
+  const imported = [];
+
+  for (let rowIndex = headerRowIndex + 1; rowIndex < matrix.length; rowIndex++) {
+    const row = matrix[rowIndex] || [];
+    const date = normalizeImportedDate(row[columns.date]);
+    if (!date) continue;
+
+    const hours = parseHours(row[columns.hours]);
+    const record = columns.record >= 0 ? String(row[columns.record] ?? "") : "";
+
+    imported.push({
+      id: `row-${rowIndex + 1}-${date}`,
+      sourceRow: rowIndex + 1,
+      date,
+      dayOfWeek: columns.dayOfWeek >= 0
+        ? String(row[columns.dayOfWeek] ?? "")
+        : parseLocal(date).toLocaleDateString(undefined, { weekday: "long" }),
+      type: columns.type >= 0 ? String(row[columns.type] ?? "Unspecified") : "Unspecified",
+      hours,
+      unit: columns.unit >= 0 ? String(row[columns.unit] ?? "Hours") : "Hours",
+      comment: columns.comment >= 0 ? String(row[columns.comment] ?? "") : "",
+      status: columns.status >= 0 ? String(row[columns.status] ?? "Unspecified") : "Unspecified",
+      recordKind: record.toLowerCase().includes("correction") || hours < 0 ? "Correction" : "Request",
+      record
+    });
+  }
+
+  if (!imported.length) {
+    throw new Error("No valid dated rows were found beneath the header row.");
+  }
+
+  return imported;
+}
+
+function parseCsv(text) {
+  const rows = [];
+  let row = [];
+  let field = "";
+  let quoted = false;
+
+  for (let index = 0; index < text.length; index++) {
+    const char = text[index];
+
+    if (quoted) {
+      if (char === '"' && text[index + 1] === '"') {
+        field += '"';
+        index++;
+      } else if (char === '"') {
+        quoted = false;
+      } else {
+        field += char;
+      }
+      continue;
+    }
+
+    if (char === '"') {
+      quoted = true;
+    } else if (char === ",") {
+      row.push(field);
+      field = "";
+    } else if (char === "\n") {
+      row.push(field.replace(/\r$/, ""));
+      rows.push(row);
+      row = [];
+      field = "";
+    } else {
+      field += char;
+    }
+  }
+
+  row.push(field.replace(/\r$/, ""));
+  if (row.some(value => value !== "")) rows.push(row);
+  return rows;
+}
+
+function readUint16(view, offset) {
+  return view.getUint16(offset, true);
+}
+
+function readUint32(view, offset) {
+  return view.getUint32(offset, true);
+}
+
+async function inflateDeflateRaw(bytes) {
+  if (typeof DecompressionStream !== "function") {
+    throw new Error("This browser does not support local XLSX decompression. Try a current version of Chrome, Edge, or Firefox.");
+  }
+
+  const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream("deflate-raw"));
+  return new Uint8Array(await new Response(stream).arrayBuffer());
+}
+
+async function unzipXlsx(arrayBuffer) {
+  const bytes = new Uint8Array(arrayBuffer);
+  const view = new DataView(arrayBuffer);
+  const minimumOffset = Math.max(0, bytes.length - 65557);
+  let endOffset = -1;
+
+  for (let offset = bytes.length - 22; offset >= minimumOffset; offset--) {
+    if (readUint32(view, offset) === 0x06054b50) {
+      endOffset = offset;
+      break;
+    }
+  }
+
+  if (endOffset < 0) throw new Error("The XLSX archive is missing its directory record.");
+
+  const entryCount = readUint16(view, endOffset + 10);
+  const centralDirectoryOffset = readUint32(view, endOffset + 16);
+  const decoder = new TextDecoder("utf-8");
+  const files = new Map();
+  let cursor = centralDirectoryOffset;
+
+  for (let entryIndex = 0; entryIndex < entryCount; entryIndex++) {
+    if (readUint32(view, cursor) !== 0x02014b50) {
+      throw new Error("The XLSX archive directory is invalid.");
+    }
+
+    const method = readUint16(view, cursor + 10);
+    const compressedSize = readUint32(view, cursor + 20);
+    const fileNameLength = readUint16(view, cursor + 28);
+    const extraLength = readUint16(view, cursor + 30);
+    const commentLength = readUint16(view, cursor + 32);
+    const localHeaderOffset = readUint32(view, cursor + 42);
+    const fileName = decoder
+      .decode(bytes.slice(cursor + 46, cursor + 46 + fileNameLength))
+      .replaceAll("\\", "/");
+
+    if (readUint32(view, localHeaderOffset) !== 0x04034b50) {
+      throw new Error("The XLSX archive contains an invalid file header.");
+    }
+
+    const localNameLength = readUint16(view, localHeaderOffset + 26);
+    const localExtraLength = readUint16(view, localHeaderOffset + 28);
+    const dataStart = localHeaderOffset + 30 + localNameLength + localExtraLength;
+    const compressed = bytes.slice(dataStart, dataStart + compressedSize);
+
+    let content;
+    if (method === 0) {
+      content = compressed;
+    } else if (method === 8) {
+      content = await inflateDeflateRaw(compressed);
+    } else {
+      throw new Error(`Unsupported XLSX compression method: ${method}`);
+    }
+
+    files.set(fileName.replace(/^\/+/, ""), content);
+    cursor += 46 + fileNameLength + extraLength + commentLength;
+  }
+
+  return files;
+}
+
+function parseXml(bytes) {
+  const xml = new TextDecoder("utf-8").decode(bytes);
+  const documentNode = new DOMParser().parseFromString(xml, "application/xml");
+
+  if (documentNode.getElementsByTagName("parsererror").length) {
+    throw new Error("One of the XLSX XML documents could not be parsed.");
+  }
+
+  return documentNode;
+}
+
+function xmlElements(node, localName) {
+  return [...node.getElementsByTagNameNS("*", localName)];
+}
+
+function normalizeZipPath(basePath, target) {
+  if (target.startsWith("/")) return target.replace(/^\/+/, "");
+
+  const parts = basePath.split("/");
+  parts.pop();
+
+  target.split("/").forEach(part => {
+    if (!part || part === ".") return;
+    if (part === "..") parts.pop();
+    else parts.push(part);
+  });
+
+  return parts.join("/");
+}
+
+function worksheetPath(files) {
+  const workbookBytes = files.get("xl/workbook.xml");
+  const relsBytes = files.get("xl/_rels/workbook.xml.rels");
+  if (!workbookBytes || !relsBytes) return "xl/worksheets/sheet1.xml";
+
+  const workbookDoc = parseXml(workbookBytes);
+  const firstSheet = xmlElements(workbookDoc, "sheet")[0];
+  if (!firstSheet) return "xl/worksheets/sheet1.xml";
+
+  const relationshipId =
+    firstSheet.getAttribute("r:id") ||
+    firstSheet.getAttributeNS(
+      "http://schemas.openxmlformats.org/officeDocument/2006/relationships",
+      "id"
+    );
+
+  const relsDoc = parseXml(relsBytes);
+  const relationship = xmlElements(relsDoc, "Relationship")
+    .find(item => item.getAttribute("Id") === relationshipId);
+
+  if (!relationship) return "xl/worksheets/sheet1.xml";
+  return normalizeZipPath("xl/workbook.xml", relationship.getAttribute("Target"));
+}
+
+function sharedStrings(files) {
+  const bytes = files.get("xl/sharedStrings.xml");
+  if (!bytes) return [];
+
+  const documentNode = parseXml(bytes);
+  return xmlElements(documentNode, "si").map(item =>
+    xmlElements(item, "t").map(textNode => textNode.textContent || "").join("")
+  );
+}
+
+function columnIndexFromReference(reference) {
+  const letters = String(reference || "").match(/[A-Z]+/i)?.[0] || "A";
+  let result = 0;
+
+  for (const letter of letters.toUpperCase()) {
+    result = result * 26 + letter.charCodeAt(0) - 64;
+  }
+
+  return result - 1;
+}
+
+function worksheetToMatrix(files, path) {
+  const bytes = files.get(path);
+  if (!bytes) throw new Error("The first worksheet could not be found.");
+
+  const strings = sharedStrings(files);
+  const documentNode = parseXml(bytes);
+  const rows = [];
+
+  xmlElements(documentNode, "row").forEach((rowNode, rowIndex) => {
+    const row = [];
+
+    xmlElements(rowNode, "c").forEach(cell => {
+      const columnIndex = columnIndexFromReference(cell.getAttribute("r"));
+      const type = cell.getAttribute("t") || "";
+      const valueNode = xmlElements(cell, "v")[0];
+      let value = "";
+
+      if (type === "inlineStr") {
+        value = xmlElements(cell, "t").map(node => node.textContent || "").join("");
+      } else {
+        const raw = valueNode?.textContent ?? "";
+
+        if (type === "s") value = strings[Number(raw)] ?? "";
+        else if (type === "b") value = raw === "1";
+        else if (type === "str" || type === "d" || type === "e") value = raw;
+        else value = raw === "" ? "" : Number(raw);
+      }
+
+      row[columnIndex] = value;
+    });
+
+    const explicitRowNumber = Number(rowNode.getAttribute("r"));
+    const destinationIndex = Number.isFinite(explicitRowNumber) && explicitRowNumber > 0
+      ? explicitRowNumber - 1
+      : rowIndex;
+    rows[destinationIndex] = row;
+  });
+
+  return rows.map(row => row || []);
+}
+
+async function xlsxToMatrix(arrayBuffer) {
+  const files = await unzipXlsx(arrayBuffer);
+  return worksheetToMatrix(files, worksheetPath(files));
+}
+
+async function importSpreadsheet(file) {
+  const extension = file.name.split(".").pop().toLowerCase();
+  let matrix;
+
+  if (extension === "xlsx") {
+    matrix = await xlsxToMatrix(await file.arrayBuffer());
+  } else if (extension === "csv") {
+    matrix = parseCsv(await file.text());
+  } else {
+    throw new Error("Use an .xlsx or .csv spreadsheet.");
+  }
+
+  entries = matrixToEntries(matrix);
+  state.sourceFileName = file.name;
+  state.view = "all";
+  state.selectedDate = null;
+  state.eventSelectedDays.clear();
+  state.eventSelectionAnchor = null;
+  state.selectedDays.clear();
+  state.lastSelectionDate = null;
+
+  persist();
+  renderAll();
+}
+
+function exportFullBackup() {
+  const payload = {
+    app: "Time Off Calendar",
+    version: BACKUP_VERSION,
+    exportedAt: new Date().toISOString(),
+    entries,
+    sourceFileName: state.sourceFileName,
+    view: state.view,
+    darkMode: state.darkMode,
+    zones: state.zones,
+    annotations: state.annotations,
+    collapsedSections: state.collapsedSections
+  };
+
+  const blob = new Blob([JSON.stringify(payload, null, 2)], {
+    type: "application/json"
+  });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `time-off-calendar-full-backup-${toISO(new Date())}.json`;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}
+
+function importBackupObject(imported, fileName = "") {
+  if (!imported || typeof imported !== "object") {
+    throw new Error("The JSON backup is invalid.");
+  }
+
+  if (Array.isArray(imported.entries)) {
+    entries = sanitizeEntries(imported.entries);
+  }
+
+  if (typeof imported.sourceFileName === "string") {
+    state.sourceFileName = imported.sourceFileName;
+  } else if (fileName && !state.sourceFileName) {
+    state.sourceFileName = fileName;
+  }
+
+  if (typeof imported.view === "string") state.view = imported.view;
+  if (typeof imported.darkMode === "boolean") state.darkMode = imported.darkMode;
+
+  if (Array.isArray(imported.zones)) {
+    state.zones = imported.zones.map(normalizeZone).filter(Boolean);
+  }
+
+  if (imported.annotations && typeof imported.annotations === "object") {
+    state.annotations = imported.annotations;
+  }
+
+  if (imported.collapsedSections && typeof imported.collapsedSections === "object") {
+    state.collapsedSections = {
+      ...state.collapsedSections,
+      ...imported.collapsedSections
+    };
+  }
+
+  state.selectedDate = null;
+  state.eventSelectedDays.clear();
+  state.eventSelectionAnchor = null;
+  state.selectedDays.clear();
+  state.lastSelectionDate = null;
+
+  persist();
+  renderAll();
+}
+
+async function handleImportedFile(file) {
+  const extension = file.name.split(".").pop().toLowerCase();
+
+  if (extension === "json") {
+    importBackupObject(JSON.parse(await file.text()), file.name);
+  } else {
+    await importSpreadsheet(file);
+  }
+}
+
+function applyCollapsedState(sectionId) {
+  const section = document.querySelector(`[data-section-id="${sectionId}"]`);
+  const toggle = document.querySelector(`[data-collapse-toggle="${sectionId}"]`);
+  if (!section || !toggle) return;
+
+  const collapsed = Boolean(state.collapsedSections[sectionId]);
+  section.classList.toggle("collapsed", collapsed);
+  toggle.setAttribute("aria-expanded", String(!collapsed));
+
+  const icon = toggle.querySelector(".collapse-icon");
+  if (icon) icon.textContent = collapsed ? "+" : "−";
+}
+
+function renderCollapsedStates() {
+  Object.keys(state.collapsedSections).forEach(applyCollapsedState);
+}
+
+function setupCollapsibles() {
+  document.querySelectorAll("[data-collapse-toggle]").forEach(toggle => {
+    toggle.addEventListener("click", () => {
+      const sectionId = toggle.dataset.collapseToggle;
+      state.collapsedSections[sectionId] = !state.collapsedSections[sectionId];
+      applyCollapsedState(sectionId);
+      persist();
+    });
+  });
+}
+
+function setupControls() {
+  els.viewSelect.addEventListener("change", () => {
+    state.view = els.viewSelect.value;
+    persist();
+    renderCalendar();
+  });
+
+  els.darkModeToggle.addEventListener("change", () => {
+    state.darkMode = els.darkModeToggle.checked;
+    applyDarkMode();
+    persist();
+  });
+
+  els.addZoneButton.addEventListener("click", () => {
+    const bounds = calendarBounds();
+    const start = state.selectedDate || bounds?.start || toISO(new Date());
+    state.zones.push(newZone(start, true));
+    persist();
+    renderAll();
+  });
+
+  els.addConsecutiveButton.addEventListener("click", () => {
+    const candidates = activeZones().length ? activeZones() : state.zones;
+    const latestEnd = candidates.map(zoneEnd).sort().at(-1);
+    const bounds = calendarBounds();
+    const start = latestEnd
+      ? addDays(latestEnd, 1)
+      : (state.selectedDate || bounds?.start || toISO(new Date()));
+
+    state.zones.push(newZone(start, true));
+    persist();
+    renderAll();
+  });
+
+  els.selectionMode.addEventListener("change", () => {
+    state.selectionMode = els.selectionMode.checked;
+    renderCalendar();
+    renderSelectionControls();
+  });
+
+  els.applyAnnotationButton.addEventListener("click", () => {
+    const description = els.annotationText.value.trim();
+    if (!description || !state.selectedDays.size) return;
+
+    state.selectedDays.forEach(dateIso => {
+      state.annotations[dateIso] = {
+        color: els.annotationColor.value,
+        description
+      };
+    });
+
+    persist();
+    renderAll();
+  });
+
+  els.removeAnnotationButton.addEventListener("click", () => {
+    state.selectedDays.forEach(dateIso => delete state.annotations[dateIso]);
+    persist();
+    renderAll();
+  });
+
+  els.clearSelectionButton.addEventListener("click", () => {
+    state.selectedDays.clear();
+    state.lastSelectionDate = null;
+    renderCalendar();
+    renderSelectionControls();
+  });
+
+  els.exportBackupButton.addEventListener("click", () => {
+    exportFullBackup();
+    els.settingsStatus.textContent = "Full backup downloaded.";
+  });
+
+  els.importFileButton.addEventListener("click", () => {
+    els.importFileInput.click();
+  });
+
+  els.importFileInput.addEventListener("change", async () => {
+    const file = els.importFileInput.files?.[0];
+    if (!file) return;
+
+    els.settingsStatus.textContent = `Importing ${file.name}…`;
+
+    try {
+      await handleImportedFile(file);
+      els.settingsStatus.textContent =
+        file.name.toLowerCase().endsWith(".json")
+          ? "Full backup imported successfully."
+          : `${entries.length} spreadsheet rows imported successfully.`;
+    } catch (error) {
+      els.settingsStatus.textContent = error?.message || "The file could not be imported.";
+    } finally {
+      els.importFileInput.value = "";
+    }
+  });
+
+  els.clearExcelDataButton.addEventListener("click", () => {
+    if (!entries.length) {
+      els.settingsStatus.textContent = "There is no Excel data to clear.";
+      return;
+    }
+
+    if (!window.confirm("Clear all currently imported spreadsheet rows? Custom highlights, warning zones, and appearance settings will remain.")) {
+      return;
+    }
+
+    entries = [];
+    state.sourceFileName = "";
+    state.view = "all";
+    state.selectedDate = null;
+    state.eventSelectedDays.clear();
+    state.eventSelectionAnchor = null;
+
+    persist();
+    renderAll();
+    els.settingsStatus.textContent = "Imported spreadsheet rows cleared.";
+  });
+}
+
+restore();
+setupControls();
+setupCollapsibles();
+
+document.addEventListener("keydown", event => {
+  if (event.key !== "Escape") return;
+
+  state.selectedDate = null;
+  state.eventSelectedDays.clear();
+  state.eventSelectionAnchor = null;
+  state.selectedDays.clear();
+  state.lastSelectionDate = null;
+
+  renderCalendar();
+  renderSelectionControls();
+  renderDetails();
+});
+
+els.annotationText.addEventListener("input", renderSelectionControls);
+
+renderAll();
+</script>
+
+</body>
+</html>
